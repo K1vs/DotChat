@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>K1vs.DotChat.Implementations.SignalR</RootNamespace>
+    <Authors>K1vs</Authors>
+    <Product>DotChat</Product>
+    <Description>Extensible chat framework for systems with microservice architecture. Api services and notification sender implementations via SignalR 2.</Description>
+    <Copyright>2020 K1vs</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/K1vs/DotChat</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/K1vs/DotChat</RepositoryUrl>
+    <PackageIcon>DotChatLogo.png</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>chat, messaging, communication, signalr</PackageTags>
+    <PackageReleaseNotes>The initial version. Use in production only after full testing.</PackageReleaseNotes>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\DotChat\DotChat.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\DotChatLogo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
