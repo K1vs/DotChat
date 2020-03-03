@@ -3,6 +3,26 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>K1vs.DotChat</RootNamespace>
+    <Authors>K1vs</Authors>
+    <Description>Extensible chat framework for systems with microservice architecture. Abstract core.</Description>
+    <Copyright>2020 K1vs</Copyright>
+    <PackageLicenseFile></PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/K1vs/DotChat</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/K1vs/DotChat</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>chat, messaging, communication</PackageTags>
+    <PackageReleaseNotes>The initial version. Use in production only after full testing.</PackageReleaseNotes>
+    <PackageIcon>DotChatLogo.png</PackageIcon>
+    <PackageIconUrl />
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\DotChatLogo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
