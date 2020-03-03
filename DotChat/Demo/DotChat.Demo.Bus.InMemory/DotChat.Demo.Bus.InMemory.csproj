@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>K1vs.DotChat.Demo.Bus.InMemory</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\DotChat.FrameworkUtils\DotChat.FrameworkUtils.csproj" />
+    <ProjectReference Include="..\..\DotChat\DotChat.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>K1vs.DotChat.Basic</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotChat.Commands\DotChat.Commands.csproj" />
+    <ProjectReference Include="..\DotChat.Common\DotChat.Common.csproj" />
+    <ProjectReference Include="..\DotChat.Events\DotChat.Events.csproj" />
+    <ProjectReference Include="..\DotChat.Models\DotChat.Models.csproj" />
+    <ProjectReference Include="..\DotChat.Modules\DotChat.Modules.csproj" />
+    <ProjectReference Include="..\DotChat.Notifications\DotChat.Notifications.csproj" />
+    <ProjectReference Include="..\DotChat.Notifiers\DotChat.Notifiers.csproj" />
+    <ProjectReference Include="..\DotChat.Security\DotChat.Security.csproj" />
+    <ProjectReference Include="..\DotChat.Services\DotChat.Services.csproj" />
+    <ProjectReference Include="..\DotChat.Workers\DotChat.Workers.csproj" />
+    <ProjectReference Include="..\DotChat\DotChat.csproj" />
+  </ItemGroup>
+
+</Project>

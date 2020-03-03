@@ -1,0 +1,35 @@
+﻿namespace K1vs.DotChat.Demo.Stores.InMemory
+{
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Basic.Chats;
+    using Basic.Messages;
+    using Models.Participants;
+
+    public class InMemoryStore
+    {
+        public InMemoryStore(IEnumerable<ChatUser> users)
+        {
+            foreach (var user in users)
+            {
+                Users.TryAdd(user.UserId, user);
+            }
+        }
+
+        public readonly ConcurrentDictionary<Guid, Chat> Chats = new ConcurrentDictionary<Guid, Chat>();
+
+        public PersonalizedChat Personalize(Chat chat, Guid userId)
+        {
+            var readIndex = chat.Participants.FirstOrDefault(r => r.UserId == userId)?.ReadIndex ?? 0;
+            return new PersonalizedChat(chat.Name, chat.Description, chat.PrivacyMode, chat.ChatId, chat.Participants, chat.LastTimestamp, chat.TopIndex, readIndex, chat.TopIndex - readIndex);
+        }
+
+        public readonly ConcurrentDictionary<Guid, ConcurrentDictionary<Guid, ChatMessage>> Messages = new ConcurrentDictionary<Guid, ConcurrentDictionary<Guid, ChatMessage>>();
+
+        public readonly ConcurrentDictionary<Guid, ChatUser> Users = new ConcurrentDictionary<Guid, ChatUser>();
+    }
+}
