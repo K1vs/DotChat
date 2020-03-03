@@ -15,9 +15,17 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>chat, messaging, communication</PackageTags>
     <PackageReleaseNotes>Demo only. Never use on production.</PackageReleaseNotes>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\DotChat\DotChat.csproj" />
   </ItemGroup>
