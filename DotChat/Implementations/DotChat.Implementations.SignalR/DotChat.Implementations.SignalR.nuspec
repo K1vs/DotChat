@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/K1vs/DotChat</projectUrl>
+    <icon>images\DotChatLogo.png</icon>
+    <description>$description$</description>
+    <releaseNotes>The initial version. Use in production only after full testing.</releaseNotes>
+    <copyright>2020 K1vs</copyright>
+    <tags>chat messaging communication</tags>
+	<repository type="git" url="https://github.com/K1vs/DotChat"></repository>
+  </metadata>
+   <files>
+		<file src="..\..\..\DotChatLogo.png" target="images\" />
+	</files>
+</package>
