@@ -14,7 +14,7 @@
     <releaseNotes>The initial version. Use in production only after full testing.</releaseNotes>
     <copyright>2020 K1vs</copyright>
     <tags>chat messaging communication</tags>
-	<repository type="git" url="https://github.com/K1vs/DotChat" branch="release" commit=""></repository>
+	<repository type="git" url="https://github.com/K1vs/DotChat" commit=""></repository>
   </metadata>
    <files>
 		<file src="..\..\..\DotChatLogo.png" target="images\" />
