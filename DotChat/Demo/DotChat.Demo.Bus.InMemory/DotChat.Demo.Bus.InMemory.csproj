@@ -3,11 +3,31 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>K1vs.DotChat.Demo.Bus.InMemory</RootNamespace>
+    <Authors>K1vs</Authors>
+    <Description>Extensible chat framework for systems with microservice architecture. In memory bus implementaion. Demo only. Never use on production.</Description>
+    <Copyright>2020 K1vs</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/K1vs/DotChat</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/K1vs/DotChat</RepositoryUrl>
+    <PackageIcon>DotChatLogo.png</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>chat, messaging, communication</PackageTags>
+    <PackageReleaseNotes>Demo only. Never use on production.</PackageReleaseNotes>
+    <Product>DotChat.Demo</Product>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\DotChat.FrameworkUtils\DotChat.FrameworkUtils.csproj" />
     <ProjectReference Include="..\..\DotChat\DotChat.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\DotChatLogo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
