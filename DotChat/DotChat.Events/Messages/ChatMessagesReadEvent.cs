@@ -8,7 +8,7 @@
     using Chats;
     using DotChat.Messages;
 
-    public class ChatMessagesReadEvent: EventBase, IChatMessagesReadEvent
+    public class ChatMessagesReadEvent: Event, IChatMessagesReadEvent
     {
         public ChatMessagesReadEvent()
         {

@@ -20,7 +20,7 @@
         }
 
         protected async Task Notify<TNotification>(Guid chatId, TNotification notification)
-            where TNotification : INotificationBase
+            where TNotification : INotification
         {
             if (NotificationSender.SupportNotifyChatParticipants)
             {

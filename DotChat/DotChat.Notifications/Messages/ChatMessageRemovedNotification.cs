@@ -5,7 +5,7 @@
     using DotChat.Messages;
     using Events;
 
-    public class ChatMessageRemovedNotification: NotificationBase, IChatMessageRemovedNotification
+    public class ChatMessageRemovedNotification: Notification, IChatMessageRemovedNotification
     {
         public ChatMessageRemovedNotification()
         {

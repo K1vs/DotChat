@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using Chats;
     using DotChat.Events.Chat;
+    using DotChat.Events.Chats;
     using DotChat.NotificationBuilders;
     using DotChat.Notifications.Chats;
     using Models.Chats;

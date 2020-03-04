@@ -5,7 +5,7 @@
     using Events;
 
     public interface IHandleEvent<in TEvent>
-        where TEvent: IEventBase
+        where TEvent: IEvent
     {
         Task Handle(TEvent @event, IChatBusContext chatBusContext);
     }

@@ -6,7 +6,7 @@
     using DotChat.Participants;
     using Events;
 
-    public class ChatParticipantsAppendedNotification<TParticipationResultCollection, TParticipationResult, TChatParticipant> : NotificationBase, IChatParticipantsAppendedNotification<TParticipationResultCollection, TParticipationResult, TChatParticipant>
+    public class ChatParticipantsAppendedNotification<TParticipationResultCollection, TParticipationResult, TChatParticipant> : Notification, IChatParticipantsAppendedNotification<TParticipationResultCollection, TParticipationResult, TChatParticipant>
         where TParticipationResultCollection : IReadOnlyCollection<TParticipationResult>
         where TParticipationResult : IParticipationResult<TChatParticipant>
         where TChatParticipant : IChatParticipant

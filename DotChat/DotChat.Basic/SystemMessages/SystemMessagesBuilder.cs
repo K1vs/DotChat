@@ -5,6 +5,7 @@
     using Chats;
     using DotChat.Chats;
     using DotChat.Events.Chat;
+    using DotChat.Events.Chats;
     using DotChat.Events.Participants;
     using DotChat.Messages;
     using DotChat.Messages.Typed;

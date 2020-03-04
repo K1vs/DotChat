@@ -4,7 +4,7 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public interface IApplyToChatCommand: ICommandBase, IChatRelated, ICustomizable
+    public interface IApplyToChatCommand: ICommand, IChatRelated, ICustomizable
     {
         ChatParticipantType ChatParticipantType { get; }
     }

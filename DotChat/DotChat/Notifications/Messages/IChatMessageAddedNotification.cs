@@ -8,7 +8,7 @@
     using Events;
 
     public interface IChatMessageAddedNotification<out TChatInfo, out TChatUser, out TChatMessage, out TChatMessageInfo, out TTextMessage, out TQuoteMessage, out TMessageAttachmentCollection, out TMessageAttachment, out TChatRefMessageCollection, out TChatRefMessage, out TContactMessageCollection, out TContactMessage>
-        : INotificationBase, IChatRelated, 
+        : IChatMessagesNotification, IChatRelated, 
         IHasChatMessage<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
         where TChatInfo : IChatInfo
         where TChatUser : IChatUser

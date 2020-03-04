@@ -1,9 +1,10 @@
 ﻿namespace K1vs.DotChat.Events.Chat
 {
     using System;
+    using Chats;
     using K1vs.DotChat.Chats;
 
-    public class ChatRemovedEvent<TChatInfo>: EventBase, IChatRemovedEvent<TChatInfo>
+    public class ChatRemovedEvent<TChatInfo>: Event, IChatRemovedEvent<TChatInfo>
         where TChatInfo : IChatInfo
     {
         public ChatRemovedEvent()

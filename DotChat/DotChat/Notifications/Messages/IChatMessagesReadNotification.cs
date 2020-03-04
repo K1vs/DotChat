@@ -4,7 +4,7 @@
     using DotChat.Messages;
     using Events;
 
-    public interface IChatMessagesReadNotification: INotificationBase, IChatRelated, IIndexed
+    public interface IChatMessagesReadNotification: IChatMessagesNotification, IChatRelated, IIndexed
     {
     }
 }

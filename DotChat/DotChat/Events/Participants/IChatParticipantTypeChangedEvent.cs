@@ -6,9 +6,10 @@
     using System.Text;
     using System.Threading.Tasks;
     using Chats;
+    using DotChat.Chats;
     using DotChat.Participants;
 
-    public interface IChatParticipantTypeChangedEvent<out TChatParticipant> : IEventBase, IChatRelated, IHasParticipant<TChatParticipant>
+    public interface IChatParticipantTypeChangedEvent<out TChatParticipant> : IChatParticipantEvent, IChatRelated, IHasParticipant<TChatParticipant>
         where TChatParticipant : IChatParticipant
     {
     }

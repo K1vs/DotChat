@@ -2,13 +2,13 @@
 {
     using System;
 
-    public class CommandBase: ICommandBase
+    public class Command: ICommand
     {
-        public CommandBase()
+        public Command()
         {
         }
 
-        public CommandBase(Guid initiatorUserId)
+        public Command(Guid initiatorUserId)
         {
             InitiatorUserId = initiatorUserId;
         }

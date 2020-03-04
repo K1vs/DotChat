@@ -4,7 +4,7 @@
     using Chats;
     using K1vs.DotChat.Participants;
 
-    public class ChatParticipantInvitedEvent<TChatParticipant>: EventBase, IChatParticipantInvitedEvent<TChatParticipant>
+    public class ChatParticipantInvitedEvent<TChatParticipant>: Event, IChatParticipantInvitedEvent<TChatParticipant>
         where TChatParticipant : IChatParticipant
     {
         public ChatParticipantInvitedEvent()

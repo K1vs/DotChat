@@ -6,9 +6,10 @@
     using System.Text;
     using System.Threading.Tasks;
     using Chats;
+    using DotChat.Chats;
     using DotChat.Messages;
 
-    public interface IChatMessagesReadEvent: IEventBase, IChatRelated, IIndexed
+    public interface IChatMessagesReadEvent: IChatMessageEvent, IChatRelated, IIndexed
     {
     }
 }

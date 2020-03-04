@@ -5,7 +5,7 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public class AddChatCommand<TChatInfo, TParticipationCandidateCollection, TParticipationCandidate> : CommandBase, IAddChatCommand<TChatInfo, TParticipationCandidateCollection, TParticipationCandidate>
+    public class AddChatCommand<TChatInfo, TParticipationCandidateCollection, TParticipationCandidate> : Command, IAddChatCommand<TChatInfo, TParticipationCandidateCollection, TParticipationCandidate>
         where TChatInfo: IChatInfo
         where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
         where TParticipationCandidate : IParticipationCandidate

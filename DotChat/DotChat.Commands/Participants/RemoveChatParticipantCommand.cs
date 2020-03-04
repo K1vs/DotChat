@@ -4,7 +4,7 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public class RemoveChatParticipantCommand: CommandBase, IRemoveChatParticipantCommand
+    public class RemoveChatParticipantCommand: Command, IRemoveChatParticipantCommand
     {
         public RemoveChatParticipantCommand()
         {

@@ -4,7 +4,7 @@
     using DotChat.Messages;
     using Events;
 
-    public interface IChatMessageRemovedNotification: INotificationBase, IChatRelated, IChatMessageRelated
+    public interface IChatMessageRemovedNotification: IChatMessagesNotification, IChatRelated, IChatMessageRelated
     {
     }
 }

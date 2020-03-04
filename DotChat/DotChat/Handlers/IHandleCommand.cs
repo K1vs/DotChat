@@ -5,7 +5,7 @@
     using Commands;
 
     public interface IHandleCommand<in TCommand>
-        where TCommand: ICommandBase
+        where TCommand: ICommand
     {
         Task Handle(TCommand command, IChatBusContext chatEventPublisher);
     }

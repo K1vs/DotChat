@@ -3,11 +3,12 @@
     using System;
     using System.Collections.Generic;
     using Chats;
+    using DotChat.Chats;
     using DotChat.Messages.Typed;
     using DotChat.Participants;
     using K1vs.DotChat.Messages;
 
-    public class ChatMessageAddedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>: EventBase,
+    public class ChatMessageAddedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>: Event,
         IChatMessageAddedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
         where TChatInfo : IChatInfo
         where TChatUser : IChatUser

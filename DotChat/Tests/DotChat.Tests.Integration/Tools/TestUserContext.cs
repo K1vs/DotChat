@@ -137,7 +137,7 @@
             }
         }
 
-        private void TestNotificationSenderOnOnNotification(INotificationBase notification, Guid user)
+        private void TestNotificationSenderOnOnNotification(INotification notification, Guid user)
         {
             if (user == _userId)
             {

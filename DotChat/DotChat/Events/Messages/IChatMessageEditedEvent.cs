@@ -2,12 +2,13 @@
 {
     using System.Collections.Generic;
     using Chats;
+    using DotChat.Chats;
     using DotChat.Messages.Typed;
     using DotChat.Participants;
     using K1vs.DotChat.Messages;
 
     public interface IChatMessageEditedEvent<out TChatInfo, out TChatUser, out TChatMessage, out TChatMessageInfo, out TTextMessage, out TQuoteMessage, 
-        out TMessageAttachmentCollection, out TMessageAttachment, out TChatRefMessageCollection, out TChatRefMessage, out TContactMessageCollection, out TContactMessage> : IEventBase, IChatRelated, 
+        out TMessageAttachmentCollection, out TMessageAttachment, out TChatRefMessageCollection, out TChatRefMessage, out TContactMessageCollection, out TContactMessage> : IChatMessageEvent, IChatRelated, 
         IHasChatMessage<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
         where TChatInfo : IChatInfo
         where TChatUser : IChatUser

@@ -8,7 +8,7 @@
     using Chats;
     using DotChat.Participants;
 
-    public class ChatParticipantTypeChangedEvent<TChatParticipant>: EventBase, IChatParticipantTypeChangedEvent<TChatParticipant>
+    public class ChatParticipantTypeChangedEvent<TChatParticipant>: Event, IChatParticipantTypeChangedEvent<TChatParticipant>
         where TChatParticipant : IChatParticipant
     {
         public ChatParticipantTypeChangedEvent()

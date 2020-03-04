@@ -2,7 +2,7 @@
 {
     using DotChat.Chats;
 
-    public interface IRemoveChatCommand: ICommandBase, IChatRelated
+    public interface IRemoveChatCommand: ICommand, IChatRelated
     {
     }
 }

@@ -5,7 +5,7 @@
     using DotChat.Messages;
     using Events;
 
-    public class ChatMessagesReadNotification: NotificationBase, IChatMessagesReadNotification
+    public class ChatMessagesReadNotification: Notification, IChatMessagesReadNotification
     {
         public ChatMessagesReadNotification()
         {

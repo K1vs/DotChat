@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using DotChat.Participants;
 
-    public class ChatParticipantTypeChangedNotification<TChatParticipant> : NotificationBase, IChatParticipantTypeChangedNotification<TChatParticipant>
+    public class ChatParticipantTypeChangedNotification<TChatParticipant> : Notification, IChatParticipantTypeChangedNotification<TChatParticipant>
         where TChatParticipant : IChatParticipant
     {
         public ChatParticipantTypeChangedNotification()

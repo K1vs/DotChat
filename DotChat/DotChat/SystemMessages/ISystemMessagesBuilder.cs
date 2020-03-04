@@ -6,7 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using Chats;
-    using Events.Chat;
+    using Events.Chats;
     using Events.Participants;
     using Messages;
     using Messages.Typed;

@@ -6,7 +6,7 @@
     using Bus;
     using Chats;
     using Configuration;
-    using Events.Chat;
+    using Events.Chats;
     using NotificationBuilders;
     using Participants;
 

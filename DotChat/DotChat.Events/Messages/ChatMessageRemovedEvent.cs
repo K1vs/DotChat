@@ -4,7 +4,7 @@
     using Chats;
     using DotChat.Messages;
 
-    public class ChatMessageRemovedEvent: EventBase, IChatMessageRemovedEvent
+    public class ChatMessageRemovedEvent: Event, IChatMessageRemovedEvent
     {
         public ChatMessageRemovedEvent()
         {

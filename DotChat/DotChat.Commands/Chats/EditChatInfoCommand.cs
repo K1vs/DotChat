@@ -3,7 +3,7 @@
     using System;
     using DotChat.Chats;
 
-    public class EditChatInfoCommand<TChatInfo> : CommandBase, IEditChatInfoCommand<TChatInfo>
+    public class EditChatInfoCommand<TChatInfo> : Command, IEditChatInfoCommand<TChatInfo>
         where TChatInfo : IChatInfo
     {
         public EditChatInfoCommand()

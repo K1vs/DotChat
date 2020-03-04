@@ -8,7 +8,7 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public class ChangeChatParticipantTypeCommand: CommandBase, IChangeChatParticipantTypeCommand
+    public class ChangeChatParticipantTypeCommand: Command, IChangeChatParticipantTypeCommand
     {
         public ChangeChatParticipantTypeCommand()
         {

@@ -2,7 +2,7 @@
 {
     using Common;
 
-    public interface IEventBase: IHasInitiator
+    public interface IEvent: IHasInitiator
     {
     }
 }

@@ -4,7 +4,7 @@
     using DotChat.Chats;
     using Events;
 
-    public class ChatInfoEditedNotification<TChatInfo>: NotificationBase, IChatInfoEditedNotification<TChatInfo>
+    public class ChatInfoEditedNotification<TChatInfo>: Notification, IChatInfoEditedNotification<TChatInfo>
         where TChatInfo : IChatInfo
     {
         public ChatInfoEditedNotification()

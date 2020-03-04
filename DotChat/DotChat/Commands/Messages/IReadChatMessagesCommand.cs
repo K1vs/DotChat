@@ -8,7 +8,7 @@
     using DotChat.Chats;
     using DotChat.Messages;
 
-    public interface IReadChatMessagesCommand: ICommandBase, IChatRelated, IIndexed
+    public interface IReadChatMessagesCommand: ICommand, IChatRelated, IIndexed
     {
     }
 }

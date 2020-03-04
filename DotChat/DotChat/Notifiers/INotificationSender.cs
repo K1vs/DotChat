@@ -10,11 +10,11 @@
     public interface INotificationSender
     {
         Task NotifyUsers<TNotificationBase>(TNotificationBase notification, IEnumerable<Guid> userIds)
-            where TNotificationBase: INotificationBase;
+            where TNotificationBase: INotification;
 
         bool SupportNotifyChatParticipants { get; }
 
         Task NotifyChatParticipants<TNotificationBase>(TNotificationBase notification, Guid chatId)
-            where TNotificationBase : INotificationBase;
+            where TNotificationBase : INotification;
     }
 }

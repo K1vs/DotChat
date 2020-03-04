@@ -6,6 +6,6 @@
     public interface IChatEventPublisher
     {
         Task Publish<TEvent>(TEvent @event)
-            where TEvent : IEventBase;
+            where TEvent : IEvent;
     }
 }

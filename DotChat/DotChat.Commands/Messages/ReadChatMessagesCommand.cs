@@ -8,7 +8,7 @@
     using DotChat.Chats;
     using DotChat.Messages;
 
-    public class ReadChatMessagesCommand: CommandBase, IReadChatMessagesCommand
+    public class ReadChatMessagesCommand: Command, IReadChatMessagesCommand
     {
         public ReadChatMessagesCommand()
         {

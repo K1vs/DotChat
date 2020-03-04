@@ -7,7 +7,7 @@
     using Events;
     using Participants;
 
-    public class ChatAddedNotification<TPersonalizedChat, TChatParticipantCollection, TChatParticipant>: NotificationBase, IChatAddedNotification<TPersonalizedChat, TChatParticipantCollection, TChatParticipant>
+    public class ChatAddedNotification<TPersonalizedChat, TChatParticipantCollection, TChatParticipant>: Notification, IChatAddedNotification<TPersonalizedChat, TChatParticipantCollection, TChatParticipant>
         where TPersonalizedChat : IPersonalizedChat<TChatParticipantCollection, TChatParticipant>
         where TChatParticipantCollection : IReadOnlyCollection<TChatParticipant>
         where TChatParticipant : IChatParticipant

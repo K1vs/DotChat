@@ -4,7 +4,7 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public class AddChatParticipantCommand: CommandBase, IAddChatParticipantCommand
+    public class AddChatParticipantCommand: Command, IAddChatParticipantCommand
     {
         public AddChatParticipantCommand()
         {

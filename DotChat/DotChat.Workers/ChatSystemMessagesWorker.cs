@@ -11,7 +11,7 @@
     using CommandBuilders;
     using Configuration;
     using Events;
-    using Events.Chat;
+    using Events.Chats;
     using Events.Participants;
     using Messages;
     using Messages.Typed;
@@ -138,7 +138,7 @@
         }
 
         private async Task AddMessage<TEvent>(TEvent @event, TChatMessageInfo messageInfo, IChatBusContext chatBusContext)
-            where TEvent : IEventBase, IChatRelated
+            where TEvent : IEvent, IChatRelated
         {
             if (ChatWorkersConfiguration.DisableSystemMessages)
             {

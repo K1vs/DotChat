@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using Chats;
-    using Events.Chat;
+    using Events.Chats;
     using Handlers;
     using Participants;
 

@@ -2,13 +2,13 @@
 {
     using System;
 
-    public class EventBase: IEventBase
+    public class Event: IEvent
     {
-        public EventBase()
+        public Event()
         {
         }
 
-        public EventBase(Guid initiatorUserId)
+        public Event(Guid initiatorUserId)
         {
             InitiatorUserId = initiatorUserId;
         }

@@ -5,7 +5,7 @@
     using DotChat.Participants;
     using Events;
 
-    public class ChatParticipantRemovedNotification<TChatParticipant>: NotificationBase, IChatParticipantRemovedNotification<TChatParticipant>
+    public class ChatParticipantRemovedNotification<TChatParticipant>: Notification, IChatParticipantRemovedNotification<TChatParticipant>
         where TChatParticipant : IChatParticipant
     {
         public ChatParticipantRemovedNotification()

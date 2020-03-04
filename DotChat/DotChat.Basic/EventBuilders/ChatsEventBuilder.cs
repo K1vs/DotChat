@@ -9,6 +9,7 @@
     using DotChat.Chats;
     using DotChat.EventBuilders;
     using DotChat.Events.Chat;
+    using DotChat.Events.Chats;
     using Events.Chat;
     using Models.Chats;
     using Models.Participants;

@@ -2,7 +2,7 @@
 {
     using Common;
 
-    public interface ICommandBase: IHasInitiator
+    public interface ICommand: IHasInitiator
     {
     }
 }

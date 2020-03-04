@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Chats;
-    using Events.Chat;
+    using Events.Chats;
     using Participants;
 
     public interface IChatsEventBuilder<TChat, TChatInfo, out TChatParticipantCollection, out TChatParticipant>

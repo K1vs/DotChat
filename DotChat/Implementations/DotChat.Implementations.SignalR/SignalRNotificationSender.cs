@@ -9,43 +9,190 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Chats;
+    using Messages;
+    using Messages.Typed;
+    using Microsoft.AspNet.SignalR.Infrastructure;
+    using Notifications.Chats;
+    using Notifications.Messages;
+    using Notifications.Participants;
+    using Participants;
 
-    public class SignalRNotificationSender<THub> : INotificationSender
-        where THub : IHub
+    public class SignalRNotificationSender<TChatsHub, TChatsClient, TChatParticipantsHub, TChatParticipantsClient, TChatMessagesHub, TChatMessagesClient, TPersonalizedChat,
+        TChatInfo, TParticipationResultCollection, TParticipationResult, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, 
+        TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> : INotificationSender
+        where TChatsHub : Hub<TChatsClient>
+        where TChatParticipantsHub : Hub<TChatParticipantsClient>
+        where TChatMessagesHub : Hub<TChatMessagesClient>
+        where TChatsClient: class, IChatsClient<TPersonalizedChat, TChatInfo, TChatParticipantCollection, TChatParticipant>
+        where TChatParticipantsClient: class, IChatParticipantsClient<TParticipationResultCollection, TParticipationResult, TChatParticipant>
+        where TChatMessagesClient: class, IChatMessagesClient<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, 
+            TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TPersonalizedChat : IPersonalizedChat<TChatParticipantCollection, TChatParticipant>
+        where TChatInfo : IChatInfo
+        where TParticipationResultCollection : IReadOnlyCollection<TParticipationResult>
+        where TParticipationResult : IParticipationResult<TChatParticipant>
+        where TChatParticipantCollection : IReadOnlyCollection<TChatParticipant>
+        where TChatParticipant : IChatParticipant
+        where TChatUser : IChatUser
+        where TChatMessage : IChatMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage,
+            TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage,
+            TContactMessageCollection, TContactMessage>
+        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage,
+            TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage,
+            TContactMessageCollection, TContactMessage>
+        where TTextMessage : ITextMessage
+        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage,
+            TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage,
+            TContactMessageCollection, TContactMessage>
+        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
+        where TMessageAttachment : IMessageAttachment
+        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
+        where TChatRefMessage : IChatRefMessage<TChatInfo>
+        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
+        where TContactMessage : IContactMessage<TChatUser>
     {
-        private readonly Lazy<IHubContext> _lazyHubContext = new Lazy<IHubContext>(() => GlobalHost.ConnectionManager.GetHubContext<THub>());
+        private readonly Lazy<IHubContext<TChatsClient>> _lazyChatsHubContext;
 
-        public bool SupportNotifyChatParticipants => false;
+        private readonly Lazy<IHubContext<TChatParticipantsClient>> _lazyChatParticipantsHubContext;
 
-        protected IHubContext HubContext => _lazyHubContext.Value;
+        private readonly Lazy<IHubContext<TChatMessagesClient>> _lazyChatMessagesHubContext;
 
-        public Task NotifyChatParticipants<TNotificationBase>(TNotificationBase notification, Guid chatId) where TNotificationBase : INotificationBase
+        public SignalRNotificationSender(IConnectionManager connectionManager)
+        {
+            _lazyChatsHubContext = new Lazy<IHubContext<TChatsClient>>(connectionManager.GetHubContext<TChatsHub, TChatsClient>);
+            _lazyChatParticipantsHubContext = new Lazy<IHubContext<TChatParticipantsClient>>(connectionManager.GetHubContext<TChatParticipantsHub, TChatParticipantsClient>);
+            _lazyChatMessagesHubContext = new Lazy<IHubContext<TChatMessagesClient>>(connectionManager.GetHubContext<TChatMessagesHub, TChatMessagesClient>);
+        }
+
+        public virtual bool SupportNotifyChatParticipants => false;
+
+        protected IHubContext<TChatsClient> ChatsHubContext => _lazyChatsHubContext.Value;
+        protected IHubContext<TChatParticipantsClient> ChatParticipantsHubContext => _lazyChatParticipantsHubContext.Value;
+        protected IHubContext<TChatMessagesClient> ChatMessagesHubContext => _lazyChatMessagesHubContext.Value;
+
+        public virtual Task NotifyChatParticipants<TNotificationBase>(TNotificationBase notification, Guid chatId) where TNotificationBase : INotification
         {
             throw new NotImplementedException();
         }
 
-        public async Task NotifyUsers<TNotificationBase>(TNotificationBase notification, IEnumerable<Guid> userIds) where TNotificationBase : INotificationBase
+        public virtual async Task NotifyUsers<TNotificationBase>(TNotificationBase notification, IEnumerable<Guid> userIds) where TNotificationBase : INotification
         {
-            foreach (var userId in userIds)
+            var stringUserId = userIds.Select(r => r.ToString()).ToList();
+
+            await SendNotifications(notification, stringUserId);
+        }
+
+        private async Task SendNotifications<TNotificationBase>(TNotificationBase notification, List<string> stringUserId)
+            where TNotificationBase : INotification
+        {
+            if (notification is IChatsNotification)
             {
-                IClientProxy clientProxy = HubContext.Clients.User(userId.ToString());
-                await clientProxy.Invoke(GetClientMethodName(notification), notification);
+                var chatsClient = ChatsHubContext.Clients.Users(stringUserId);
+                await SendChatsNotifications(notification, chatsClient);
+            }
+
+            if (notification is IChatParticipantsNotification)
+            {
+                var chatParticipantsClient = ChatParticipantsHubContext.Clients.Users(stringUserId);
+                await SendChatParticipantsNotifications(notification, chatParticipantsClient);
+            }
+
+            if (notification is IChatMessagesNotification)
+            {
+                var chatMessagesClient = ChatMessagesHubContext.Clients.Users(stringUserId);
+                await SendChatMessagesNotifications(notification, chatMessagesClient);
             }
         }
 
-        protected virtual string TruncatedMethodSuffix => "Notification";
-
-        private string GetClientMethodName<TNotificationBase>(TNotificationBase notification)
-            where TNotificationBase : INotificationBase
+        protected virtual async Task SendChatMessagesNotifications<TNotificationBase>(TNotificationBase notification,
+            TChatMessagesClient chatMessagesClient) where TNotificationBase : INotification
         {
-            var notificationType = notification.GetType();
-            if (!string.IsNullOrEmpty(TruncatedMethodSuffix) && notificationType.Name.EndsWith(TruncatedMethodSuffix))
+            if (notification is IChatMessageAddedNotification<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo,
+                TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection,
+                TChatRefMessage, TContactMessageCollection, TContactMessage> chatMessageAddedNotification)
             {
-                return notificationType.Name.Substring(0, notificationType.Name.Length - TruncatedMethodSuffix.Length);
+                await chatMessagesClient.ChatMessageAdded(chatMessageAddedNotification);
             }
-            else
+
+            if (notification is IChatMessageEditedNotification<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo,
+                TTextMessage,
+                TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection,
+                TChatRefMessage, TContactMessageCollection, TContactMessage> chatMessageEditedNotification)
             {
-                return notificationType.Name;
+                await chatMessagesClient.ChatMessageEdited(chatMessageEditedNotification);
+            }
+
+            if (notification is IChatMessageRemovedNotification chatMessageRemovedNotification)
+            {
+                await chatMessagesClient.ChatMessageRemoved(chatMessageRemovedNotification);
+            }
+
+            if (notification is IChatMessagesReadNotification chatMessagesReadNotification)
+            {
+                await chatMessagesClient.ChatMessagesRead(chatMessagesReadNotification);
+            }
+        }
+
+        protected virtual async Task SendChatParticipantsNotifications<TNotificationBase>(TNotificationBase notification,
+            TChatParticipantsClient chatParticipantsClient) where TNotificationBase : INotification
+        {
+            if (notification is IChatParticipantAddedNotification<TChatParticipant> chatParticipantAddedNotification)
+            {
+                await chatParticipantsClient.ChatParticipantAdded(chatParticipantAddedNotification);
+            }
+
+            if (notification is IChatParticipantInvitedNotification<TChatParticipant> chatParticipantInvitedNotification)
+            {
+                await chatParticipantsClient.ChatParticipantInvited(chatParticipantInvitedNotification);
+            }
+
+            if (notification is IChatParticipantAppliedNotification<TChatParticipant> chatParticipantAppliedNotification)
+            {
+                await chatParticipantsClient.ChatParticipantApplied(chatParticipantAppliedNotification);
+            }
+
+            if (notification is IChatParticipantRemovedNotification<TChatParticipant> chatParticipantRemovedNotification)
+            {
+                await chatParticipantsClient.ChatParticipantRemoved(chatParticipantRemovedNotification);
+            }
+
+            if (notification is IChatParticipantBlockedNotification<TChatParticipant> chatParticipantBlockedNotification)
+            {
+                await chatParticipantsClient.ChatParticipantBlocked(chatParticipantBlockedNotification);
+            }
+
+            if (notification is
+                IChatParticipantsAppendedNotification<TParticipationResultCollection, TParticipationResult, TChatParticipant>
+                chatParticipantsAppendedNotification)
+            {
+                await chatParticipantsClient.ChatParticipantsAppended(chatParticipantsAppendedNotification);
+            }
+
+            if (notification is IChatParticipantTypeChangedNotification<TChatParticipant> chatParticipantTypeChangedNotification
+            )
+            {
+                await chatParticipantsClient.ChatParticipantTypeChanged(chatParticipantTypeChangedNotification);
+            }
+        }
+
+        protected virtual async Task SendChatsNotifications<TNotificationBase>(TNotificationBase notification,
+            TChatsClient chatsClient) where TNotificationBase : INotification
+        {
+            if (notification is IChatAddedNotification<TPersonalizedChat, TChatParticipantCollection, TChatParticipant>
+                chatAddedNotification)
+            {
+                await chatsClient.ChatAdded(chatAddedNotification);
+            }
+
+            if (notification is IChatInfoEditedNotification<TChatInfo> chatInfoEditedNotification)
+            {
+                await chatsClient.ChatInfoEdited(chatInfoEditedNotification);
+            }
+
+            if (notification is IChatRemovedNotification<TChatInfo> chatRemovedNotification)
+            {
+                await chatsClient.ChatRemoved(chatRemovedNotification);
             }
         }
     }

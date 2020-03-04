@@ -6,13 +6,13 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class NotificationBase: INotificationBase
+    public class Notification: INotification
     {
-        public NotificationBase()
+        public Notification()
         {
         }
 
-        public NotificationBase(Guid initiatorUserId)
+        public Notification(Guid initiatorUserId)
         {
             InitiatorUserId = initiatorUserId;
         }

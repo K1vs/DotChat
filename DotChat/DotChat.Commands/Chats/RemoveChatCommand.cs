@@ -3,7 +3,7 @@
     using System;
     using DotChat.Chats;
 
-    public class RemoveChatCommand: CommandBase, IRemoveChatCommand
+    public class RemoveChatCommand: Command, IRemoveChatCommand
     {
         public RemoveChatCommand()
         {

@@ -8,9 +8,9 @@
 
     public class EventNotificationSender: INotificationSender
     {
-        public event Action<INotificationBase, Guid> OnNotification; 
+        public event Action<INotification, Guid> OnNotification; 
 
-        public Task NotifyUsers<TNotificationBase>(TNotificationBase notification, IEnumerable<Guid> userIds) where TNotificationBase : INotificationBase
+        public Task NotifyUsers<TNotificationBase>(TNotificationBase notification, IEnumerable<Guid> userIds) where TNotificationBase : INotification
         {
             foreach (var userId in userIds)
             {
@@ -21,7 +21,7 @@
 
         public bool SupportNotifyChatParticipants => false;
 
-        public async Task NotifyChatParticipants<TNotificationBase>(TNotificationBase notification, Guid chatId) where TNotificationBase : INotificationBase
+        public async Task NotifyChatParticipants<TNotificationBase>(TNotificationBase notification, Guid chatId) where TNotificationBase : INotification
         {
             await Task.Yield();
             throw new NotImplementedException();

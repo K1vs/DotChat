@@ -8,7 +8,7 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public class AppendChatParticipantsCommand<TParticipationCandidateCollection, TParticipationCandidate>: CommandBase, IAppendChatParticipantsCommand<TParticipationCandidateCollection, TParticipationCandidate>
+    public class AppendChatParticipantsCommand<TParticipationCandidateCollection, TParticipationCandidate>: Command, IAppendChatParticipantsCommand<TParticipationCandidateCollection, TParticipationCandidate>
         where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
         where TParticipationCandidate : IParticipationCandidate
     {

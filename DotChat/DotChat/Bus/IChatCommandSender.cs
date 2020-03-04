@@ -6,6 +6,6 @@
     public interface IChatCommandSender
     {
         Task Send<TCommand>(TCommand command)
-            where TCommand : ICommandBase;
+            where TCommand : ICommand;
     }
 }

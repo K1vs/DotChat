@@ -38,13 +38,13 @@
             return _readQueueTask;
         }
 
-        public Task Send<TCommand>(TCommand command) where TCommand : ICommandBase
+        public Task Send<TCommand>(TCommand command) where TCommand : ICommand
         {
             _inMemoryQueues.WorkerQueue.Add(command);
             return Task.CompletedTask;
         }
 
-        public Task Publish<TEvent>(TEvent @event) where TEvent : IEventBase
+        public Task Publish<TEvent>(TEvent @event) where TEvent : IEvent
         {
             _inMemoryQueues.WorkerQueue.Add(@event);
             _inMemoryQueues.NotificationQueue.Add(@event);

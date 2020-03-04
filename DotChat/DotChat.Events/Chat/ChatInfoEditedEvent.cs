@@ -2,8 +2,9 @@
 {
     using System;
     using Chats;
+    using DotChat.Chats;
 
-    public class ChatInfoEditedEvent<TChatInfo>: EventBase, IChatInfoEditedEvent<TChatInfo>
+    public class ChatInfoEditedEvent<TChatInfo>: Event, IChatInfoEditedEvent<TChatInfo>
         where TChatInfo : IChatInfo
     {
         public ChatInfoEditedEvent()

@@ -8,7 +8,7 @@
     using Chats;
     using DotChat.Participants;
 
-    public class ChatParticipantsAppendedEvent<TParticipationResultCollection, TParticipationResult, TChatParticipant>: EventBase, IChatParticipantsAppendedEvent<TParticipationResultCollection, TParticipationResult, TChatParticipant>
+    public class ChatParticipantsAppendedEvent<TParticipationResultCollection, TParticipationResult, TChatParticipant>: Event, IChatParticipantsAppendedEvent<TParticipationResultCollection, TParticipationResult, TChatParticipant>
         where TParticipationResultCollection: IReadOnlyCollection<TParticipationResult>
         where TParticipationResult : IParticipationResult<TChatParticipant>
         where TChatParticipant : IChatParticipant

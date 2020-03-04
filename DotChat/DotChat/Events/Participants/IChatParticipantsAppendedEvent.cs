@@ -6,9 +6,10 @@
     using System.Text;
     using System.Threading.Tasks;
     using Chats;
+    using DotChat.Chats;
     using DotChat.Participants;
 
-    public interface IChatParticipantsAppendedEvent<out TParticipationResultCollection, out TParticipationResult, out TChatParticipant> : IEventBase, IChatRelated
+    public interface IChatParticipantsAppendedEvent<out TParticipationResultCollection, out TParticipationResult, out TChatParticipant> : IChatParticipantEvent, IChatRelated
         where TParticipationResultCollection: IReadOnlyCollection<TParticipationResult>
         where TParticipationResult : IParticipationResult<TChatParticipant>
         where TChatParticipant : IChatParticipant

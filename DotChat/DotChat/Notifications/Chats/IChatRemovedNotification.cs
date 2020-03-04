@@ -4,7 +4,7 @@
     using Events;
 
     public interface IChatRemovedNotification<out TChatInfo> 
-        : INotificationBase, IChatRelated, IHasChatInfo<TChatInfo>
+        : IChatsNotification, IChatRelated, IHasChatInfo<TChatInfo>
         where TChatInfo : IChatInfo
     {
     }
