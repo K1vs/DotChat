@@ -3,7 +3,8 @@
     using DotChat.Chats;
     using Events;
 
-    public interface IChatRemovedNotification<out TChatInfo> : INotificationBase, IChatRelated, IHasChatInfo<TChatInfo>
+    public interface IChatRemovedNotification<out TChatInfo> 
+        : INotificationBase, IChatRelated, IHasChatInfo<TChatInfo>
         where TChatInfo : IChatInfo
     {
     }

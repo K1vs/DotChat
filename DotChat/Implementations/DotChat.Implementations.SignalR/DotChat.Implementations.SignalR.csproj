@@ -58,7 +58,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DotChatHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SignalRNotificationSender.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DotChat\DotChat.csproj">
