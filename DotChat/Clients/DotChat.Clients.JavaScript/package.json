@@ -1,0 +1,27 @@
+{
+  "name": "dot-chat-client",
+  "version": "1.0.1",
+  "description": "Extensible chat framework for systems with microservice architecture. Javascript client library.",
+  "main": "dist/dot-chat-client.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "keywords": [
+    "chat",
+    "messaging",
+    "communication"
+  ],
+  "author": "K1vs",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "@babel/register": "^7.8.6",
+    "babel-loader": "^8.0.6",
+    "eslint": "^6.8.0",
+    "eslint-loader": "^3.0.3",
+    "lodash": "^4.17.15",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
+  }
+}

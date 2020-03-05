@@ -348,3 +348,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# Webpack build results
+/DotChat/Clients/DotChat.Clients.JavaScript/dist
