@@ -19,10 +19,8 @@
             TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment,
             TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter,
             TChatMessagesPagedResult, TPagingOptions>
-        : Hub, IChatMessagesService<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo,
-            TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment,
-            TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter,
-            TChatMessagesPagedResult, TPagingOptions>
+        : Hub<IChatMessagesClient<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage,
+            TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>>
         where TChatInfo : IChatInfo
         where TChatUser : IChatUser
         where TChatMessageCollection : IReadOnlyCollection<TChatMessage>
@@ -58,30 +56,32 @@
             _chatMessagesService = chatMessagesService;
         }
 
-        public async Task<TChatMessagesPagedResult> GetAll(Guid currentUserId, Guid chatId, IReadOnlyCollection<TMessageFilter> filters = default,
+        public async Task<TChatMessagesPagedResult> GetAll(Guid chatId, IReadOnlyCollection<TMessageFilter> filters = default,
             TPagingOptions pagingOptions = default)
         {
-            return await _chatMessagesService.GetAll(currentUserId, chatId, filters, pagingOptions);
+            return await _chatMessagesService.GetAll(CurrentUserId, chatId, filters, pagingOptions);
         }
 
-        public async Task Read(Guid currentUserId, Guid chatId, long index)
+        public async Task Read(Guid chatId, long index)
         {
-            await _chatMessagesService.Read(currentUserId, chatId, index);
+            await _chatMessagesService.Read(CurrentUserId, chatId, index);
         }
 
-        public async Task<Guid> Add(Guid currentUserId, Guid chatId, Guid? messageId, TChatMessageInfo messageInfo)
+        public async Task<Guid> Add(Guid chatId, Guid? messageId, TChatMessageInfo messageInfo)
         {
-            return await _chatMessagesService.Add(currentUserId, chatId, messageId, messageInfo);
+            return await _chatMessagesService.Add(CurrentUserId, chatId, messageId, messageInfo);
         }
 
-        public async Task<Guid> Edit(Guid currentUserId, Guid chatId, Guid messageId, TChatMessageInfo messageInfo, Guid? archivedMessageId)
+        public async Task<Guid> Edit(Guid chatId, Guid messageId, TChatMessageInfo messageInfo, Guid? archivedMessageId)
         {
-            return await _chatMessagesService.Edit(currentUserId, chatId, messageId, messageInfo, archivedMessageId);
+            return await _chatMessagesService.Edit(CurrentUserId, chatId, messageId, messageInfo, archivedMessageId);
         }
 
-        public async Task Remove(Guid currentUserId, Guid chatId, Guid messageId)
+        public async Task Remove(Guid chatId, Guid messageId)
         {
-            await _chatMessagesService.Remove(currentUserId, chatId, messageId);
+            await _chatMessagesService.Remove(CurrentUserId, chatId, messageId);
         }
+
+        protected virtual Guid CurrentUserId => Guid.Parse(Context.User.Identity.Name);
     }
 }

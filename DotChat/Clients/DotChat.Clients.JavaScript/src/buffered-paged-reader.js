@@ -26,7 +26,7 @@ export class BufferedPagedReader{
         return this._frame;
     }
 
-    async initialize(){
+    async init(){
         var page = await this._loadPage();
         this._buffer = page.items;
         this._bufferNextCursor = page.next;

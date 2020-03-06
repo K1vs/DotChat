@@ -18,9 +18,7 @@
     public class ChatsHub<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo,
             TChatParticipantCollection, TChatParticipant, TParticipationCandidates, TParticipationCandidateCollection, 
             TParticipationCandidate, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions>
-        : Hub, IChatsService<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat,
-            TChatInfo, TChatParticipantCollection, TChatParticipant, TParticipationCandidates, TParticipationCandidateCollection,
-            TParticipationCandidate, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions>
+        : Hub<IChatsClient<TPersonalizedChat, TChatInfo, TChatParticipantCollection, TChatParticipant>>
         where TPersonalizedChatsSummary : IPersonalizedChatsSummary
         where TPersonalizedChatCollection : IReadOnlyCollection<TPersonalizedChat>
         where TPersonalizedChat : IPersonalizedChat<TChatParticipantCollection, TChatParticipant>
@@ -49,39 +47,41 @@
             _chatsService = chatsService;
         }
 
-        public async Task<TPersonalizedChatsSummary> GetSummary(Guid currentUserId)
+        public async Task<TPersonalizedChatsSummary> GetSummary()
         {
-            return await _chatsService.GetSummary(currentUserId);
+            return await _chatsService.GetSummary(CurrentUserId);
         }
 
-        public async Task<TPagedResult> GetPage(Guid currentUserId, TChatFilter filter, TPagingOptions pagingOptions = default)
+        public async Task<TPagedResult> GetPage(TChatFilter filter, TPagingOptions pagingOptions = default)
         {
-            return await _chatsService.GetPage(currentUserId, filter, pagingOptions);
+            return await _chatsService.GetPage(CurrentUserId, filter, pagingOptions);
         }
 
-        public async Task<TPagedResult> GetPage(Guid currentUserId, TPagingOptions pagingOptions = default)
+        public async Task<TPagedResult> GetPage(TPagingOptions pagingOptions = default)
         {
-            return await _chatsService.GetPage(currentUserId, pagingOptions);
+            return await _chatsService.GetPage(CurrentUserId, pagingOptions);
         }
 
-        public async Task<TPersonalizedChat> Get(Guid currentUserId, Guid chatId)
+        public async Task<TPersonalizedChat> Get(Guid chatId)
         {
-            return await _chatsService.Get(currentUserId, chatId);
+            return await _chatsService.Get(CurrentUserId, chatId);
         }
 
-        public async Task<Guid> Add(Guid currentUserId, TChatInfo chatInfo, TParticipationCandidates participationCandidates)
+        public async Task<Guid> Add(TChatInfo chatInfo, TParticipationCandidates participationCandidates)
         {
-            return await _chatsService.Add(currentUserId, chatInfo, participationCandidates);
+            return await _chatsService.Add(CurrentUserId, chatInfo, participationCandidates);
         }
 
-        public async Task Edit(Guid currentUserId, Guid chatId, TChatInfo chatInfo)
+        public async Task Edit(Guid chatId, TChatInfo chatInfo)
         {
-            await _chatsService.Edit(currentUserId, chatId, chatInfo);
+            await _chatsService.Edit(CurrentUserId, chatId, chatInfo);
         }
 
-        public async Task Remove(Guid currentUserId, Guid chatId)
+        public async Task Remove(Guid chatId)
         {
-            await _chatsService.Remove(currentUserId, chatId);
+            await _chatsService.Remove(CurrentUserId, chatId);
         }
+
+        protected virtual Guid CurrentUserId => Guid.Parse(Context.User.Identity.Name);
     }
 }
