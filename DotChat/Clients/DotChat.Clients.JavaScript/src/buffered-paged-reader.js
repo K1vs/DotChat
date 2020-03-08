@@ -12,7 +12,7 @@ export class BufferedPagedReader{
     .keyFunction : function(item):any
     .sortKeyFunction : function(item):int
     */
-    constructor(loadPage, onFrameChanged, onClose, settings){
+    constructor(loadPage, onFrameChanged, settings){
         this._loadPage = loadPage;
         this._onFrameChanged = onFrameChanged;
         this._onClose = onClose;
@@ -33,11 +33,31 @@ export class BufferedPagedReader{
         this._bufferNextCursor = page.next;
         this._bufferPreviousCursor = page.previous; 
         this._loadPreviousCursors();
-        this._inUse = true;
+    }
+
+    aquire(){
+        if(this._disposed){
+            throw new "This buffered reader is hard closed and can not be reopened.";
+        }
+        this._refCount = this._refCount + 1;
     }
 
     release(){
-        this._inUse = false;
+        if(this._refCount > 0){
+            this._refCount = this._refCount - 1;
+        }    
+    }
+
+    get closed(){
+        return this._refCount == 0;
+    }
+
+    dispose(){
+        this._disposed = true;
+    }
+
+    get disposed(){
+        return this._disposed;
     }
 
     async next(){

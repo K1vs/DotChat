@@ -30,6 +30,7 @@
         where TPagingOptions : IPagingOptions
     {
         Task<TPagedResult> Retrieve(Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions options);
+        Task<TPagedResult> Retrieve(Guid chatId, TPagingOptions options);
         Task<TChatMessage> Retrieve(Guid chatId, Guid messageId);
     }
 }

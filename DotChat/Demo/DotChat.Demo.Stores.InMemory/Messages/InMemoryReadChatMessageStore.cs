@@ -42,6 +42,22 @@
             return new PagedResult<List<ChatMessage>, ChatMessage>(query.ToList(), skip == 0 ? null : prev.ToString(), $"{skip + take}");
         }
 
+        public async Task<PagedResult<List<ChatMessage>, ChatMessage>> Retrieve(Guid chatId, PagingOptions pagingOptions)
+        {
+            await Task.Yield();
+            IEnumerable<ChatMessage> query = Store.Messages[chatId]
+                .Values
+                .OrderByDescending(r => r.Index);
+            if (!int.TryParse(pagingOptions?.Cursor, out var skip))
+            {
+                skip = 0;
+            }
+            var take = pagingOptions?.Limit ?? ServicesConfiguration.DefaultChatsPageSize;
+            query = query.Skip(skip).Take(take);
+            var prev = Math.Max(skip - take, 0);
+            return new PagedResult<List<ChatMessage>, ChatMessage>(query.ToList(), skip == 0 ? null : prev.ToString(), $"{skip + take}");
+        }
+
         public async Task<ChatMessage> Retrieve(Guid chatId, Guid messageId)
         {
             await Task.Yield();

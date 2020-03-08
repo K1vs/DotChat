@@ -49,10 +49,17 @@
             _chatCommandSender = chatCommandSender;
         }
 
-        public async Task<TPagedResult> GetAll(Guid currentUserId, Guid chatId, IReadOnlyCollection<TMessageFilter> filters = default, TPagingOptions pagingOptions = default)
+        public async Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions pagingOptions = default)
         {
             var messagesPage = await _readChatMessageStore.Retrieve(chatId, filters, pagingOptions).ConfigureAwait(false);
             await _chatMessagesPermissionValidator.ValidateGetPage(currentUserId, chatId, filters, pagingOptions, messagesPage, ServiceName).ConfigureAwait(false);
+            return messagesPage;
+        }
+
+        public async Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, TPagingOptions pagingOptions = default)
+        {
+            var messagesPage = await _readChatMessageStore.Retrieve(chatId, pagingOptions).ConfigureAwait(false);
+            await _chatMessagesPermissionValidator.ValidateGetPage(currentUserId, chatId, pagingOptions, messagesPage, ServiceName).ConfigureAwait(false);
             return messagesPage;
         }
 

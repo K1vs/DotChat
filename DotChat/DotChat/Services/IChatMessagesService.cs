@@ -29,8 +29,8 @@
         where TPagedResult : IPagedResult<TChatMessageCollection, TChatMessage>
         where TPagingOptions : IPagingOptions
     {
-        Task<TPagedResult> GetAll(Guid currentUserId, Guid chatId, IReadOnlyCollection<TMessageFilter> filters = default, TPagingOptions pagingOptions = default);
-
+        Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions pagingOptions = default);
+        Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, TPagingOptions pagingOptions = default);
         Task Read(Guid currentUserId, Guid chatId, long index);
         Task<Guid> Add(Guid currentUserId, Guid chatId, Guid? messageId, TChatMessageInfo messageInfo);
         Task<Guid> Edit(Guid currentUserId, Guid chatId, Guid messageId, TChatMessageInfo messageInfo, Guid? archivedMessageId);

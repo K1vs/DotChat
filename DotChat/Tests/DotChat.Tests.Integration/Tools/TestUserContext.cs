@@ -60,7 +60,7 @@
         public async Task Activate(string chat)
         {
             var chatId = _chatIds[chat];
-            var messages = await _dotChat.ChatMessages.GetAll(_userId, _chatIds[chat]);
+            var messages = await _dotChat.ChatMessages.GetPage(_userId, _chatIds[chat]);
             var chatMessages = this._chatsMessages[chatId];
             chatMessages.AddRange(messages.Items);
         }

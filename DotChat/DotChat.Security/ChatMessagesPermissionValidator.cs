@@ -59,6 +59,16 @@
             }
         }
 
+        public async Task ValidateGetPage(Guid currentUserId, Guid chatId, TPagingOptions pagingOptions, TPagedResult messagesPage, string serviceName, [CallerMemberName] string methodName = null)
+        {
+            var participant = await _readChatParticipantStore.Retrieve(chatId, currentUserId);
+            if (participant == null || participant.ChatParticipantStatus != ChatParticipantStatus.Active)
+            {
+                throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Get, ErrorEntity.Message),
+                    serviceName, methodName, chatId, currentUserId);
+            }
+        }
+
         public virtual async Task ValidateRead(Guid currentUserId, Guid chatId, long index, string serviceName, string methodName = null)
         {
             var participant = await _readChatParticipantStore.Retrieve(chatId, currentUserId);
