@@ -18,7 +18,7 @@
         {
         }
 
-        public ChatMessageInfo(MessageType type, bool immutable = false, string style = null, string metadata = null, TextMessage text = default, QuoteMessage quote = default, List<MessageAttachment> messageAttachments = default, List<ChatRefMessage> chatRefs = default, List<ContactMessage> contacts = default) : base(type, immutable, style, metadata, text, quote, messageAttachments, chatRefs, contacts)
+        public ChatMessageInfo(MessageType type, long version, bool immutable = false, string style = null, string metadata = null, TextMessage text = default, QuoteMessage quote = default, List<MessageAttachment> messageAttachments = default, List<ChatRefMessage> chatRefs = default, List<ContactMessage> contacts = default) : base(type, version, immutable, style, metadata, text, quote, messageAttachments, chatRefs, contacts)
         {
         }
     }

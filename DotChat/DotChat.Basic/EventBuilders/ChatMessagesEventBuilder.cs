@@ -35,9 +35,9 @@
             return new ChatMessageEditedEvent(initiatorUserId, chatId, chatMessage);
         }
 
-        public IChatMessageRemovedEvent BuildChatMessageRemovedEvent(Guid initiatorUserId, Guid chatId, Guid chatMessageId)
+        public IChatMessageRemovedEvent BuildChatMessageRemovedEvent(Guid initiatorUserId, Guid chatId, Guid chatMessageId, long version)
         {
-            return new ChatMessageRemovedEvent(initiatorUserId, chatId, chatMessageId);
+            return new ChatMessageRemovedEvent(initiatorUserId, chatId, chatMessageId, version);
         }
 
         public IChatMessagesReadEvent BuildChatMessagesReadEvent(Guid initiatorUserId, Guid chatId, long index)

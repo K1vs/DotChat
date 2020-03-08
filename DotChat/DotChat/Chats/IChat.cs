@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using Messages;
+    using K1vs.DotChat.Common;
 
     public interface IChat<out TChatParticipantCollection, out TChatParticipant> : IChatInfo, IChatRelated, IHasParticipants<TChatParticipantCollection, TChatParticipant>
         where TChatParticipantCollection : IReadOnlyCollection<TChatParticipant>

@@ -25,9 +25,9 @@
             await Task.Yield();
             var now = DateTime.UtcNow;
             var added = toAdd.Select(r =>
-                new ChatParticipant(r.ChatParticipantType, ChatParticipantStatus.Active, now, 0, Store.Users[r.UserId]));
+                new ChatParticipant(r.ChatParticipantType, ChatParticipantStatus.Active, now, -1, 0, Store.Users[r.UserId]));
             var invited = toInvite.Select(r =>
-                new ChatParticipant(r.ChatParticipantType, ChatParticipantStatus.Active, now, 0, Store.Users[r.UserId]));
+                new ChatParticipant(r.ChatParticipantType, ChatParticipantStatus.Active, now, -1, 0, Store.Users[r.UserId]));
             var chat = new Chat(chatInfo, chatId, added.Concat(invited).ToList(), now, 0);
             Store.Chats.TryAdd(chatId, chat);
             return chat;

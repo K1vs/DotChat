@@ -12,9 +12,10 @@ export class BufferedPagedReader{
     .keyFunction : function(item):any
     .sortKeyFunction : function(item):int
     */
-    constructor(loadPage, onFrameChanged, settings){
+    constructor(loadPage, onFrameChanged, onClose, settings){
         this._loadPage = loadPage;
         this._onFrameChanged = onFrameChanged;
+        this._onClose = onClose;
         this._settings = settings;
         this._buffer = [];
         this._bufferNextCursor = null;
@@ -32,6 +33,11 @@ export class BufferedPagedReader{
         this._bufferNextCursor = page.next;
         this._bufferPreviousCursor = page.previous; 
         this._loadPreviousCursors();
+        this._inUse = true;
+    }
+
+    release(){
+        this._inUse = false;
     }
 
     async next(){
@@ -41,7 +47,7 @@ export class BufferedPagedReader{
             if(this._bufferNextCursor == null){
                 result = this._frameIndex;
             }else{
-                var loadedCount = await this._loadNextCursor();
+                var loadedCount = await this._safeLoadNextCursor();
                 frameIndex = Math.max(loadedCount + this._frameIndex - this._settings.frameSize, 0);
                 result = Math.min(loadedCount + this._frameIndex, this._settings.frameSize);
             }
@@ -50,6 +56,7 @@ export class BufferedPagedReader{
         }
         this._frameIndex = frameIndex;
         this._setFrame();
+        this._loadNextCursors();
         return result;
     }
 
@@ -61,7 +68,7 @@ export class BufferedPagedReader{
             if(this._bufferPreviousCursor == null){
                 result = maxFrameIndex - this._frameIndex;
             }else{
-                var loadedCount = await this._loadPreviousCursor();
+                var loadedCount = await this._safeLoadPreviousCursor();
                 frameIndex = Math.min(this._settings.frameSize + this._frameIndex, maxFrameIndex + loadedCount);
                 result = Math.min((maxFrameIndex - this._frameIndex) + loadedCount, this._settings.frameSize);
             }
@@ -70,6 +77,7 @@ export class BufferedPagedReader{
         }
         this._frameIndex = frameIndex;
         this._setFrame();
+        this._loadPreviousCursors();
         return result;
     }
 
@@ -86,6 +94,10 @@ export class BufferedPagedReader{
         }else{
             this.add(item);
         }
+    }
+
+    close(){
+        this._onClose();
     }
 
     _setFrame(){
@@ -106,6 +118,16 @@ export class BufferedPagedReader{
         return page.items.length;
     }
 
+    async _safeLoadNextCursor(){
+        if(this._nextPagePromise){
+            return await this._nextPagePromise;
+        }else{
+            this._nextPagePromise = this._loadNextCursor();
+            await this._nextPagePromise;
+            this._nextPagePromise = null;
+        }
+    }
+
     async _loadPreviousCursor(){
         var page = await this._loadPage(this._bufferNextCursor);
         this._bufferPreviousCursor = page.previous;
@@ -119,6 +141,16 @@ export class BufferedPagedReader{
         return page.items.length;
     }
 
+    async _safeLoadPreviousCursor(){
+        if(this._previousPagePromise){
+            return await this._previousPagePromise;
+        }else{
+            this._previousPagePromise = this._loadPreviousCursor();
+            await this._previousPagePromise;
+            this._previousPagePromise = null;
+        }
+    }
+
     _sortBuffer(){
         this._buffer.sort(function(a, b) {
             var x = this._settings.sortKeyFunction(a); 
@@ -128,8 +160,14 @@ export class BufferedPagedReader{
     }
 
     async _loadPreviousCursors(){
-        while(this._settings.minBufferSize - this._buffer.length > 0){
-            await this._loadPreviousCursor(true);
+        while(this._buffer.length < this._settings.minBufferSize){
+            await this._safeLoadPreviousCursor();
+        }
+    }
+
+    async _loadNextCursors(){
+        while(this._buffer.length < this._settings.minBufferSize){
+            await this._safeLoadNextCursor();
         }
     }
 }

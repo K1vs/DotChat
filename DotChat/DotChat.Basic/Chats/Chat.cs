@@ -13,7 +13,8 @@
         {
         }
 
-        public Chat(string name, string description, ChatPrivacyMode privacyMode, Guid chatId, List<ChatParticipant> participants, DateTime lastTimestamp, long topIndex) : base(name, description, privacyMode, chatId, participants, lastTimestamp, topIndex)
+        public Chat(string name, string description, ChatPrivacyMode privacyMode, long version, Guid chatId, List<ChatParticipant> participants, DateTime lastTimestamp, long topIndex) 
+            : base(name, description, privacyMode, version, chatId, participants, lastTimestamp, topIndex)
         {
         }
 

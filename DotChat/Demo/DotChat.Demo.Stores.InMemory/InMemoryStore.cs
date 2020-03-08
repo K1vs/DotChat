@@ -25,7 +25,7 @@
         public PersonalizedChat Personalize(Chat chat, Guid userId)
         {
             var readIndex = chat.Participants.FirstOrDefault(r => r.UserId == userId)?.ReadIndex ?? 0;
-            return new PersonalizedChat(chat.Name, chat.Description, chat.PrivacyMode, chat.ChatId, chat.Participants, chat.LastTimestamp, chat.TopIndex, readIndex, chat.TopIndex - readIndex);
+            return new PersonalizedChat(chat.Name, chat.Description, chat.PrivacyMode, chat.Version, chat.ChatId, chat.Participants, chat.LastTimestamp, chat.TopIndex, readIndex, chat.TopIndex - readIndex);
         }
 
         public readonly ConcurrentDictionary<Guid, ConcurrentDictionary<Guid, ChatMessage>> Messages = new ConcurrentDictionary<Guid, ConcurrentDictionary<Guid, ChatMessage>>();

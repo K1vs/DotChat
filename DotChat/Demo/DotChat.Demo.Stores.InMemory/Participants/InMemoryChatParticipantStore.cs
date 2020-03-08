@@ -30,7 +30,7 @@
                 var exist = participants.FirstOrDefault(r => r.UserId == chatUser.UserId);
                 if (exist == null)
                 {
-                    exist = new ChatParticipant(ChatParticipantType.ReadOnlyParticipant, participantStatus, DateTime.MinValue, -1, chatUser);
+                    exist = new ChatParticipant(ChatParticipantType.ReadOnlyParticipant, participantStatus, DateTime.MinValue, -1, 0, chatUser);
                     participants.Add(exist);
                 }
                 else
@@ -64,7 +64,7 @@
                 var exist = participants.FirstOrDefault(r => r.UserId == chatUser.UserId);
                 if (exist == null)
                 {
-                    exist = new ChatParticipant(participantType, participantStatus, DateTime.MinValue, -1, chatUser);
+                    exist = new ChatParticipant(participantType, participantStatus, DateTime.MinValue, -1, 0, chatUser);
                     participants.Add(exist);
                 }
                 else

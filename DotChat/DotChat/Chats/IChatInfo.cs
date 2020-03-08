@@ -2,7 +2,7 @@
 {
     using Common;
 
-    public interface IChatInfo: ICustomizable
+    public interface IChatInfo: ICustomizable, IVersioned
     {
         string Name { get; }
         string Description { get; }

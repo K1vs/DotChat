@@ -18,7 +18,7 @@
     {
         public IChatAddedNotification<PersonalizedChat, List<ChatParticipant>, ChatParticipant> BuildChatAddedNotification(IChatAddedEvent<Chat, List<ChatParticipant>, ChatParticipant> @event)
         {
-            var personalizedChat = new PersonalizedChat(@event.Chat.Name, @event.Chat.Description, @event.Chat.PrivacyMode, @event.Chat.ChatId, @event.Chat.Participants, @event.Chat.LastTimestamp, @event.Chat.TopIndex, 0, @event.Chat.TopIndex);
+            var personalizedChat = new PersonalizedChat(@event.Chat.Name, @event.Chat.Description, @event.Chat.PrivacyMode, @event.Chat.Version, @event.Chat.ChatId, @event.Chat.Participants, @event.Chat.LastTimestamp, @event.Chat.TopIndex, 0, @event.Chat.TopIndex);
             return new ChatAddedNotification(@event.InitiatorUserId, personalizedChat);
         }
 

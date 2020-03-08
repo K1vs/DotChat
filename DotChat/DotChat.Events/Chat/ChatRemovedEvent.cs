@@ -19,5 +19,6 @@
 
         public Guid ChatId { get; set; }
         public TChatInfo ChatInfo { get; set; }
+        public long Version { get; set; }
     }
 }

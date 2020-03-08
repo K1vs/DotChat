@@ -18,11 +18,12 @@
         {
         }
 
-        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage, MessageType type, bool immutable = false, string style = null, string metadata = null, TextMessage text = default, QuoteMessage quote = default, List<MessageAttachment> messageAttachments = default, List<ChatRefMessage> chatRefs = default, List<ContactMessage> contacts = default) : base(messageId, timestamp, index, authorId, messageStatus, originalMessage, type, immutable, style, metadata, text, quote, messageAttachments, chatRefs, contacts)
+        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage, MessageType type, long version, bool immutable = false, string style = null, string metadata = null, TextMessage text = default, QuoteMessage quote = default, List<MessageAttachment> messageAttachments = default, List<ChatRefMessage> chatRefs = default, List<ContactMessage> contacts = default)
+            : base(messageId, timestamp, index, authorId, messageStatus, originalMessage, type, version, immutable, style, metadata, text, quote, messageAttachments, chatRefs, contacts)
         {
         }
 
-        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage, 
+        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage,
             IChatMessageInfo<ChatInfo, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> messageInfo) 
             : base(messageInfo, messageId, timestamp, index, authorId, messageStatus, originalMessage)
         {

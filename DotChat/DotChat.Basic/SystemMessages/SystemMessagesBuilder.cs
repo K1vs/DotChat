@@ -29,21 +29,21 @@
 
         public virtual IReadOnlyCollection<ChatMessageInfo> BuildChatAddedMessage(IChatAddedEvent<Chat, List<ChatParticipant>, ChatParticipant> @event)
         {
-            var chatMessage = new ChatMessageInfo(MessageType.ChatRef, immutable:true, style: MessageStyle("ChatAdded"), chatRefs: new List<ChatRefMessage>() { new ChatRefMessage(@event.Chat.ChatId, @event.Chat)});
+            var chatMessage = new ChatMessageInfo(MessageType.ChatRef, 0, immutable:true, style: MessageStyle("ChatAdded"), chatRefs: new List<ChatRefMessage>() { new ChatRefMessage(@event.Chat.ChatId, @event.Chat)});
             var result = new List<ChatMessageInfo>{ chatMessage };
 
             var added = @event.Chat.Participants.Where(r => r.ChatParticipantStatus == ChatParticipantStatus.Active).ToList();
             if (added.Any())
             {
                 var addedContactMessages = added.Select(r => new ContactMessage(r)).ToList();
-                var addedMessage = new ChatMessageInfo(MessageType.Contact, immutable: true, style: MessageStyle("AddedInitialChatParticipants"), contacts: addedContactMessages);
+                var addedMessage = new ChatMessageInfo(MessageType.Contact, 0, immutable: true, style: MessageStyle("AddedInitialChatParticipants"), contacts: addedContactMessages);
                 result.Add(addedMessage);
             }
             var invited = @event.Chat.Participants.Where(r => r.ChatParticipantStatus == ChatParticipantStatus.Active).ToList();
             if (invited.Any())
             {
                 var invitedContactMessages = invited.Select(r => new ContactMessage(r)).ToList();
-                var invitedMessage = new ChatMessageInfo(MessageType.Contact, immutable:true, style: MessageStyle("InvitedInitialChatParticipants"), contacts: invitedContactMessages);
+                var invitedMessage = new ChatMessageInfo(MessageType.Contact, 0, immutable:true, style: MessageStyle("InvitedInitialChatParticipants"), contacts: invitedContactMessages);
                 result.Add(invitedMessage);
             }
 
@@ -52,7 +52,7 @@
 
         public virtual ChatMessageInfo BuildChatInfoEditedMessage(IChatInfoEditedEvent<ChatInfo> @event)
         {
-            return new ChatMessageInfo(MessageType.ChatRef, immutable: true, style: MessageStyle("ChatInfoEdited"), chatRefs : new List<ChatRefMessage>() { new ChatRefMessage(@event.ChatId, @event.ChatInfo) });
+            return new ChatMessageInfo(MessageType.ChatRef, 0, immutable: true, style: MessageStyle("ChatInfoEdited"), chatRefs : new List<ChatRefMessage>() { new ChatRefMessage(@event.ChatId, @event.ChatInfo) });
         }
 
         public virtual IReadOnlyCollection<ChatMessageInfo> BuildBulkParticipantsAppendedMessages(IChatParticipantsAppendedEvent<List<ParticipationResult>, ParticipationResult, ChatParticipant> @event)
@@ -62,14 +62,14 @@
             if (@event.Added.Any())
             {
                 var addedContactMessages = @event.Added.Select(r => new ContactMessage(r.Participant)).ToList();
-                var addedMessage = new ChatMessageInfo(MessageType.Contact, immutable: true, style: MessageStyle("ChatBulkAdded"), contacts: addedContactMessages);
+                var addedMessage = new ChatMessageInfo(MessageType.Contact, 0, immutable: true, style: MessageStyle("ChatBulkAdded"), contacts: addedContactMessages);
                 result.Add(addedMessage);
             }
 
             if (@event.Invited.Any())
             {
                 var invitedContactMessages = @event.Invited.Select(r => new ContactMessage(r.Participant)).ToList();
-                var invitedMessage = new ChatMessageInfo(MessageType.Contact, immutable: true, style: MessageStyle("ChatBulkInvited"), contacts: invitedContactMessages);
+                var invitedMessage = new ChatMessageInfo(MessageType.Contact, 0, immutable: true, style: MessageStyle("ChatBulkInvited"), contacts: invitedContactMessages);
                 result.Add(invitedMessage);
             }
 
@@ -78,32 +78,32 @@
 
         public virtual ChatMessageInfo BuildChatParticipantAddedMessage(IChatParticipantAddedEvent<ChatParticipant> @event)
         {
-            return new ChatMessageInfo(MessageType.ChatRef, style: MessageStyle("ParticipantAdded"), contacts: new List<ContactMessage>() { new ContactMessage(@event.Participant) });
+            return new ChatMessageInfo(MessageType.ChatRef, 0, style: MessageStyle("ParticipantAdded"), contacts: new List<ContactMessage>() { new ContactMessage(@event.Participant) });
         }
 
         public virtual ChatMessageInfo BuildChatParticipantAppliedMessage(IChatParticipantAppliedEvent<ChatParticipant> @event)
         {
-            return new ChatMessageInfo(MessageType.ChatRef, style: MessageStyle("ParticipantApplied"), contacts: new List<ContactMessage>() { new ContactMessage(@event.Participant) });
+            return new ChatMessageInfo(MessageType.ChatRef, 0, style: MessageStyle("ParticipantApplied"), contacts: new List<ContactMessage>() { new ContactMessage(@event.Participant) });
         }
 
         public virtual ChatMessageInfo BuildChatParticipantBlockedMessage(IChatParticipantBlockedEvent<ChatParticipant> @event)
         {
-            return new ChatMessageInfo(MessageType.ChatRef, style: MessageStyle("ParticipantBlocked"), contacts: new List<ContactMessage>() { new ContactMessage(@event.Participant) });
+            return new ChatMessageInfo(MessageType.ChatRef, 0, style: MessageStyle("ParticipantBlocked"), contacts: new List<ContactMessage>() { new ContactMessage(@event.Participant) });
         }
 
         public virtual ChatMessageInfo BuildChatParticipantInvitedMessage(IChatParticipantInvitedEvent<ChatParticipant> @event)
         {
-            return new ChatMessageInfo(MessageType.ChatRef, style: MessageStyle("ParticipantInvited"), contacts: new List<ContactMessage>() { new ContactMessage(@event.Participant) });
+            return new ChatMessageInfo(MessageType.ChatRef, 0, style: MessageStyle("ParticipantInvited"), contacts: new List<ContactMessage>() { new ContactMessage(@event.Participant) });
         }
 
         public virtual ChatMessageInfo BuildChatParticipantRemovedMessage(IChatParticipantRemovedEvent<ChatParticipant> @event)
         {
-            return new ChatMessageInfo(MessageType.ChatRef, style: MessageStyle("ParticipantInvited"), contacts: new List<ContactMessage>() { new ContactMessage(@event.Participant) });
+            return new ChatMessageInfo(MessageType.ChatRef, 0, style: MessageStyle("ParticipantInvited"), contacts: new List<ContactMessage>() { new ContactMessage(@event.Participant) });
         }
 
         public virtual ChatMessageInfo BuildParticipantTypeChangedMessage(IChatParticipantTypeChangedEvent<ChatParticipant> @event)
         {
-            return new ChatMessageInfo(MessageType.ChatRef, style: MessageStyle("ParticipantTypeChanged"), contacts: new List<ContactMessage>() { new ContactMessage(@event.Participant) });
+            return new ChatMessageInfo(MessageType.ChatRef, 0, style: MessageStyle("ParticipantTypeChanged"), contacts: new List<ContactMessage>() { new ContactMessage(@event.Participant) });
         }
     }
 }

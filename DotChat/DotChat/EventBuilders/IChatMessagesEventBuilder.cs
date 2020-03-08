@@ -26,7 +26,7 @@
         IChatMessageAddedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> BuildChatMessageAddedEvent(Guid initiatorUserId, Guid chatId, TChatMessage chatMessage);
         IChatMessageAddedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> BuildChatMessageAddedEvent(Guid initiatorUserId, Guid chatId, Guid messageId, DateTime timestamp, long index, TChatMessageInfo chatMessageInfo);
         IChatMessageEditedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> BuildChatMessageEditedEvent(Guid initiatorUserId, Guid chatId, TChatMessage chatMessage);
-        IChatMessageRemovedEvent BuildChatMessageRemovedEvent(Guid initiatorUserId, Guid chatId, Guid chatMessageId);
+        IChatMessageRemovedEvent BuildChatMessageRemovedEvent(Guid initiatorUserId, Guid chatId, Guid chatMessageId, long version);
         IChatMessagesReadEvent BuildChatMessagesReadEvent(Guid initiatorUserId, Guid chatId,  long index);
     }
 }

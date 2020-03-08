@@ -25,10 +25,11 @@
         {
         }
 
-        public ChatMessageInfo(MessageType type, bool immutable = false, string style = null, string metadata = null, 
+        public ChatMessageInfo(MessageType type, long version, bool immutable = false, string style = null, string metadata = null, 
             TTextMessage text = default, TQuoteMessage quote = default, TMessageAttachmentCollection messageAttachments = default, TChatRefMessageCollection chatRefs = default, TContactMessageCollection contacts = default)
         {
             Type = type;
+            Version = version;
             Immutable = immutable;
             Style = style;
             Metadata = metadata;
@@ -40,6 +41,7 @@
         }
 
         public MessageType Type { get; set; }
+        public long Version { get; set; }
         public bool Immutable { get; set; }
         public string Style { get; set; }
         public string Metadata { get; set; }
