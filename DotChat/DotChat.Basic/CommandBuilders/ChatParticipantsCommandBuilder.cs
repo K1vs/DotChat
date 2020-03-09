@@ -46,7 +46,7 @@
             return new BlockChatParticipantCommand(currentUserId, chatId, userId);
         }
 
-        public IAppendChatParticipantsCommand<List<ParticipationCandidate>, ParticipationCandidate> BuildAppendChatParticipantCommand(Guid currentUserId, Guid chatId,
+        public IAppendChatParticipantsCommand<List<ParticipationCandidate>, ParticipationCandidate> BuildAppendChatParticipantsCommand(Guid currentUserId, Guid chatId,
             List<ParticipationCandidate> addCandidates, List<ParticipationCandidate> inviteCandidates)
         {
             return new AppendChatParticipantsCommand(currentUserId, chatId, addCandidates, inviteCandidates);

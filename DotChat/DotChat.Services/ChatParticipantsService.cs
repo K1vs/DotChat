@@ -73,12 +73,12 @@
             await _chatCommandSender.Send(command).ConfigureAwait(false);
         }
 
-        public async Task BulkAppendChatParticipants(Guid currentUserId, Guid chatId, TParticipationCandidateCollection addCandidates,
+        public async Task Append(Guid currentUserId, Guid chatId, TParticipationCandidateCollection addCandidates,
             TParticipationCandidateCollection inviteCandidates)
         {
-            await _chatParticipantsPermissionValidator.ValidateBulkAppend(currentUserId, chatId, addCandidates, inviteCandidates, ServiceName)
+            await _chatParticipantsPermissionValidator.ValidateAppend(currentUserId, chatId, addCandidates, inviteCandidates, ServiceName)
                 .ConfigureAwait(false);
-            var command = _chatParticipantsCommandBuilder.BuildAppendChatParticipantCommand(currentUserId, chatId, addCandidates, inviteCandidates);
+            var command = _chatParticipantsCommandBuilder.BuildAppendChatParticipantsCommand(currentUserId, chatId, addCandidates, inviteCandidates);
             await _chatCommandSender.Send(command).ConfigureAwait(false);
         }
     }

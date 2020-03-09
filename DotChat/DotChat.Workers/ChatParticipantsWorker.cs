@@ -97,7 +97,7 @@
 
         public async Task Handle(IAppendChatParticipantsCommand<TParticipationCandidateCollection, TParticipationCandidate> command, IChatBusContext chatEventPublisher)
         {
-            await _chatParticipantsPermissionValidator.ValidateBulkAppend(command.InitiatorUserId, command.ChatId, command.ToAdd, command.ToInvite, WorkerName).ConfigureAwait(false);
+            await _chatParticipantsPermissionValidator.ValidateAppend(command.InitiatorUserId, command.ChatId, command.ToAdd, command.ToInvite, WorkerName).ConfigureAwait(false);
             var currentParticipants = await _chatParticipantStore.RetrieveList(command.ChatId, command.ToAdd.Concat(command.ToInvite).Select(r => r.UserId));
             var append = command.ToAdd.Concat(command.ToInvite);
             var users = await _readUserStore.Retrieve(append.Select(r => r.UserId));

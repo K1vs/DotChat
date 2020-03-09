@@ -18,6 +18,12 @@ export default () => (
                 commonjs2: 'lodash',
                 amd: 'lodash',
                 root: '_'
+            },
+            'signalr': {
+                commonjs: 'signalr',
+                commonjs2: 'signalr',
+                amd: 'signalr',
+                root: '$'
             }
         },
         module: {

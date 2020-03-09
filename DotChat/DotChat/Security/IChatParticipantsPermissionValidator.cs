@@ -17,7 +17,7 @@
         Task ValidateBlock(Guid currentUserId, Guid chatId, Guid userId, string serviceName, [CallerMemberName] string methodName = null);
         Task ValidateChangeType(Guid currentUserId, Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata, string serviceName, [CallerMemberName] string methodName = null);
 
-        Task ValidateBulkAppend(Guid currentUserId, Guid chatId,
+        Task ValidateAppend(Guid currentUserId, Guid chatId,
             TParticipationCandidateCollection addCandidates,
             TParticipationCandidateCollection inviteCandidates, 
             string serviceName, [CallerMemberName] string methodName = null);

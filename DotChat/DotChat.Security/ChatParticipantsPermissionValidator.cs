@@ -156,7 +156,7 @@
             }
         }
 
-        public virtual async Task ValidateBulkAppend(Guid currentUserId, Guid chatId, TParticipationCandidateCollection addCandidates,
+        public virtual async Task ValidateAppend(Guid currentUserId, Guid chatId, TParticipationCandidateCollection addCandidates,
             TParticipationCandidateCollection inviteCandidates, string serviceName, string methodName = null)
         {
             var participant = await _readChatParticipantStore.Retrieve(chatId, currentUserId);

@@ -15,7 +15,6 @@
         Task Remove(Guid currentUserId, Guid chatId, Guid userId);
         Task Block(Guid currentUserId, Guid chatId, Guid userId);
         Task ChangeType(Guid currentUserId, Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style = null, string metadata = null);
-
-        Task BulkAppendChatParticipants(Guid currentUserId, Guid chatId, TParticipationCandidateCollection addCandidates, TParticipationCandidateCollection inviteCandidates);
+        Task Append(Guid currentUserId, Guid chatId, TParticipationCandidateCollection addCandidates, TParticipationCandidateCollection inviteCandidates);
     }
 }

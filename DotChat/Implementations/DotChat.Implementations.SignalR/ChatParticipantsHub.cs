@@ -64,10 +64,9 @@
             await _chatParticipantsService.ChangeType(CurrentUserId, chatId, userId, chatParticipantType, style, metadata);
         }
 
-        public async Task BulkAppendChatParticipants(Guid chatId, TParticipationCandidateCollection addCandidates,
-            TParticipationCandidateCollection inviteCandidates)
+        public async Task Append(Guid chatId, TParticipationCandidateCollection addCandidates, TParticipationCandidateCollection inviteCandidates)
         {
-            await _chatParticipantsService.BulkAppendChatParticipants(CurrentUserId, chatId, addCandidates, inviteCandidates);
+            await _chatParticipantsService.Append(CurrentUserId, chatId, addCandidates, inviteCandidates);
         }
 
         protected virtual Guid CurrentUserId => Guid.Parse(Context.User.Identity.Name);

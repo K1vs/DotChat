@@ -15,7 +15,7 @@
         IRemoveChatParticipantCommand BuildRemoveChatParticipantCommand(Guid currentUserId, Guid chatId, Guid userId);
         IBlockChatParticipantCommand BuildBlockChatParticipantCommand(Guid currentUserId, Guid chatId, Guid userId);
         IChangeChatParticipantTypeCommand BuildChangeChatParticipantTypeCommand(Guid currentUserId, Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata);
-        IAppendChatParticipantsCommand<TParticipationCandidateCollection, TParticipationCandidate> BuildAppendChatParticipantCommand(Guid currentUserId, Guid chatId, TParticipationCandidateCollection addCandidates,
+        IAppendChatParticipantsCommand<TParticipationCandidateCollection, TParticipationCandidate> BuildAppendChatParticipantsCommand(Guid currentUserId, Guid chatId, TParticipationCandidateCollection addCandidates,
             TParticipationCandidateCollection inviteCandidates);
     }
 }
