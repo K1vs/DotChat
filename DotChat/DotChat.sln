@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotChat.Implementations.Sig
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{B5458590-AD1A-413D-9D0E-707A3B24AD3F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotChat.Demo.SignalR", "Demo\DotChat.Demo.SignalR\DotChat.Demo.SignalR.csproj", "{E130CB12-B5DA-4FD8-BE69-0C0615588354}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +133,10 @@ Global
 		{6C546BAA-E06D-4F7E-BC2B-DFD8BAA9521C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C546BAA-E06D-4F7E-BC2B-DFD8BAA9521C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C546BAA-E06D-4F7E-BC2B-DFD8BAA9521C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E130CB12-B5DA-4FD8-BE69-0C0615588354}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E130CB12-B5DA-4FD8-BE69-0C0615588354}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E130CB12-B5DA-4FD8-BE69-0C0615588354}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E130CB12-B5DA-4FD8-BE69-0C0615588354}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -142,6 +148,7 @@ Global
 		{00593972-1D91-4A35-B80A-C63ECF22973C} = {33655B48-9001-4904-8995-6A3B916DCECF}
 		{79F549BC-8D77-47C2-BFE2-89B80E18591B} = {EDB74A82-07EB-43A3-928B-7D3C724F2AD2}
 		{6C546BAA-E06D-4F7E-BC2B-DFD8BAA9521C} = {EDB74A82-07EB-43A3-928B-7D3C724F2AD2}
+		{E130CB12-B5DA-4FD8-BE69-0C0615588354} = {6B76A79F-B638-4BA4-BCC2-BE05CC906C93}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A131F489-4334-43C7-A428-B4E92AE72797}

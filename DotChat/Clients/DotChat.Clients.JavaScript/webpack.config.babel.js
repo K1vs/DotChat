@@ -3,14 +3,14 @@ const path = require('path');
 export default () => (
     {
         mode: 'production',
-        entry: './src/dot-chat-client.js',
+        entry: ['babel-polyfill', './src/dot-chat-client.js'],
         output: {
             path: path.resolve(__dirname, './dist'),
             filename: 'dot-chat-client.js',
             libraryTarget: 'umd',
             libraryExport: 'default',
             globalObject: 'this',
-            library: 'dotChatClient'
+            library: 'DotChatClient'
         },
         externals: {
             'lodash': {

@@ -10,7 +10,7 @@ export default () => (
             libraryTarget: 'umd',
             libraryExport: 'default',
             globalObject: 'this',
-            library: 'dotChatSignalR'
+            library: 'DotChatSignalRConnector'
         },
         externals: {
             'lodash': {

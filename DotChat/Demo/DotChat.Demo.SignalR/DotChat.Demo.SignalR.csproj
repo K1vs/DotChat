@@ -1,0 +1,514 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E130CB12-B5DA-4FD8-BE69-0C0615588354}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DotChat.Demo.SignalR</RootNamespace>
+    <AssemblyName>DotChat.Demo.SignalR</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.SignalR.Core.2.4.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.4.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.FileSystems, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.FileSystems.4.1.0\lib\net45\Microsoft.Owin.FileSystems.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.Host.SystemWeb.4.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.StaticFiles, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.StaticFiles.4.1.0\lib\net45\Microsoft.Owin.StaticFiles.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Client\dot-chat-client.js" />
+    <Content Include="Client\dot-chat-signalr.js" />
+    <Content Include="Client\Index.html" />
+    <Content Include="Client\node_modules\bootstrap\dist\css\bootstrap-grid.css" />
+    <Content Include="Client\node_modules\bootstrap\dist\css\bootstrap-grid.min.css" />
+    <Content Include="Client\node_modules\bootstrap\dist\css\bootstrap-reboot.css" />
+    <Content Include="Client\node_modules\bootstrap\dist\css\bootstrap-reboot.min.css" />
+    <Content Include="Client\node_modules\bootstrap\dist\css\bootstrap.css" />
+    <Content Include="Client\node_modules\bootstrap\dist\css\bootstrap.min.css" />
+    <Content Include="Client\node_modules\bootstrap\dist\js\bootstrap.bundle.js" />
+    <Content Include="Client\node_modules\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <Content Include="Client\node_modules\bootstrap\dist\js\bootstrap.js" />
+    <Content Include="Client\node_modules\bootstrap\dist\js\bootstrap.min.js" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\alert.js" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\button.js" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\carousel.js" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\collapse.js" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\dropdown.js" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\index.js" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\modal.js" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\popover.js" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\scrollspy.js" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\tab.js" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\toast.js" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\tooltip.js" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\util.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\alert.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\button.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\carousel.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\collapse.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\dropdown.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\index.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\modal.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\popover.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\scrollspy.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\tab.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\toast.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\tools\sanitizer.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\tooltip.js" />
+    <Content Include="Client\node_modules\bootstrap\js\src\util.js" />
+    <Content Include="Client\node_modules\jquery\AUTHORS.txt" />
+    <Content Include="Client\node_modules\jquery\dist\core.js" />
+    <Content Include="Client\node_modules\jquery\dist\jquery.js" />
+    <Content Include="Client\node_modules\jquery\dist\jquery.min.js" />
+    <Content Include="Client\node_modules\jquery\dist\jquery.slim.js" />
+    <Content Include="Client\node_modules\jquery\dist\jquery.slim.min.js" />
+    <Content Include="Client\node_modules\jquery\external\sizzle\dist\sizzle.js" />
+    <Content Include="Client\node_modules\jquery\external\sizzle\dist\sizzle.min.js" />
+    <Content Include="Client\node_modules\jquery\external\sizzle\LICENSE.txt" />
+    <Content Include="Client\node_modules\jquery\LICENSE.txt" />
+    <Content Include="Client\node_modules\jquery\src\ajax.js" />
+    <Content Include="Client\node_modules\jquery\src\ajax\jsonp.js" />
+    <Content Include="Client\node_modules\jquery\src\ajax\load.js" />
+    <Content Include="Client\node_modules\jquery\src\ajax\parseXML.js" />
+    <Content Include="Client\node_modules\jquery\src\ajax\script.js" />
+    <Content Include="Client\node_modules\jquery\src\ajax\var\location.js" />
+    <Content Include="Client\node_modules\jquery\src\ajax\var\nonce.js" />
+    <Content Include="Client\node_modules\jquery\src\ajax\var\rquery.js" />
+    <Content Include="Client\node_modules\jquery\src\ajax\xhr.js" />
+    <Content Include="Client\node_modules\jquery\src\attributes.js" />
+    <Content Include="Client\node_modules\jquery\src\attributes\attr.js" />
+    <Content Include="Client\node_modules\jquery\src\attributes\classes.js" />
+    <Content Include="Client\node_modules\jquery\src\attributes\prop.js" />
+    <Content Include="Client\node_modules\jquery\src\attributes\support.js" />
+    <Content Include="Client\node_modules\jquery\src\attributes\val.js" />
+    <Content Include="Client\node_modules\jquery\src\callbacks.js" />
+    <Content Include="Client\node_modules\jquery\src\core.js" />
+    <Content Include="Client\node_modules\jquery\src\core\access.js" />
+    <Content Include="Client\node_modules\jquery\src\core\camelCase.js" />
+    <Content Include="Client\node_modules\jquery\src\core\DOMEval.js" />
+    <Content Include="Client\node_modules\jquery\src\core\init.js" />
+    <Content Include="Client\node_modules\jquery\src\core\isAttached.js" />
+    <Content Include="Client\node_modules\jquery\src\core\nodeName.js" />
+    <Content Include="Client\node_modules\jquery\src\core\parseHTML.js" />
+    <Content Include="Client\node_modules\jquery\src\core\ready-no-deferred.js" />
+    <Content Include="Client\node_modules\jquery\src\core\ready.js" />
+    <Content Include="Client\node_modules\jquery\src\core\readyException.js" />
+    <Content Include="Client\node_modules\jquery\src\core\stripAndCollapse.js" />
+    <Content Include="Client\node_modules\jquery\src\core\support.js" />
+    <Content Include="Client\node_modules\jquery\src\core\toType.js" />
+    <Content Include="Client\node_modules\jquery\src\core\var\rsingleTag.js" />
+    <Content Include="Client\node_modules\jquery\src\css.js" />
+    <Content Include="Client\node_modules\jquery\src\css\addGetHookIf.js" />
+    <Content Include="Client\node_modules\jquery\src\css\adjustCSS.js" />
+    <Content Include="Client\node_modules\jquery\src\css\curCSS.js" />
+    <Content Include="Client\node_modules\jquery\src\css\finalPropName.js" />
+    <Content Include="Client\node_modules\jquery\src\css\hiddenVisibleSelectors.js" />
+    <Content Include="Client\node_modules\jquery\src\css\showHide.js" />
+    <Content Include="Client\node_modules\jquery\src\css\support.js" />
+    <Content Include="Client\node_modules\jquery\src\css\var\cssExpand.js" />
+    <Content Include="Client\node_modules\jquery\src\css\var\getStyles.js" />
+    <Content Include="Client\node_modules\jquery\src\css\var\isHiddenWithinTree.js" />
+    <Content Include="Client\node_modules\jquery\src\css\var\rboxStyle.js" />
+    <Content Include="Client\node_modules\jquery\src\css\var\rnumnonpx.js" />
+    <Content Include="Client\node_modules\jquery\src\css\var\swap.js" />
+    <Content Include="Client\node_modules\jquery\src\data.js" />
+    <Content Include="Client\node_modules\jquery\src\data\Data.js" />
+    <Content Include="Client\node_modules\jquery\src\data\var\acceptData.js" />
+    <Content Include="Client\node_modules\jquery\src\data\var\dataPriv.js" />
+    <Content Include="Client\node_modules\jquery\src\data\var\dataUser.js" />
+    <Content Include="Client\node_modules\jquery\src\deferred.js" />
+    <Content Include="Client\node_modules\jquery\src\deferred\exceptionHook.js" />
+    <Content Include="Client\node_modules\jquery\src\deprecated.js" />
+    <Content Include="Client\node_modules\jquery\src\dimensions.js" />
+    <Content Include="Client\node_modules\jquery\src\effects.js" />
+    <Content Include="Client\node_modules\jquery\src\effects\animatedSelector.js" />
+    <Content Include="Client\node_modules\jquery\src\effects\Tween.js" />
+    <Content Include="Client\node_modules\jquery\src\event.js" />
+    <Content Include="Client\node_modules\jquery\src\event\ajax.js" />
+    <Content Include="Client\node_modules\jquery\src\event\alias.js" />
+    <Content Include="Client\node_modules\jquery\src\event\focusin.js" />
+    <Content Include="Client\node_modules\jquery\src\event\support.js" />
+    <Content Include="Client\node_modules\jquery\src\event\trigger.js" />
+    <Content Include="Client\node_modules\jquery\src\exports\amd.js" />
+    <Content Include="Client\node_modules\jquery\src\exports\global.js" />
+    <Content Include="Client\node_modules\jquery\src\jquery.js" />
+    <Content Include="Client\node_modules\jquery\src\manipulation.js" />
+    <Content Include="Client\node_modules\jquery\src\manipulation\buildFragment.js" />
+    <Content Include="Client\node_modules\jquery\src\manipulation\getAll.js" />
+    <Content Include="Client\node_modules\jquery\src\manipulation\setGlobalEval.js" />
+    <Content Include="Client\node_modules\jquery\src\manipulation\support.js" />
+    <Content Include="Client\node_modules\jquery\src\manipulation\var\rscriptType.js" />
+    <Content Include="Client\node_modules\jquery\src\manipulation\var\rtagName.js" />
+    <Content Include="Client\node_modules\jquery\src\manipulation\wrapMap.js" />
+    <Content Include="Client\node_modules\jquery\src\manipulation\_evalUrl.js" />
+    <Content Include="Client\node_modules\jquery\src\offset.js" />
+    <Content Include="Client\node_modules\jquery\src\queue.js" />
+    <Content Include="Client\node_modules\jquery\src\queue\delay.js" />
+    <Content Include="Client\node_modules\jquery\src\selector-native.js" />
+    <Content Include="Client\node_modules\jquery\src\selector-sizzle.js" />
+    <Content Include="Client\node_modules\jquery\src\selector.js" />
+    <Content Include="Client\node_modules\jquery\src\serialize.js" />
+    <Content Include="Client\node_modules\jquery\src\traversing.js" />
+    <Content Include="Client\node_modules\jquery\src\traversing\findFilter.js" />
+    <Content Include="Client\node_modules\jquery\src\traversing\var\dir.js" />
+    <Content Include="Client\node_modules\jquery\src\traversing\var\rneedsContext.js" />
+    <Content Include="Client\node_modules\jquery\src\traversing\var\siblings.js" />
+    <Content Include="Client\node_modules\jquery\src\var\arr.js" />
+    <Content Include="Client\node_modules\jquery\src\var\class2type.js" />
+    <Content Include="Client\node_modules\jquery\src\var\concat.js" />
+    <Content Include="Client\node_modules\jquery\src\var\document.js" />
+    <Content Include="Client\node_modules\jquery\src\var\documentElement.js" />
+    <Content Include="Client\node_modules\jquery\src\var\fnToString.js" />
+    <Content Include="Client\node_modules\jquery\src\var\getProto.js" />
+    <Content Include="Client\node_modules\jquery\src\var\hasOwn.js" />
+    <Content Include="Client\node_modules\jquery\src\var\indexOf.js" />
+    <Content Include="Client\node_modules\jquery\src\var\isFunction.js" />
+    <Content Include="Client\node_modules\jquery\src\var\isWindow.js" />
+    <Content Include="Client\node_modules\jquery\src\var\ObjectFunctionString.js" />
+    <Content Include="Client\node_modules\jquery\src\var\pnum.js" />
+    <Content Include="Client\node_modules\jquery\src\var\push.js" />
+    <Content Include="Client\node_modules\jquery\src\var\rcheckableType.js" />
+    <Content Include="Client\node_modules\jquery\src\var\rcssNum.js" />
+    <Content Include="Client\node_modules\jquery\src\var\rnothtmlwhite.js" />
+    <Content Include="Client\node_modules\jquery\src\var\slice.js" />
+    <Content Include="Client\node_modules\jquery\src\var\support.js" />
+    <Content Include="Client\node_modules\jquery\src\var\toString.js" />
+    <Content Include="Client\node_modules\jquery\src\wrap.js" />
+    <Content Include="Client\node_modules\signalr\jquery.signalR.js" />
+    <Content Include="Client\node_modules\signalr\jquery.signalR.min.js" />
+    <Content Include="Client\script.js" />
+    <Content Include="Client\style.css" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Hubs\ChatsHub.cs" />
+    <Compile Include="Modules\TestChatNotificationModule.cs" />
+    <Compile Include="Modules\TestChatServiceModule.cs" />
+    <Compile Include="Modules\TestChatWorkerModule.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Client\node_modules\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <Content Include="Client\node_modules\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <Content Include="Client\node_modules\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <Content Include="Client\node_modules\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <Content Include="Client\node_modules\bootstrap\dist\css\bootstrap.css.map" />
+    <Content Include="Client\node_modules\bootstrap\dist\css\bootstrap.min.css.map" />
+    <Content Include="Client\node_modules\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <Content Include="Client\node_modules\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <Content Include="Client\node_modules\bootstrap\dist\js\bootstrap.js.map" />
+    <Content Include="Client\node_modules\bootstrap\dist\js\bootstrap.min.js.map" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\alert.js.map" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\button.js.map" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\carousel.js.map" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\collapse.js.map" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\dropdown.js.map" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\index.js.map" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\modal.js.map" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\popover.js.map" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\scrollspy.js.map" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\tab.js.map" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\toast.js.map" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\tooltip.js.map" />
+    <Content Include="Client\node_modules\bootstrap\js\dist\util.js.map" />
+    <Content Include="Client\node_modules\bootstrap\LICENSE" />
+    <Content Include="Client\node_modules\bootstrap\package.json" />
+    <Content Include="Client\node_modules\bootstrap\README.md" />
+    <Content Include="Client\node_modules\bootstrap\scss\bootstrap-grid.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\bootstrap-reboot.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\bootstrap.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_alert.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_background-variant.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_badge.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_border-radius.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_box-shadow.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_breakpoints.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_buttons.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_caret.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_clearfix.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_deprecate.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_float.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_forms.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_gradients.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_grid-framework.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_grid.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_hover.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_image.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_list-group.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_lists.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_nav-divider.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_pagination.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_reset-text.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_resize.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_screen-reader.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_size.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_table-row.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_text-emphasis.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_text-hide.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_text-truncate.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_transition.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\mixins\_visibility.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_align.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_background.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_borders.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_clearfix.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_display.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_embed.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_flex.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_float.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_overflow.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_position.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_screenreaders.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_shadows.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_sizing.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_spacing.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_stretched-link.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_text.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\utilities\_visibility.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\vendor\_rfs.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_alert.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_badge.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_breadcrumb.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_button-group.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_buttons.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_card.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_carousel.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_close.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_code.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_custom-forms.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_dropdown.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_forms.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_functions.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_grid.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_images.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_input-group.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_jumbotron.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_list-group.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_media.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_mixins.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_modal.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_nav.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_navbar.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_pagination.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_popover.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_print.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_progress.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_reboot.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_root.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_spinners.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_tables.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_toasts.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_tooltip.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_transitions.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_type.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_utilities.scss" />
+    <Content Include="Client\node_modules\bootstrap\scss\_variables.scss" />
+    <Content Include="Client\node_modules\jquery\bower.json" />
+    <Content Include="Client\node_modules\jquery\dist\jquery.min.map" />
+    <Content Include="Client\node_modules\jquery\dist\jquery.slim.min.map" />
+    <Content Include="Client\node_modules\jquery\external\sizzle\dist\sizzle.min.map" />
+    <Content Include="Client\node_modules\jquery\package.json" />
+    <Content Include="Client\node_modules\jquery\README.md" />
+    <Content Include="Client\node_modules\jquery\src\.eslintrc.json" />
+    <Content Include="Client\node_modules\signalr\LICENSE.md" />
+    <Content Include="Client\node_modules\signalr\package.json" />
+    <Content Include="Client\node_modules\signalr\README.md" />
+    <None Include="packages.config" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\DotChat.Basic\DotChat.Basic.csproj">
+      <Project>{406835e3-eafd-40aa-a5bd-142eb94286b2}</Project>
+      <Name>DotChat.Basic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DotChat.Commands\DotChat.Commands.csproj">
+      <Project>{88071eca-8a29-4952-91db-f833d869b77b}</Project>
+      <Name>DotChat.Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DotChat.Common\DotChat.Common.csproj">
+      <Project>{b7f20bbf-450a-4d35-a9dc-2357ddb125e4}</Project>
+      <Name>DotChat.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DotChat.Events\DotChat.Events.csproj">
+      <Project>{14493ed1-6041-4dbe-b64a-cc1a8e96a68d}</Project>
+      <Name>DotChat.Events</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DotChat.FrameworkUtils\DotChat.FrameworkUtils.csproj">
+      <Project>{2d5ec196-c438-4def-99ff-5ccfa76001b8}</Project>
+      <Name>DotChat.FrameworkUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DotChat.Models\DotChat.Models.csproj">
+      <Project>{4566dc55-99b2-4ae3-a554-2a929c4794c2}</Project>
+      <Name>DotChat.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DotChat.Modules\DotChat.Modules.csproj">
+      <Project>{659ccebb-e507-44db-9e42-e56d196d82bb}</Project>
+      <Name>DotChat.Modules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DotChat.Notifications\DotChat.Notifications.csproj">
+      <Project>{5be540cc-599e-4777-b83f-dbb073193ecf}</Project>
+      <Name>DotChat.Notifications</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DotChat.Notifiers\DotChat.Notifiers.csproj">
+      <Project>{b4cf3d02-67d8-423e-87cf-3d0606c9430a}</Project>
+      <Name>DotChat.Notifiers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DotChat.Security\DotChat.Security.csproj">
+      <Project>{ed6841eb-1cf2-4b0c-9a0d-abcbdadbfd27}</Project>
+      <Name>DotChat.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DotChat.Services\DotChat.Services.csproj">
+      <Project>{1fc179dc-f529-40df-ab80-4486956658eb}</Project>
+      <Name>DotChat.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DotChat.Workers\DotChat.Workers.csproj">
+      <Project>{5d55e06e-c4f0-47c8-a090-13a47b43c41f}</Project>
+      <Name>DotChat.Workers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DotChat\DotChat.csproj">
+      <Project>{8f0d45bf-6ae3-44d6-b326-73d773dd130c}</Project>
+      <Name>DotChat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Implementations\DotChat.Implementations.DependencyCore\DotChat.Implementations.DependencyCore.csproj">
+      <Project>{79f549bc-8d77-47c2-bfe2-89b80e18591b}</Project>
+      <Name>DotChat.Implementations.DependencyCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Implementations\DotChat.Implementations.SignalR\DotChat.Implementations.SignalR.csproj">
+      <Project>{6c546baa-e06d-4f7e-bc2b-dfd8baa9521c}</Project>
+      <Name>DotChat.Implementations.SignalR</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DotChat.Demo.Bus.InMemory\DotChat.Demo.Bus.InMemory.csproj">
+      <Project>{e2d29766-1064-4d27-a122-6126c39294ab}</Project>
+      <Name>DotChat.Demo.Bus.InMemory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DotChat.Demo.Others\DotChat.Demo.Others.csproj">
+      <Project>{791e1a75-ecca-471c-bbf2-566cf1c48fd4}</Project>
+      <Name>DotChat.Demo.Others</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DotChat.Demo.Stores.InMemory\DotChat.Demo.Stores.InMemory.csproj">
+      <Project>{5ec5ded9-a5be-422d-bca0-bcb8f535a51a}</Project>
+      <Name>DotChat.Demo.Stores.InMemory</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>51441</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:51396/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

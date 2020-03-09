@@ -74,7 +74,10 @@
 
         public virtual void Register(IDependencyRegistrar registrar, bool rootModule)
         {
-            _chatServiceModule.Register(registrar, false);
+            if(_chatServiceModule != null)
+            {
+                _chatServiceModule.Register(registrar, false);
+            }
             RegisterChatWorkersConfiguration(registrar).Build();
             RegisterChatMessageTimestampGenerator(registrar).Build();
             RegisterChatMessageIndexGenerator(registrar).Build();

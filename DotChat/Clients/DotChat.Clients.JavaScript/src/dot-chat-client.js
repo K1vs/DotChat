@@ -2,12 +2,12 @@ import _ from 'lodash';
 import {BufferedPagedReader} from './buffered-paged-reader';
 import {ChatParticipantStatus} from './enums/participant-status';
 import {MessageStatus} from './enums/message-status';
+import {dotChatSettings} from './settings/dot-chat-settings';
 
-export class DotChatClient{
+export default class DotChatClient{
     /*
     connector
     callbacks
-    .onFrameChanged
     settings
     .chatsSettings
     ..maxNamedReaders: number 
@@ -23,11 +23,11 @@ export class DotChatClient{
     ..maxBufferSize: number
     ..minBufferSize: number
     */
-    constructor(userId, connector, callbacks, settings){
+    constructor(userId, connector, settings, callbacks){
         this._userId = userId;
         this._connector = connector;
         this._callbacks = callbacks;
-        this._settings = settings;
+        this._settings = _.merge({}, dotChatSettings, settings);
         this._chatsReaders = {
             default: null,
             named: {}
@@ -43,6 +43,7 @@ export class DotChatClient{
     async init(){
         await this._connector.start();
         this._summary = await this._connector.chats.getSummary();
+        return this.summary;
     }
 
     getChatsReader(onChatsFrameChanged, name, filter){
@@ -82,7 +83,7 @@ export class DotChatClient{
         return reader;
     }
 
-    getMessagesReader(chatId, onChatsFrameChanged, name, filter){
+    getMessagesReader(chatId, onMessagesFrameChanged, name, filter){
         if(!name && filter){
             throw 'Name is required for filtered message reader';
         }
@@ -114,7 +115,7 @@ export class DotChatClient{
         var loadPage = filter ? 
             ((cursor) => this._connector.messages.getPage(filter, createPageOptions(cursor))): 
             ((cursor) => this._connector.messages.getPage(createPageOptions(cursor)));
-        var reader = BufferedPagedReader(loadPage, frame => onChatsFrameChanged(frame), this._settings.chatsSettings);
+        var reader = BufferedPagedReader(loadPage, frame => onMessagesFrameChanged(frame), this._settings.chatsSettings);
         if(name){
             chatMessagesReaders.named[name] = {
                 reader: reader,
@@ -199,7 +200,7 @@ export class DotChatClient{
     async readMessage(chatId, index){
         await this._connector.messages.read(chatId, index);
         this._getChats(chatId).forEach(chat => {
-            var exist = chat.partcipants.find(r => r.userId === this._userId);
+            var exist = chat.participants.find(r => r.userId === this._userId);
             if(exist){
                 exist.readIndex = index;
             }
@@ -251,7 +252,7 @@ export class DotChatClient{
             catch(error) {
                 chat = {
                     chatId: chatId,
-                    partcipants: []
+                    participants: []
                 };
             }
             var readers = this._getChatReaders();
@@ -261,8 +262,18 @@ export class DotChatClient{
         return chats;
     }
 
+    _callCallback(name, notification){
+        if(this._callbacks){
+            var callback = this._callbacks[name];
+            if(callback){
+                callback(notification);
+            }
+        }
+    }
+
     _registerChatsNotifications(){
         this._connector.chats.chatAdded = (notification) => {
+            this._callCallback('chatAdded', notification);
             if(this._chatsReaders.default){
                 this._chatsReaders.default.addOrUpdate(notification.personalizedChat.chatId, notification.personalizedChat,
                     (exist) => _.assign(exist, notification.personalizedChat));
@@ -276,6 +287,7 @@ export class DotChatClient{
         };
 
         this._connector.chats.chatInfoEdited = (notification) => {
+            this._callCallback('chatInfoEdited', notification);
             if(this._chatsReaders.default){
                 this._chatsReaders.default.update(notification.chatId, (exist) => _.merge(exist, notification.chatInfo));
             }
@@ -285,6 +297,7 @@ export class DotChatClient{
         };
 
         this._connector.chats.chatRemoved = (notification) => {
+            this._callCallback('chatRemoved', notification);
             if(this._chatsReaders.default){
                 this._chatsReaders.default.update(notification.chatId, (exist) => exist.removed = true);
             }
@@ -296,7 +309,7 @@ export class DotChatClient{
 
     _registerChatParticipantsNotifications(){
         var addOrUpdateParticipant = (participant, chat) => {
-            var exist = chat.partcipants.find(r => r.userId === participant.userId);
+            var exist = chat.participants.find(r => r.userId === participant.userId);
             if(exist){
                 if(exist.version < participant.version){
                     _.assign(exist, participant);
@@ -304,7 +317,7 @@ export class DotChatClient{
                     return;
                 }
             }else{
-                chat.partcipants.push(participant);
+                chat.participants.push(participant);
             }
             if(this._userId === participant.userId){
                 chat.lost = participant.chatParticipantStatus === ChatParticipantStatus.removed || 
@@ -312,37 +325,44 @@ export class DotChatClient{
             }
         };
 
-        this._connector.partcipants.chatParticipantAdded = async (notification) => {
+        this._connector.participants.chatParticipantAdded = async (notification) => {
+            this._callCallback('chatParticipantAdded', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
-        this._connector.partcipants.chatParticipantApplied = async (notification) => {
+        this._connector.participants.chatParticipantApplied = async (notification) => {
+            this._callCallback('chatParticipantApplied', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
-        this._connector.partcipants.chatParticipantInvited = async (notification) => {
+        this._connector.participants.chatParticipantInvited = async (notification) => {
+            this._callCallback('chatParticipantInvited', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
-        this._connector.partcipants.chatParticipantTypeChanged = async (notification) => {
+        this._connector.participants.chatParticipantTypeChanged = async (notification) => {
+            this._callCallback('chatParticipantTypeChanged', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
         
-        this._connector.partcipants.ChatParticipantRemoved = async (notification) => {
+        this._connector.participants.chatParticipantRemoved = async (notification) => {
+            this._callCallback('chatParticipantRemoved', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
         
-        this._connector.partcipants.ChatParticipantBlocked = async (notification) => {
+        this._connector.participants.chatParticipantBlocked = async (notification) => {
+            this._callCallback('chatParticipantBlocked', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
-        this._connector.partcipants.chatParticipantsAppended = async (notification) => {
+        this._connector.participants.chatParticipantsAppended = async (notification) => {
+            this._callCallback('chatParticipantsAppended', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             notification.added.concat(notification.invited).forEach(participant => {
                 chats.forEach(r => addOrUpdateParticipant(participant, r));
@@ -363,26 +383,30 @@ export class DotChatClient{
 
     _registerChatMessagesNotifications(){
         this._connector.messages.chatMessageAdded = (notification) => {
+            this._callCallback('chatMessageAdded', notification);
             var readers = this._getChatMessageReaders(notification.chatId);
             readers.forEach(reader => {
                 reader.addOrUpdate(notification.message.messageId, notification.message, (exist) => _.assign(exist, notification.message));
             });
         };
         this._connector.messages.chatMessageEdited = (notification) => {
+            this._callCallback('chatMessageEdited', notification);
             var readers = this._getChatMessageReaders(notification.chatId);
             readers.forEach(reader => {
                 reader.addOrUpdate(notification.message.messageId, notification.message, (exist) => _.assign(exist, notification.message));
             });
         };
         this._connector.messages.chatMessageRemoved = (notification) => {
+            this._callCallback('chatMessageRemoved', notification);
             var readers = this._getChatMessageReaders(notification.chatId);
             readers.forEach(reader => {
                 reader.addOrUpdate(notification.message.messageId, notification.message, (exist) => _.assign(exist, notification.message));
             });
         };
         this._connector.messages.chatMessagesRead = async (notification) => {
+            this._callCallback('chatMessagesRead', notification);
             var participants = await this._getChatsWithLoad(notification.chatId)
-                .map(chat => chat.partcipants.find(p => p.userId === notification.initiatorUserId))
+                .map(chat => chat.participants.find(p => p.userId === notification.initiatorUserId))
                 .filter(r => r);
             participants.forEach(p => p.readIndex = notification.index);
         };
