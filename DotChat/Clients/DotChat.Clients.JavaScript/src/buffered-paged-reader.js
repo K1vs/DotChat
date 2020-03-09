@@ -15,7 +15,6 @@ export class BufferedPagedReader{
     constructor(loadPage, onFrameChanged, settings){
         this._loadPage = loadPage;
         this._onFrameChanged = onFrameChanged;
-        this._onClose = onClose;
         this._settings = settings;
         this._buffer = [];
         this._bufferNextCursor = null;
@@ -37,7 +36,7 @@ export class BufferedPagedReader{
 
     aquire(){
         if(this._disposed){
-            throw new "This buffered reader is hard closed and can not be reopened.";
+            throw new 'This buffered reader is hard closed and can not be reopened.';
         }
         this._refCount = this._refCount + 1;
     }
@@ -118,10 +117,10 @@ export class BufferedPagedReader{
         }
     }
 
-    update(key, updateFunc){
+    update(key, newVersion, updateFunc){
         var exist = _.find(this._buffer, (i) => _.isEqual(this._settings.keyFunction(i), key));
         if(exist){
-            if(exist.version < item.version){
+            if(exist.version < newVersion){
                 updateFunc(exist);
             }
         }
