@@ -72,9 +72,9 @@
             return await _chatsService.Add(CurrentUserId, chatInfo, participationCandidates);
         }
 
-        public async Task Edit(Guid chatId, TChatInfo chatInfo)
+        public async Task EditInfo(Guid chatId, TChatInfo chatInfo)
         {
-            await _chatsService.Edit(CurrentUserId, chatId, chatInfo);
+            await _chatsService.EditInfo(CurrentUserId, chatId, chatInfo);
         }
 
         public async Task Remove(Guid chatId)

@@ -16,22 +16,21 @@
         public IAddChatParticipantCommand BuildAddChatParticipantCommand(Guid currentUserId, Guid chatId, Guid userId,
             ChatParticipantType chatParticipantType, string style, string metadata)
         {
-            return new AddChatParticipantCommand(currentUserId, chatId, userId, chatParticipantType);
+            return new AddChatParticipantCommand(currentUserId, chatId, userId, chatParticipantType, style, metadata);
         }
 
         public IApplyToChatCommand BuildApplyToChatCommand(Guid currentUserId, Guid chatId, ChatParticipantType chatParticipantType, string style, string metadata)
         {
-            return new ApplyToChatCommand(currentUserId, chatId, chatParticipantType);
+            return new ApplyToChatCommand(currentUserId, chatId, chatParticipantType, style, metadata);
         }
 
         public IInviteChatParticipantCommand BuildInviteChatParticipantCommand(Guid currentUserId, Guid chatId, Guid userId,
             ChatParticipantType chatParticipantType, string style, string metadata)
         {
-            return new InviteChatParticipantCommand(currentUserId, chatId, userId, chatParticipantType);
+            return new InviteChatParticipantCommand(currentUserId, chatId, userId, chatParticipantType, style, metadata);
         }
 
-        public IRemoveChatParticipantCommand BuildRemoveChatParticipantCommand(Guid currentUserId, Guid chatId, Guid userId,
-            ChatParticipantType chatParticipantType)
+        public IRemoveChatParticipantCommand BuildRemoveChatParticipantCommand(Guid currentUserId, Guid chatId, Guid userId)
         {
             return new RemoveChatParticipantCommand(currentUserId, chatId, userId);
         }
@@ -39,11 +38,10 @@
         public IChangeChatParticipantTypeCommand BuildChangeChatParticipantTypeCommand(Guid currentUserId, Guid chatId, Guid userId,
             ChatParticipantType chatParticipantType, string style, string metadata)
         {
-            return new ChangeChatParticipantTypeCommand(currentUserId, chatId, userId, chatParticipantType);
+            return new ChangeChatParticipantTypeCommand(currentUserId, chatId, userId, chatParticipantType, style, metadata);
         }
 
-        public IBlockChatParticipantCommand BuildBlockChatParticipantCommand(Guid currentUserId, Guid chatId, Guid userId,
-            ChatParticipantType chatParticipantType)
+        public IBlockChatParticipantCommand BuildBlockChatParticipantCommand(Guid currentUserId, Guid chatId, Guid userId)
         {
             return new BlockChatParticipantCommand(currentUserId, chatId, userId);
         }

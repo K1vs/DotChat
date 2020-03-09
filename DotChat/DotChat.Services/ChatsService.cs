@@ -80,7 +80,7 @@
             return command.ChatId;
         }
 
-        public async Task Edit(Guid currentUserId, Guid chatId, TChatInfo chatInfo)
+        public async Task EditInfo(Guid currentUserId, Guid chatId, TChatInfo chatInfo)
         {
             await _chatsPermissionValidator.ValidateEditInfo(currentUserId, chatId, chatInfo, ServiceName).ConfigureAwait(false);
             var command = _chatsCommandBuilder.BuildEditChatCommand(currentUserId, chatId, chatInfo);

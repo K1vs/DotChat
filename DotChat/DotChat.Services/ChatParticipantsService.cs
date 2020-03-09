@@ -49,19 +49,19 @@
             await _chatCommandSender.Send(command).ConfigureAwait(false);
         }
 
-        public async Task Remove(Guid currentUserId, Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style = null, string metadata = null)
+        public async Task Remove(Guid currentUserId, Guid chatId, Guid userId)
         {
             await _chatParticipantsPermissionValidator.ValidateRemove(currentUserId, chatId, userId, ServiceName)
                 .ConfigureAwait(false);
-            var command = _chatParticipantsCommandBuilder.BuildRemoveChatParticipantCommand(currentUserId, chatId, userId, chatParticipantType);
+            var command = _chatParticipantsCommandBuilder.BuildRemoveChatParticipantCommand(currentUserId, chatId, userId);
             await _chatCommandSender.Send(command).ConfigureAwait(false);
         }
 
-        public async Task Block(Guid currentUserId, Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style = null, string metadata = null)
+        public async Task Block(Guid currentUserId, Guid chatId, Guid userId)
         {
             await _chatParticipantsPermissionValidator.ValidateBlock(currentUserId, chatId, userId, ServiceName)
                 .ConfigureAwait(false);
-            var command = _chatParticipantsCommandBuilder.BuildBlockChatParticipantCommand(currentUserId, chatId, userId, chatParticipantType);
+            var command = _chatParticipantsCommandBuilder.BuildBlockChatParticipantCommand(currentUserId, chatId, userId);
             await _chatCommandSender.Send(command).ConfigureAwait(false);
         }
 

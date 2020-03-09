@@ -31,7 +31,7 @@
         Task<TPagedResult> GetPage(Guid currentUserId, TPagingOptions pagingOptions = default);
         Task<TPersonalizedChat> Get(Guid currentUserId, Guid chatId);
         Task<Guid> Add(Guid currentUserId, TChatInfo chatInfo, TParticipationCandidates participationCandidates);
-        Task Edit(Guid currentUserId, Guid chatId, TChatInfo chatInfo);
+        Task EditInfo(Guid currentUserId, Guid chatId, TChatInfo chatInfo);
         Task Remove(Guid currentUserId, Guid chatId);
     }
 }

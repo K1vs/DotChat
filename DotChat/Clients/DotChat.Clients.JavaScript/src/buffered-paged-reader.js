@@ -101,18 +101,29 @@ export class BufferedPagedReader{
         return result;
     }
 
-    add(item){
-        var index = _.sortedLastIndexBy(this._buffer, item, this._settings.sortKeyFunction);
-        this._buffer.splice(index, 0, item);
-        this._setFrame();
+    get(id){
+        return this._buffer.find(r => this._settings.keyFunction(r) === id);
     }
 
-    edit(item){
-        var exist = _.find(this._buffer, (i) => _.isEqual(this._settings.keyFunction(i), this._settings.keyFunction(item)));
+    addOrUpdate(key, item, updateFunc){
+        var exist = _.find(this._buffer, (i) => _.isEqual(this._settings.keyFunction(i), key));
         if(exist){
-            _.assign(exist, item);
+            if(exist.version < item.version){
+                updateFunc(exist);
+            }
         }else{
-            this.add(item);
+            var index = _.sortedLastIndexBy(this._buffer, item, this._settings.sortKeyFunction);
+            this._buffer.splice(index, 0, item);
+            this._setFrame();
+        }
+    }
+
+    update(key, updateFunc){
+        var exist = _.find(this._buffer, (i) => _.isEqual(this._settings.keyFunction(i), key));
+        if(exist){
+            if(exist.version < item.version){
+                updateFunc(exist);
+            }
         }
     }
 

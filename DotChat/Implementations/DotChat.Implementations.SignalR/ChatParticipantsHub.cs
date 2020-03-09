@@ -48,16 +48,14 @@
             await _chatParticipantsService.Apply(CurrentUserId, chatId, chatParticipantType, style, metadata);
         }
 
-        public async Task Remove(Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style = null,
-            string metadata = null)
+        public async Task Remove(Guid chatId, Guid userId)
         {
-            await _chatParticipantsService.Remove(CurrentUserId, chatId, userId, chatParticipantType, style, metadata);
+            await _chatParticipantsService.Remove(CurrentUserId, chatId, userId);
         }
 
-        public async Task Block(Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style = null,
-            string metadata = null)
+        public async Task Block(Guid chatId, Guid userId)
         {
-            await _chatParticipantsService.Block(CurrentUserId, chatId, userId, chatParticipantType, style, metadata);
+            await _chatParticipantsService.Block(CurrentUserId, chatId, userId);
         }
 
         public async Task ChangeType(Guid chatId, Guid userId, ChatParticipantType chatParticipantType,
