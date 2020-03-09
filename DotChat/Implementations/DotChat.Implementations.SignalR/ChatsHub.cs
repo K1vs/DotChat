@@ -15,10 +15,11 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class ChatsHub<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo,
+    public class ChatsHub<TChatsClient, TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo,
             TChatParticipantCollection, TChatParticipant, TParticipationCandidates, TParticipationCandidateCollection, 
             TParticipationCandidate, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions>
-        : Hub<IChatsClient<TPersonalizedChat, TChatInfo, TChatParticipantCollection, TChatParticipant>>
+        : Hub<TChatsClient>
+        where TChatsClient: class, IChatsClient<TPersonalizedChat, TChatInfo, TChatParticipantCollection, TChatParticipant>
         where TPersonalizedChatsSummary : IPersonalizedChatsSummary
         where TPersonalizedChatCollection : IReadOnlyCollection<TPersonalizedChat>
         where TPersonalizedChat : IPersonalizedChat<TChatParticipantCollection, TChatParticipant>

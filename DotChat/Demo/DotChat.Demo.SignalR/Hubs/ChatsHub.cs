@@ -10,14 +10,16 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web;
+    using Clients;
+    using Services;
 
-    public class ChatsHub : ChatsHub<PersonalizedChatsSummary, List<PersonalizedChat>, PersonalizedChat, Chat, ChatInfo,
+    public class ChatsHub : ChatsHub<IChatsClient, PersonalizedChatsSummary, List<PersonalizedChat>, PersonalizedChat, Chat, ChatInfo,
             List<ChatParticipant>, ChatParticipant, ParticipationCandidates<List<ParticipationCandidate>, ParticipationCandidate>, List<ParticipationCandidate>,
             ParticipationCandidate, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions>
     {
-        public ChatsHub()
+        public ChatsHub(IChatsService<PersonalizedChatsSummary, List<PersonalizedChat>, PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ParticipationCandidates<List<ParticipationCandidate>, ParticipationCandidate>, List<ParticipationCandidate>, ParticipationCandidate, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions> chatsService) 
+            : base(chatsService)
         {
-
         }
     }
 }

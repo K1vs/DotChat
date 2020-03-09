@@ -2,9 +2,6 @@
 {
     using Basic.Configuration;
     using Basic.Modules;
-    using Demo.Bus.InMemory;
-    using Demo.Others;
-    using Demo.Stores.InMemory;
     using Dependency;
     using K1vs.DotChat.Basic.Chats;
     using K1vs.DotChat.Basic.Messages;
@@ -16,6 +13,8 @@
     using K1vs.DotChat.Models.Participants;
     using Notifiers;
     using System.Collections.Generic;
+    using Clients;
+    using Hubs;
 
     public class TestChatNotificationModule: ChatNotificationModule
     {
@@ -25,7 +24,7 @@
 
         public override IDependencyRegistrationBuilder<INotificationSender> RegisterNotificationSender(IDependencyRegistrar registrar)
         {
-            return registrar.Register<SignalRNotificationSender<ChatsHub, IChatsClient<PersonalizedChat, ChatInfo, List<ChatParticipant>, ChatParticipant>, ChatParticipantsHub, IChatParticipantsClient, ChatMessagesHub, IChatMessagesClient, PersonalizedChat,
+            return registrar.Register<SignalRNotificationSender<ChatsHub, IChatsClient, ChatParticipantsHub, IChatParticipantsClient, ChatMessagesHub, IChatMessagesClient, PersonalizedChat,
                 ChatInfo, List<ParticipationResult>, ParticipationResult, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessage, ChatMessageInfo, TextMessage,
                 QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>>()
                 .AsSelf()

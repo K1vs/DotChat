@@ -15,12 +15,13 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class ChatMessagesHub<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo,
+    public class ChatMessagesHub<TChatMessagesClient, TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo,
             TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment,
             TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter,
             TChatMessagesPagedResult, TPagingOptions>
-        : Hub<IChatMessagesClient<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage,
-            TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>>
+        : Hub<TChatMessagesClient>
+        where TChatMessagesClient: class, IChatMessagesClient<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage,
+        TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
         where TChatInfo : IChatInfo
         where TChatUser : IChatUser
         where TChatMessageCollection : IReadOnlyCollection<TChatMessage>

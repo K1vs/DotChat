@@ -15,8 +15,9 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class ChatParticipantsHub<TParticipationResultCollection, TParticipationResult, TChatParticipant, TParticipationCandidateCollection, TParticipationCandidate>
-        : Hub<IChatParticipantsClient<TParticipationResultCollection, TParticipationResult, TChatParticipant>>
+    public class ChatParticipantsHub<TChatParticipantsClient, TParticipationResultCollection, TParticipationResult, TChatParticipant, TParticipationCandidateCollection, TParticipationCandidate>
+        : Hub<TChatParticipantsClient>
+        where TChatParticipantsClient: class, IChatParticipantsClient<TParticipationResultCollection, TParticipationResult, TChatParticipant>
         where TParticipationResultCollection : IReadOnlyCollection<TParticipationResult>
         where TParticipationResult : IParticipationResult<TChatParticipant>
         where TChatParticipant : IChatParticipant
