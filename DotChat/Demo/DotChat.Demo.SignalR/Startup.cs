@@ -15,20 +15,8 @@ namespace K1vs.DotChat.Demo.SignalR
     {
         public void Configuration(IAppBuilder app)
         {
-            string root = AppDomain.CurrentDomain.BaseDirectory;
-            var physicalFileSystem = new PhysicalFileSystem(Path.Combine(root, "wwwroot"));
-
-            var fileServerOptions = new FileServerOptions
-            {
-                EnableDefaultFiles = true,
-                FileSystem = physicalFileSystem,
-                EnableDirectoryBrowsing = true
-            };
-
-            fileServerOptions.StaticFileOptions.ServeUnknownFileTypes = true;
-            app.UseFileServer(fileServerOptions);
-
-
+            app.UseStaticFiles("/wwwroot");
+            app.MapSignalR();
         }
     }
 }
