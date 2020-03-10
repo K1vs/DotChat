@@ -40,7 +40,7 @@ namespace K1vs.DotChat.Demo.SignalR
 
     public class Startup
     {
-        public IReadOnlyCollection<ChatUser> Users = new List<ChatUser>
+        public IReadOnlyList<ChatUser> Users = new List<ChatUser>
         {
             new ChatUser(Guid.Parse("99C10789-D258-4093-93ED-7DE74A81E3FA"), "A"),
             new ChatUser(Guid.Parse("3C38BD03-6B08-41DC-8EE1-3074F36193A0"), "B"),
@@ -117,20 +117,21 @@ namespace K1vs.DotChat.Demo.SignalR
 
             var dotChat = container.Resolve<IDotChat>();
 
-            dotChat.Chats.Add(Users.First().UserId, new ChatInfo
+            dotChat.Chats.Add(Users[0].UserId, new ChatInfo
             {
                 Name = "TestChat"
             }, new Basic.Participants.ParticipationCandidates(new List<ParticipationCandidate> {
-                new ParticipationCandidate(Users.First().UserId, Participants.ChatParticipantType.Admin)
+                new ParticipationCandidate(Users[0].UserId, Participants.ChatParticipantType.Admin)
             }, new List<ParticipationCandidate> { })).Wait();
 
             Task.Delay(TimeSpan.FromSeconds(10))
                 .ContinueWith((t) =>
-                dotChat.Chats.Add(Users.First().UserId, new ChatInfo
+                dotChat.Chats.Add(Users[0].UserId, new ChatInfo
             {
                 Name = "TestChat2"
             }, new Basic.Participants.ParticipationCandidates(new List<ParticipationCandidate> {
-                new ParticipationCandidate(Users.First().UserId, Participants.ChatParticipantType.Admin)
+                new ParticipationCandidate(Users[0].UserId, Participants.ChatParticipantType.Admin),
+                new ParticipationCandidate(Users[1].UserId, Participants.ChatParticipantType.Admin)
             }, new List<ParticipationCandidate> { })));
 
             config.Resolver = new AutofacDependencyResolver(container);
