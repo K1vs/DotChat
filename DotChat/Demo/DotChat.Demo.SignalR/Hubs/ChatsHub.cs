@@ -12,13 +12,13 @@
     using System.Web;
     using Clients;
     using Services;
+    using K1vs.DotChat.Basic.Participants;
 
     public class ChatsHub : ChatsHub<IChatsClient, PersonalizedChatsSummary, List<PersonalizedChat>, PersonalizedChat, Chat, ChatInfo,
-            List<ChatParticipant>, ChatParticipant, ParticipationCandidates<List<ParticipationCandidate>, ParticipationCandidate>, List<ParticipationCandidate>,
+            List<ChatParticipant>, ChatParticipant, ParticipationCandidates, List<ParticipationCandidate>,
             ParticipationCandidate, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions>
     {
-        public ChatsHub(IChatsService<PersonalizedChatsSummary, List<PersonalizedChat>, PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ParticipationCandidates<List<ParticipationCandidate>, ParticipationCandidate>, List<ParticipationCandidate>, ParticipationCandidate, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions> chatsService) 
-            : base(chatsService)
+        public ChatsHub(IChatsService<PersonalizedChatsSummary, List<PersonalizedChat>, PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ParticipationCandidates, List<ParticipationCandidate>, ParticipationCandidate, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions> chatsService) : base(chatsService)
         {
         }
     }

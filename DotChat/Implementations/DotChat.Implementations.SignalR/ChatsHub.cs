@@ -15,7 +15,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class ChatsHub<TChatsClient, TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo,
+    public abstract class ChatsHub<TChatsClient, TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo,
             TChatParticipantCollection, TChatParticipant, TParticipationCandidates, TParticipationCandidateCollection, 
             TParticipationCandidate, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions>
         : Hub<TChatsClient>

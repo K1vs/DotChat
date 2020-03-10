@@ -1,6 +1,6 @@
 import {createProxyHelper} from './helper.js';
 export let createParticipantsConnector = function(connection, participantsHubName){
-    var participantsHubProxy = connection.createHubProxy(participantsHubName || 'participantsHub');
+    var participantsHubProxy = connection.createHubProxy(participantsHubName || 'chatParticipantsHub');
     var result = {};
     var helper = createProxyHelper(participantsHubProxy, result);
 

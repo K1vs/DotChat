@@ -4,6 +4,7 @@ export default () => (
     {
         mode: 'production',
         entry: './src/dot-chat-signalr.js',
+        devtool: 'source-map',
         output: {
             path: path.resolve(__dirname, './dist'),
             filename: 'dot-chat-signalr.js',

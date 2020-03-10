@@ -19,6 +19,7 @@
         }
 
         public IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>(TImplementation implementation)
+            where TImplementation : class
         {
             return new DependencyRegistrationBuilder<TImplementation>(_serviceCollection, implementation);
         }

@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>K1vs.DotChat.Implementations.Autofac</RootNamespace>
+    <Version>1.1.0</Version>
+    <Authors>K1vs</Authors>
+    <Description>Extensible chat framework for systems with microservice architecture. DotChat.Dependency implementation via Autofac.</Description>
+    <Copyright>2020 K1vs</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/K1vs/DotChat</PackageProjectUrl>
+    <PackageIcon>DotChatLogo.png</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/K1vs/DotChat</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>chat, messaging, communication</PackageTags>
+    <PackageReleaseNotes>The initial version. Use in production only after full testing.</PackageReleaseNotes>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="5.1.2" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="..\..\..\DotChatLogo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\DotChat\DotChat.csproj" />
+  </ItemGroup>
+
+</Project>

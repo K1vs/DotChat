@@ -9,7 +9,7 @@
     public interface IDependencyRegistrar
     {
         IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>();
-        IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>(TImplementation implementation);
+        IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>(TImplementation implementation) where TImplementation : class;
         IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>(Func<IDependencyResolver, TImplementation> factory);
     }
 }

@@ -4,6 +4,7 @@ export default () => (
     {
         mode: 'production',
         entry: ['babel-polyfill', './src/dot-chat-client.js'],
+        devtool: 'source-map',
         output: {
             path: path.resolve(__dirname, './dist'),
             filename: 'dot-chat-client.js',

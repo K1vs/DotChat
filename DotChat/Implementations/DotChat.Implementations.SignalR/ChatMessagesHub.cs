@@ -15,7 +15,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class ChatMessagesHub<TChatMessagesClient, TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo,
+    public abstract class ChatMessagesHub<TChatMessagesClient, TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo,
             TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment,
             TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter,
             TChatMessagesPagedResult, TPagingOptions>
