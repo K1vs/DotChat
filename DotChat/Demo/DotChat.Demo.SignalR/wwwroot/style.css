@@ -25,3 +25,6 @@ html, body, .container-fluid{
 .participants-box{
     background-color: azure;
 }
+.active{
+    border: solid;
+}

@@ -286,7 +286,9 @@
     <Compile Include="Modules\TestChatServiceModule.cs" />
     <Compile Include="Modules\TestChatWorkerModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SignalRContractResolver.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="UserIdProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="wwwroot\node_modules\bootstrap\dist\css\bootstrap-grid.css.map" />

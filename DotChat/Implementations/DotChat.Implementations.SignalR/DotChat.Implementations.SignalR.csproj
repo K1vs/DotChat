@@ -61,9 +61,11 @@
     <Compile Include="ChatParticipantsHub.cs" />
     <Compile Include="ChatMessagesHub.cs" />
     <Compile Include="ChatsHub.cs" />
+    <Compile Include="ConnectionManagerAccessor.cs" />
     <Compile Include="IChatMessagesClient.cs" />
     <Compile Include="IChatParticipantsClient.cs" />
     <Compile Include="IChatsClient.cs" />
+    <Compile Include="IConnectionManagerAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignalRNotificationSender.cs" />
   </ItemGroup>

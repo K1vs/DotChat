@@ -30,6 +30,13 @@ namespace K1vs.DotChat.Demo.SignalR
     using K1vs.DotChat.Models.Chats;
     using K1vs.DotChat.Demo.Stores.InMemory.Chats;
     using K1vs.DotChat.Stores.Chats;
+    using System.Security.Claims;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
+    using Microsoft.AspNet.SignalR.Infrastructure;
+    using K1vs.DotChat.Basic;
+    using System.Threading.Tasks;
+    using K1vs.DotChat.Implementations.SignalR;
 
     public class Startup
     {
@@ -45,6 +52,18 @@ namespace K1vs.DotChat.Demo.SignalR
         public void Configuration(IAppBuilder app)
         {
             app.UseStaticFiles("/wwwroot");
+
+            app.Use((context, next) =>
+            {
+                var userId = context.Request.Query.Get("userId");
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    context.Authentication.User = new ClaimsPrincipal(new List<ClaimsIdentity>() { 
+                        new ClaimsIdentity(new List<Claim>{new Claim("name", userId) }, "Demo", "name", "role")
+                    });
+                }
+                return next.Invoke();
+            });
 
             var builder = new ContainerBuilder();
             IContainer container = null;
@@ -68,26 +87,51 @@ namespace K1vs.DotChat.Demo.SignalR
             var queue = new InMemoryQueues();
             var store = new InMemoryStore(Users);
             var bus = new InMemoryBus(queue, r => r.WorkerQueue, type => container?.Resolve(type), workerHandlers.Concat(notificationHandlers));
+            var busTask = bus.Start();
+
+            app.Use((context, next) =>
+            {
+                if (busTask.IsFaulted)
+                {
+                    throw busTask.Exception;
+                }               
+                return next.Invoke();
+            });
 
             builder.RegisterDotChat(new TestChatWorkerModule(bus, store));
             builder.RegisterDotChat(new TestChatNotificationModule());
 
+            var settings = new JsonSerializerSettings();
+            settings.ContractResolver = new SignalRContractResolver();
+            var serializer = JsonSerializer.Create(settings);
+            builder.RegisterInstance(serializer).As<JsonSerializer>();
+
+            builder.RegisterType<UserIdProvider>().As<IUserIdProvider>().SingleInstance();
+
             var config = new HubConfiguration();
+            config.EnableDetailedErrors = true;
             builder.RegisterHubs(Assembly.GetExecutingAssembly());
+            builder.Register<IConnectionManagerAccessor>(r => new ConnectionManagerAccessor(config.Resolver.Resolve<IConnectionManager>()));
 
             container = builder.Build();
 
-//            try
-//            {
-//                var t = container.Resolve<IChatsService<PersonalizedChatsSummary, List<PersonalizedChat>, PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ParticipationCandidates, List<ParticipationCandidate>, ParticipationCandidate, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions>>();
-//                var test = container.Resolve<IChatsService<PersonalizedChatsSummary, List<PersonalizedChat>, PersonalizedChat, Chat, ChatInfo,
-//List<ChatParticipant>, ChatParticipant, ParticipationCandidates<List<ParticipationCandidate>, ParticipationCandidate>, List<ParticipationCandidate>,
-//ParticipationCandidate, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions>>();
-//            }
-//            catch(Exception ex)
-//            {
-//                var a = ex;
-//            }
+            var dotChat = container.Resolve<IDotChat>();
+
+            dotChat.Chats.Add(Users.First().UserId, new ChatInfo
+            {
+                Name = "TestChat"
+            }, new Basic.Participants.ParticipationCandidates(new List<ParticipationCandidate> {
+                new ParticipationCandidate(Users.First().UserId, Participants.ChatParticipantType.Admin)
+            }, new List<ParticipationCandidate> { })).Wait();
+
+            Task.Delay(TimeSpan.FromSeconds(10))
+                .ContinueWith((t) =>
+                dotChat.Chats.Add(Users.First().UserId, new ChatInfo
+            {
+                Name = "TestChat2"
+            }, new Basic.Participants.ParticipationCandidates(new List<ParticipationCandidate> {
+                new ParticipationCandidate(Users.First().UserId, Participants.ChatParticipantType.Admin)
+            }, new List<ParticipationCandidate> { })));
 
             config.Resolver = new AutofacDependencyResolver(container);
 

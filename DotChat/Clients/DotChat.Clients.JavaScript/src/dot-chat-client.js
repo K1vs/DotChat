@@ -6,6 +6,7 @@ import {dotChatSettings} from './settings/dot-chat-settings';
 
 export default class DotChatClient{
     /*
+    userId
     connector
     callbacks
     settings
@@ -46,19 +47,17 @@ export default class DotChatClient{
         return this.summary;
     }
 
-    getChatsReader(onChatsFrameChanged, name, filter){
+    getChatsReader(name, filter){
         if(!name && filter){
             throw 'Name is required for filtered chat reader';
         }
         if(name){
             var existedNamed = this._chatsReaders.named[name];
             if(existedNamed){
-                existedNamed.reader.aquire();
                 return existedNamed.reader;
             }
-        }else if(this._chatsReader.default) {
-            this._chatsReader.default.aquire();
-            return this._chatsReader.default;
+        }else if(this._chatsReaders.default) {
+            return this._chatsReaders.default;
         }
         if(this._chatsReaders.named.length > this._settings.chatsSettings.maxNamedReaders){
             _.remove(this._chatsReaders.named, r => r.closed).forEach(removed => removed.dispose());
@@ -70,20 +69,19 @@ export default class DotChatClient{
         var loadPage = filter ? 
             ((cursor) => this._connector.chats.getPage(filter, createPageOptions(cursor))): 
             ((cursor) => this._connector.chats.getPage(createPageOptions(cursor)));
-        var reader = BufferedPagedReader(loadPage, frame => onChatsFrameChanged(frame), this._settings.chatsSettings);
+        var reader = new BufferedPagedReader(loadPage, this._settings.chatsSettings);
         if(name){
             this._chatsReaders.named[name] = {
                 reader: reader,
                 filter: filter
             };
         }else{
-            this._chatsReader.default = reader;
+            this._chatsReaders.default = reader;
         }
-        reader.aquire();
         return reader;
     }
 
-    getMessagesReader(chatId, onMessagesFrameChanged, name, filter){
+    getMessagesReader(chatId, name, filter){
         if(!name && filter){
             throw 'Name is required for filtered message reader';
         }
@@ -92,11 +90,9 @@ export default class DotChatClient{
             if(name){
                 var existedNamedReader = chatMessagesReaders.named[name];
                 if(existedNamedReader){
-                    existedNamedReader.aquire();
                     return existedNamedReader;
                 }
             }else if(chatMessagesReaders.default) {
-                chatMessagesReaders.default.aquire();
                 return chatMessagesReaders.default;
             }
         }else{
@@ -115,7 +111,7 @@ export default class DotChatClient{
         var loadPage = filter ? 
             ((cursor) => this._connector.messages.getPage(filter, createPageOptions(cursor))): 
             ((cursor) => this._connector.messages.getPage(createPageOptions(cursor)));
-        var reader = BufferedPagedReader(loadPage, frame => onMessagesFrameChanged(frame), this._settings.chatsSettings);
+        var reader = new BufferedPagedReader(loadPage, this._settings.chatsSettings);
         if(name){
             chatMessagesReaders.named[name] = {
                 reader: reader,
@@ -124,7 +120,6 @@ export default class DotChatClient{
         }else{
             chatMessagesReaders.default = reader;
         }
-        reader.aquire();
         return reader;
     }
 

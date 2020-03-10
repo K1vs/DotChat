@@ -4,7 +4,6 @@ export class BufferedPagedReader{
 
     /*
     loadPage: function(cursor)
-    onFrameChanged: function(items)
     settings
     .frameSize: number
     .maxBufferSize: number
@@ -12,9 +11,9 @@ export class BufferedPagedReader{
     .keyFunction : function(item):any
     .sortKeyFunction : function(item):int
     */
-    constructor(loadPage, onFrameChanged, settings){
+    constructor(loadPage, settings){
         this._loadPage = loadPage;
-        this._onFrameChanged = onFrameChanged;
+        this._onFrameChanged = [];
         this._settings = settings;
         this._buffer = [];
         this._bufferNextCursor = null;
@@ -22,26 +21,31 @@ export class BufferedPagedReader{
         this._frameIndex = 0;
     }
 
-    get frame(){
-        return this._frame;
-    }
-
-    async init(){
-        var page = await this._loadPage();
-        this._buffer = page.items;
-        this._bufferNextCursor = page.next;
-        this._bufferPreviousCursor = page.previous; 
-        this._loadPreviousCursors();
-    }
-
-    aquire(){
-        if(this._disposed){
-            throw new 'This buffered reader is hard closed and can not be reopened.';
+    async open(){
+        if(!this._openPromise){
+            this._openPromise = this._open();
         }
-        this._refCount = this._refCount + 1;
+        await this._openPromise;
     }
 
-    release(){
+    get opened(){
+        return this._opened;
+    }
+
+    aquire(onFrameChanged){
+        if(this.disposed){
+            throw new 'This buffered reader is disposed and can not be aquired.';
+        }
+        this._onFrameChanged.push(onFrameChanged);
+        this._refCount = this._refCount + 1;
+        return () => this.release(onFrameChanged);
+    }
+
+    release(onFrameChanged){
+        const index = this._onFrameChanged.indexOf(onFrameChanged);
+        if (index > -1) {
+            this._onFrameChanged.splice(index, 1);
+          }
         if(this._refCount > 0){
             this._refCount = this._refCount - 1;
         }    
@@ -57,6 +61,10 @@ export class BufferedPagedReader{
 
     get disposed(){
         return this._disposed;
+    }
+
+    get current(){
+        return this._frame;
     }
 
     async next(){
@@ -126,13 +134,22 @@ export class BufferedPagedReader{
         }
     }
 
-    close(){
-        this._onClose();
+    async _open(){
+        this._opened = true;
+        var page = await this._loadPage();
+        this._buffer = page.items;
+        this._bufferNextCursor = page.next;
+        this._bufferPreviousCursor = page.previous;
+        this._setFrame();
+        this._loadPreviousCursors();
     }
 
     _setFrame(){
         var frame = this._buffer.slice(-this._frameIndex - this._settings.frameSize, this._frameIndex === 0 ? undefined : - this._frameIndex);
-        this._onFrameChanged(frame);
+        this._frame = frame;
+        if(!this.closed){
+            this._onFrameChanged.forEach(onFrameChanged => onFrameChanged(frame));
+        }
     }
 
     async _loadNextCursor(){
@@ -153,8 +170,9 @@ export class BufferedPagedReader{
             return await this._nextPagePromise;
         }else{
             this._nextPagePromise = this._loadNextCursor();
-            await this._nextPagePromise;
+            var result = await this._nextPagePromise;
             this._nextPagePromise = null;
+            return result;
         }
     }
 
@@ -176,8 +194,9 @@ export class BufferedPagedReader{
             return await this._previousPagePromise;
         }else{
             this._previousPagePromise = this._loadPreviousCursor();
-            await this._previousPagePromise;
+            var result = await this._previousPagePromise;
             this._previousPagePromise = null;
+            return result;
         }
     }
 
@@ -191,13 +210,17 @@ export class BufferedPagedReader{
 
     async _loadPreviousCursors(){
         while(this._buffer.length < this._settings.minBufferSize){
-            await this._safeLoadPreviousCursor();
+            if(await this._safeLoadPreviousCursor() === 0){
+                break;
+            }
         }
     }
 
     async _loadNextCursors(){
         while(this._buffer.length < this._settings.minBufferSize){
-            await this._safeLoadNextCursor();
+            if(await this._safeLoadNextCursor() === 0){
+                break;
+            }
         }
     }
 }

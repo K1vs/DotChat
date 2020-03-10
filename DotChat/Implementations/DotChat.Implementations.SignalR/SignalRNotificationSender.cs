@@ -58,8 +58,9 @@
 
         private readonly Lazy<IHubContext<TChatMessagesClient>> _lazyChatMessagesHubContext;
 
-        public SignalRNotificationSender(IConnectionManager connectionManager)
+        public SignalRNotificationSender(IConnectionManagerAccessor connectionManagerAccessor)
         {
+            var connectionManager = connectionManagerAccessor.ConnectionManager;
             _lazyChatsHubContext = new Lazy<IHubContext<TChatsClient>>(connectionManager.GetHubContext<TChatsHub, TChatsClient>);
             _lazyChatParticipantsHubContext = new Lazy<IHubContext<TChatParticipantsClient>>(connectionManager.GetHubContext<TChatParticipantsHub, TChatParticipantsClient>);
             _lazyChatMessagesHubContext = new Lazy<IHubContext<TChatMessagesClient>>(connectionManager.GetHubContext<TChatMessagesHub, TChatMessagesClient>);
