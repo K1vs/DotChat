@@ -4,5 +4,7 @@ export const messagesSettings = {
     pageSize: 200,
     frameSize: 100,
     maxBufferSize: 10000,
-    minBufferSize: 5000
+    minBufferSize: 5000,
+    keyFunction: (item) => item.messageId,
+    sortKeyFunction: (item) => item.index
 };

@@ -1,6 +1,7 @@
 ﻿.input-panel{
     display: flex;
     flex-direction: row;
+    margin: 25px;
 }
 .input-box{
     flex: 1 0;
@@ -10,21 +11,23 @@
     flex: 0 0;
     margin: 10px;
 }
-html, body, .container-fluid{
+html, body{
     height: 100%;
-}
-.read-zone{
-    height: 100%;
-}
-.main{
-    padding: 20px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-.participants-box{
-    background-color: azure;
 }
 .active{
     border: solid;
+}
+.messages-box{
+    margin: 25px;
+    overflow-y: scroll;
+    flex: 1 1;
+}
+.right-panel{
+    height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.chats-box{
+    margin: 25px;
 }

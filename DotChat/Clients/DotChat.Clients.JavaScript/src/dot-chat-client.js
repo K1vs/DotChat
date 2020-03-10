@@ -16,6 +16,8 @@ export default class DotChatClient{
     ..frameSize: number
     ..maxBufferSize: number
     ..minBufferSize: number
+    ..keyFunction : function(item):any
+    ..sortKeyFunction : function(item):int
     .messagesSettings
     ..maxReaders: number 
     ..maxNamedReaders: number 
@@ -23,6 +25,8 @@ export default class DotChatClient{
     ..frameSize: number
     ..maxBufferSize: number
     ..minBufferSize: number
+    ..keyFunction : function(item):any
+    ..sortKeyFunction : function(item):int
     */
     constructor(userId, connector, settings, callbacks){
         this._userId = userId;
@@ -100,6 +104,7 @@ export default class DotChatClient{
                 default: null,
                 named: []
             };
+            this._messagesReaders[chatId] = chatMessagesReaders;
         }
 
         this._shrinkMessagesReaders();
@@ -109,9 +114,9 @@ export default class DotChatClient{
                 limit: this._settings.messagesSettings.pageSize
         });
         var loadPage = filter ? 
-            ((cursor) => this._connector.messages.getPage(filter, createPageOptions(cursor))): 
-            ((cursor) => this._connector.messages.getPage(createPageOptions(cursor)));
-        var reader = new BufferedPagedReader(loadPage, this._settings.chatsSettings);
+            ((cursor) => this._connector.messages.getPage(chatId, filter, createPageOptions(cursor))): 
+            ((cursor) => this._connector.messages.getPage(chatId, createPageOptions(cursor)));
+        var reader = new BufferedPagedReader(loadPage, this._settings.messagesSettings);
         if(name){
             chatMessagesReaders.named[name] = {
                 reader: reader,
@@ -203,7 +208,7 @@ export default class DotChatClient{
     }
 
     _shrinkMessagesReaders(){
-        var allChatsMessagesReaders = this._messagesReaders.entries().map(([, value]) => value);
+        var allChatsMessagesReaders = Object.entries(this._messagesReaders).map(([, value]) => value);
         var namedCount = _.sum(allChatsMessagesReaders, r => r.named.length);
         if(namedCount > this._settings.messagesSettings.maxNamedReaders || allChatsMessagesReaders.length > this._settings.messagesSettings.maxNamedReaders){
             for(let сhatMessagesReaders in allChatsMessagesReaders){
@@ -222,7 +227,7 @@ export default class DotChatClient{
     }
 
     _getChatReaders(){
-        var readers = this._chatsReaders.named.entries().map(([, value]) => value).filter(r => !r.filter).map(r => r.reader);
+        var readers = Object.entries(this._chatsReaders.named).map(([, value]) => value).filter(r => !r.filter).map(r => r.reader);
         readers.push(this._chatsReaders.default);
         return readers;
     }
@@ -273,7 +278,7 @@ export default class DotChatClient{
                 this._chatsReaders.default.addOrUpdate(notification.personalizedChat.chatId, notification.personalizedChat,
                     (exist) => _.assign(exist, notification.personalizedChat));
             }
-            for(let namedChatReaderBox in this._chatsReaders.named.entries().map(([,value]) => value)){
+            for(let namedChatReaderBox in Object.entries(this._chatsReaders.named).map(([,value]) => value)){
                 if(!namedChatReaderBox.filter){
                     namedChatReaderBox.reader.addOrUpdate(notification.personalizedChat.chatId, notification.personalizedChat,
                         (exist) => _.assign(exist, notification.personalizedChat));
@@ -286,7 +291,7 @@ export default class DotChatClient{
             if(this._chatsReaders.default){
                 this._chatsReaders.default.update(notification.chatId, (exist) => _.merge(exist, notification.chatInfo));
             }
-            for(let namedChatReaderBox in this._chatsReaders.named.entries().map(([,value]) => value)){
+            for(let namedChatReaderBox in Object.entries(this._chatsReaders.named).map(([,value]) => value)){
                 namedChatReaderBox.reader.update(notification.chatId, (exist) => _.merge(exist, notification.chatInfo));
             }
         };
@@ -296,7 +301,7 @@ export default class DotChatClient{
             if(this._chatsReaders.default){
                 this._chatsReaders.default.update(notification.chatId, (exist) => exist.removed = true);
             }
-            for(let namedChatReaderBox in this._chatsReaders.named.entries().map(([,value]) => value)){
+            for(let namedChatReaderBox in Object.entries(this._chatsReaders.named).map(([,value]) => value)){
                 namedChatReaderBox.reader.update(notification.chatId, (exist) => exist.removed = true);
             }
         };
@@ -306,7 +311,7 @@ export default class DotChatClient{
         var addOrUpdateParticipant = (participant, chat) => {
             var exist = chat.participants.find(r => r.userId === participant.userId);
             if(exist){
-                if(exist.version < participant.version){
+                if(exist.version == undefined || exist.version < participant.version){
                     _.assign(exist, participant);
                 }else{
                     return;
@@ -368,8 +373,8 @@ export default class DotChatClient{
     _getChatMessageReaders(chatId){
         var chatMessagesReaders = this._messagesReaders[chatId];
         if(chatMessagesReaders){
-            var readers = chatMessagesReaders.named.entries().map(([, value]) => value).filter(r => !r.filter).map(r => r.reader);
-            readers.push(this._chatsReaders.default);
+            var readers = Object.entries(chatMessagesReaders.named).map(([, value]) => value).filter(r => !r.filter).map(r => r.reader);
+            readers.push(chatMessagesReaders.default);
             return readers;
         }else{
             return [];
@@ -377,25 +382,26 @@ export default class DotChatClient{
     }
 
     _registerChatMessagesNotifications(){
+        var update = (exist, fromNotification) => _.assign(exist, fromNotification, {pending: false});
         this._connector.messages.chatMessageAdded = (notification) => {
             this._callCallback('chatMessageAdded', notification);
             var readers = this._getChatMessageReaders(notification.chatId);
             readers.forEach(reader => {
-                reader.addOrUpdate(notification.message.messageId, notification.message, (exist) => _.assign(exist, notification.message));
+                reader.addOrUpdate(notification.message.messageId, notification.message, exist => update(exist, notification.message));
             });
         };
         this._connector.messages.chatMessageEdited = (notification) => {
             this._callCallback('chatMessageEdited', notification);
             var readers = this._getChatMessageReaders(notification.chatId);
             readers.forEach(reader => {
-                reader.addOrUpdate(notification.message.messageId, notification.message, (exist) => _.assign(exist, notification.message));
+                reader.addOrUpdate(notification.message.messageId, notification.message, exist => update(exist, notification.message));
             });
         };
         this._connector.messages.chatMessageRemoved = (notification) => {
             this._callCallback('chatMessageRemoved', notification);
             var readers = this._getChatMessageReaders(notification.chatId);
             readers.forEach(reader => {
-                reader.addOrUpdate(notification.message.messageId, notification.message, (exist) => _.assign(exist, notification.message));
+                reader.addOrUpdate(notification.message.messageId, notification.message, exist => update(exist, notification.message));
             });
         };
         this._connector.messages.chatMessagesRead = async (notification) => {

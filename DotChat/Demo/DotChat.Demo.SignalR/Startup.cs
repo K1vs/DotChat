@@ -56,10 +56,10 @@ namespace K1vs.DotChat.Demo.SignalR
             app.Use((context, next) =>
             {
                 var userId = context.Request.Query.Get("userId");
-                if (!string.IsNullOrEmpty(userId))
+                if (!string.IsNullOrEmpty(userId) && Guid.TryParse(userId, out var userIdGuid))
                 {
                     context.Authentication.User = new ClaimsPrincipal(new List<ClaimsIdentity>() { 
-                        new ClaimsIdentity(new List<Claim>{new Claim("name", userId) }, "Demo", "name", "role")
+                        new ClaimsIdentity(new List<Claim>{new Claim("name", userIdGuid.ToString()) }, "Demo", "name", "role")
                     });
                 }
                 return next.Invoke();

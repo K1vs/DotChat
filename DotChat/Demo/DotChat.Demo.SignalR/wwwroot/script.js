@@ -9,20 +9,47 @@
         var container = $('.chats-box');
         container.empty();
         for(chatIndex in chats){
-            var chatElem = $("<p></p>").text(chats[chatIndex].name);
+            var chatElem = $("<p></p>").attr('id', chats[chatIndex].chatId).addClass('chat').text(chats[chatIndex].name);
             if(chats[chatIndex].chatId === activeChat.chatId){
                 chatElem.addClass("active");
             }
             container.append(chatElem);
         }
+        $('.chat').click(function(){
+            var id = $(this).attr('id');
+            var chat = reader.get(id);
+            activateChat(chat);
+            setChats(chats);
+        });
     };
 
     var activateChat = function(chat){
+        if(activeMessageReaderReleaser){
+            activeMessageReaderReleaser();
+        }
         activeChat = chat;
-        var setMessages = function(){
-            
+        var setMessages = function(messages){
+            var container = $('.messages-box');
+            container.empty();
+            for(messageIndex in messages){
+                var message = messages[messageIndex];
+                if(message.type === 1){
+                    var msgElem = $("<div></div>").text(message.text.content);
+                    if(message.pending){
+                        msgElem.addClass("active");
+                    }
+                    container.append(msgElem);
+                }
+            }
+            container.animate({scrollTop: container.height()}, 500);
         };
-        //var messagesReader = dotChatClient.getMessagesReader(setMessages);
+        var messagesReader = dotChatClient.getMessagesReader(chat.chatId);
+        activeMessageReaderReleaser = messagesReader.aquire(setMessages);
+        messagesReader.open().then(function(){
+            setMessages(messagesReader.current);
+        }, function(){
+            alert(JSON.stringify(arguments));
+        });
     };
 
     var connection = $.hubConnection();
@@ -35,6 +62,7 @@
     reader.aquire(setChats);
 
     var activeChat = null;
+    var activeMessageReaderReleaser = null;
     $('.send-button').click(function(){
         if(!activeChat){
             alert('Select chat');
@@ -53,7 +81,7 @@
         });
     });
     
-    
+    $()
     
     
     connection.start().then(function(){

@@ -19,6 +19,7 @@ export class BufferedPagedReader{
         this._bufferNextCursor = null;
         this._bufferPreviousCursor = null;
         this._frameIndex = 0;
+        this._refCount = 0;
     }
 
     async open(){
@@ -115,23 +116,24 @@ export class BufferedPagedReader{
     addOrUpdate(key, item, updateFunc){
         var exist = _.find(this._buffer, (i) => _.isEqual(this._settings.keyFunction(i), key));
         if(exist){
-            if(exist.version < item.version){
+            if(exist.version == undefined || exist.version < item.version){
                 updateFunc(exist);
             }
         }else{
             var index = _.sortedLastIndexBy(this._buffer, item, this._settings.sortKeyFunction);
             this._buffer.splice(index, 0, item);
-            this._setFrame();
         }
+        this._setFrame();
     }
 
     update(key, newVersion, updateFunc){
         var exist = _.find(this._buffer, (i) => _.isEqual(this._settings.keyFunction(i), key));
         if(exist){
-            if(exist.version < newVersion){
+            if(exist.version == undefined || exist.version < newVersion){
                 updateFunc(exist);
             }
         }
+        this._setFrame();
     }
 
     async _open(){
@@ -156,7 +158,7 @@ export class BufferedPagedReader{
         var page = await this._loadPage(this._bufferNextCursor);
         this._bufferNextCursor = page.next;
         _.pullAllWith(page.items, this._buffer, (i1, i2) => _.isEqual(this._settings.keyFunction(i1), this._settings.keyFunction(i2)));
-        var removeCount = this._settings.maxBufferSize - this._buffer.length - page.items.length;
+        var removeCount = this._buffer.length + page.items.length - this._settings.maxBufferSize;
         if(removeCount > 0){
             this._buffer.splice(0, removeCount);
         }
@@ -180,7 +182,7 @@ export class BufferedPagedReader{
         var page = await this._loadPage(this._bufferNextCursor);
         this._bufferPreviousCursor = page.previous;
         _.pullAllWith(page.items, this._buffer, (i1, i2) => _.isEqual(this._settings.keyFunction(i1), this._settings.keyFunction(i2)));
-        var removeCount = this._settings.maxBufferSize - this._buffer.length - page.items.length;
+        var removeCount = this._buffer.length + page.items.length - this._settings.maxBufferSize;
         if(removeCount > 0){
             this._buffer.splice(-1, removeCount);
         }
@@ -201,7 +203,7 @@ export class BufferedPagedReader{
     }
 
     _sortBuffer(){
-        this._buffer.sort(function(a, b) {
+        this._buffer.sort((a, b) => {
             var x = this._settings.sortKeyFunction(a); 
             var y = this._settings.sortKeyFunction(b);
             return ((x < y) ? -1 : ((x > y) ? 1 : 0));
