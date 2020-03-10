@@ -3,11 +3,11 @@ const path = require('path');
 export default () => (
     {
         mode: 'production',
-        entry: './src/dot-chat-signalr.js',
+        entry: './src/dot-chat-signalr-connector.js',
         devtool: 'source-map',
         output: {
             path: path.resolve(__dirname, './dist'),
-            filename: 'dot-chat-signalr.js',
+            filename: 'dot-chat-signalr-connector.js',
             libraryTarget: 'umd',
             libraryExport: 'default',
             globalObject: 'this',

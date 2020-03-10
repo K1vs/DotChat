@@ -1,7 +1,7 @@
 {
   "name": "dot-chat-signalr-demo-client",
   "version": "1.1.0",
-  "description": "Demo client.",
+  "description": "Extensible chat framework for systems with microservice architecture. Demo client.",
   "main": "script.js",
   "keywords": [
     "chat",
@@ -11,6 +11,10 @@
   ],
   "author": "K1vs",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/K1vs/DotChat"
+  },
   "dependencies": {
     "bootstrap": "^4.4.1",
     "jquery": "^3.4.1",

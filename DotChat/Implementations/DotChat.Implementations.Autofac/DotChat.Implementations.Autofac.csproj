@@ -13,7 +13,7 @@
     <PackageIconUrl />
     <RepositoryUrl>https://github.com/K1vs/DotChat</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>chat, messaging, communication</PackageTags>
+    <PackageTags>chat, messaging, communication, autofac</PackageTags>
     <PackageReleaseNotes>The initial version. Use in production only after full testing.</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
