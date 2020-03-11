@@ -14,7 +14,7 @@
     <releaseNotes>The initial version. Use in production only after full testing.</releaseNotes>
     <copyright>2020 K1vs</copyright>
     <tags>chat messaging communication signalr</tags>
-	<repository type="git" url="https://github.com/K1vs/DotChat" commit=""></repository>
+	<repository type="git" url="https://github.com/K1vs/DotChat" commit="77db32501835cd72050e0b74dd66f401dbab28e4"></repository>
   </metadata>
    <files>
 		<file src="..\..\..\DotChatLogo.png" target="images\" />
