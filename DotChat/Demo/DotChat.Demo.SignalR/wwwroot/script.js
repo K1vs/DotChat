@@ -64,10 +64,16 @@
         connection.stop();
         connection.qs = { 'userId': userId };
         connection.logging = true;
+
         var connector = new DotChatSignalRConnector(connection);
+
+        if (window.dotChatClient) {
+            window.dotChatClient.dispose();
+        }
         var dotChatClient = new DotChatClient(userId, connector);
+        window.dotChatClient = dotChatClient;
         
-        var reader = dotChatClient.getChatsReader();
+        var reader = dotChatClient.getChatsReader('tt');
         reader.aquire(setChats);
     
         var activeChat = null;

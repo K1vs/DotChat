@@ -3,6 +3,7 @@ import {BufferedPagedReader} from './buffered-paged-reader';
 import {ChatParticipantStatus} from './enums/participant-status';
 import {MessageStatus} from './enums/message-status';
 import {dotChatSettings} from './settings/dot-chat-settings';
+import {CleanableValueSetter} from './cleanable-value-setter';
 
 export default class DotChatClient{
     /*
@@ -33,12 +34,7 @@ export default class DotChatClient{
         this._connector = connector;
         this._callbacks = callbacks;
         this._settings = _.merge({}, dotChatSettings, settings);
-        this._chatsReaders = {
-            default: null,
-            named: {}
-        };
-        this._messagesReaders = {};
-        this._register();
+        this._initReadersBoxes();
     }
 
     get summary(){
@@ -46,9 +42,19 @@ export default class DotChatClient{
     }
 
     async init(){
+        this._releaser = this._register();
         await this._connector.start();
-        this._summary = await this._connector.chats.getSummary();
+        await this._loadSummary();
         return this.summary;
+    }
+
+    dispose(){
+        if(this._releaser){
+            this._releaser();
+        }
+        this._getChatReaders(true).forEach(r => r.dispose());
+        this._getChatsMessageReaders(true).forEach(r => r.dispose());
+        this._initReadersBoxes();
     }
 
     getChatsReader(name, filter){
@@ -207,28 +213,42 @@ export default class DotChatClient{
         });
     }
 
+    async _loadSummary(){
+        this._summary = await this._connector.chats.getSummary();
+    }
+
+    _initReadersBoxes(){
+        this._chatsReaders = {
+            default: null,
+            named: {}
+        };
+        this._messagesReaders = {};
+    }
+
     _shrinkMessagesReaders(){
         var allChatsMessagesReaders = Object.entries(this._messagesReaders).map(([, value]) => value);
         var namedCount = _.sum(allChatsMessagesReaders, r => r.named.length);
         if(namedCount > this._settings.messagesSettings.maxNamedReaders || allChatsMessagesReaders.length > this._settings.messagesSettings.maxNamedReaders){
-            for(let сhatMessagesReaders in allChatsMessagesReaders){
+            allChatsMessagesReaders.forEach(сhatMessagesReaders => {
                 _.remove(сhatMessagesReaders, r => r.closed)
                 .forEach(removed => removed.dispose());
-            }
+            });
         }
         if(allChatsMessagesReaders.length > this._settings.messagesSettings.maxNamedReaders){
-            for(let сhatMessagesReaders in allChatsMessagesReaders){
+            allChatsMessagesReaders.forEach(сhatMessagesReaders => {
                 if(сhatMessagesReaders.default.closed){
                     сhatMessagesReaders.default.dispose();
                     сhatMessagesReaders.default = null;
                 }
-            }
+            });
         }
     }
 
-    _getChatReaders(){
-        var readers = Object.entries(this._chatsReaders.named).map(([, value]) => value).filter(r => !r.filter).map(r => r.reader);
-        readers.push(this._chatsReaders.default);
+    _getChatReaders(includeFiltered){
+        var readers = Object.entries(this._chatsReaders.named).map(([, value]) => value).filter(r => !r.filter || includeFiltered).map(r => r.reader);
+        if(this._chatsReaders.default){
+            readers.push(this._chatsReaders.default);
+        }
         return readers;
     }
 
@@ -272,39 +292,46 @@ export default class DotChatClient{
     }
 
     _registerChatsNotifications(){
-        this._connector.chats.chatAdded = (notification) => {
+        var chatAdded = (notification) => {
             this._callCallback('chatAdded', notification);
             if(this._chatsReaders.default){
                 this._chatsReaders.default.addOrUpdate(notification.personalizedChat.chatId, notification.personalizedChat,
                     (exist) => _.assign(exist, notification.personalizedChat));
             }
-            for(let namedChatReaderBox in Object.entries(this._chatsReaders.named).map(([,value]) => value)){
+            Object.entries(this._chatsReaders.named).map(([,value]) => value).forEach(namedChatReaderBox => {
                 if(!namedChatReaderBox.filter){
                     namedChatReaderBox.reader.addOrUpdate(notification.personalizedChat.chatId, notification.personalizedChat,
                         (exist) => _.assign(exist, notification.personalizedChat));
                 }
-            }
+            });
         };
 
-        this._connector.chats.chatInfoEdited = (notification) => {
+        var chatInfoEdited = (notification) => {
             this._callCallback('chatInfoEdited', notification);
             if(this._chatsReaders.default){
                 this._chatsReaders.default.update(notification.chatId, (exist) => _.merge(exist, notification.chatInfo));
             }
-            for(let namedChatReaderBox in Object.entries(this._chatsReaders.named).map(([,value]) => value)){
+            Object.entries(this._chatsReaders.named).map(([,value]) => value).forEach(namedChatReaderBox => {
                 namedChatReaderBox.reader.update(notification.chatId, (exist) => _.merge(exist, notification.chatInfo));
-            }
+            });
         };
 
-        this._connector.chats.chatRemoved = (notification) => {
+        var chatRemoved = (notification) => {
             this._callCallback('chatRemoved', notification);
             if(this._chatsReaders.default){
                 this._chatsReaders.default.update(notification.chatId, (exist) => exist.removed = true);
             }
-            for(let namedChatReaderBox in Object.entries(this._chatsReaders.named).map(([,value]) => value)){
+            Object.entries(this._chatsReaders.named).map(([,value]) => value).forEach(namedChatReaderBox => {
                 namedChatReaderBox.reader.update(notification.chatId, (exist) => exist.removed = true);
-            }
+            });
         };
+
+        var cleanableValueSetter = new CleanableValueSetter(this._connector.chats, null);
+        cleanableValueSetter.add('chatAdded', chatAdded);
+        cleanableValueSetter.add('chatInfoEdited', chatInfoEdited);
+        cleanableValueSetter.add('chatRemoved', chatRemoved);
+
+        return () => cleanableValueSetter.clean();
     }
 
     _registerChatParticipantsNotifications(){
@@ -325,56 +352,73 @@ export default class DotChatClient{
             }
         };
 
-        this._connector.participants.chatParticipantAdded = async (notification) => {
+        var chatParticipantAdded = async (notification) => {
             this._callCallback('chatParticipantAdded', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
-        this._connector.participants.chatParticipantApplied = async (notification) => {
+        var chatParticipantApplied = async (notification) => {
             this._callCallback('chatParticipantApplied', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
-        this._connector.participants.chatParticipantInvited = async (notification) => {
+        var chatParticipantInvited = async (notification) => {
             this._callCallback('chatParticipantInvited', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
-        this._connector.participants.chatParticipantTypeChanged = async (notification) => {
+        var chatParticipantTypeChanged = async (notification) => {
             this._callCallback('chatParticipantTypeChanged', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
         
-        this._connector.participants.chatParticipantRemoved = async (notification) => {
+        var chatParticipantRemoved = async (notification) => {
             this._callCallback('chatParticipantRemoved', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
         
-        this._connector.participants.chatParticipantBlocked = async (notification) => {
+        var chatParticipantBlocked = async (notification) => {
             this._callCallback('chatParticipantBlocked', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
-        this._connector.participants.chatParticipantsAppended = async (notification) => {
+        var chatParticipantsAppended = async (notification) => {
             this._callCallback('chatParticipantsAppended', notification);
             var chats = await this._getChatsWithLoad(notification.chatId);
             notification.added.concat(notification.invited).forEach(participant => {
                 chats.forEach(r => addOrUpdateParticipant(participant, r));
             });
         };
+
+        var cleanableValueSetter = new CleanableValueSetter(this._connector.participants, null);
+        cleanableValueSetter.add('chatParticipantAdded', chatParticipantAdded);
+        cleanableValueSetter.add('chatParticipantApplied', chatParticipantApplied);
+        cleanableValueSetter.add('chatParticipantInvited', chatParticipantInvited);
+        cleanableValueSetter.add('chatParticipantTypeChanged', chatParticipantTypeChanged);
+        cleanableValueSetter.add('chatParticipantRemoved', chatParticipantRemoved);
+        cleanableValueSetter.add('chatParticipantBlocked', chatParticipantBlocked);
+        cleanableValueSetter.add('chatParticipantsAppended', chatParticipantsAppended);
+
+        return () => cleanableValueSetter.clean();
     }
 
-    _getChatMessageReaders(chatId){
+    _getChatsMessageReaders(includeFiltered){
+        return Object.getOwnPropertyNames(this._messagesReaders).map(chatId => this._getChatMessageReaders(chatId, includeFiltered)).flat();
+    }
+
+    _getChatMessageReaders(chatId, includeFiltered){
         var chatMessagesReaders = this._messagesReaders[chatId];
         if(chatMessagesReaders){
-            var readers = Object.entries(chatMessagesReaders.named).map(([, value]) => value).filter(r => !r.filter).map(r => r.reader);
-            readers.push(chatMessagesReaders.default);
+            var readers = Object.entries(chatMessagesReaders.named).map(([, value]) => value).filter(r => !r.filter || includeFiltered).map(r => r.reader);
+            if(chatMessagesReaders.default){
+                readers.push(chatMessagesReaders.default);
+            }
             return readers;
         }else{
             return [];
@@ -383,39 +427,52 @@ export default class DotChatClient{
 
     _registerChatMessagesNotifications(){
         var update = (exist, fromNotification) => _.assign(exist, fromNotification, {pending: false});
-        this._connector.messages.chatMessageAdded = (notification) => {
+        var chatMessageAdded = (notification) => {
             this._callCallback('chatMessageAdded', notification);
             var readers = this._getChatMessageReaders(notification.chatId);
             readers.forEach(reader => {
                 reader.addOrUpdate(notification.message.messageId, notification.message, exist => update(exist, notification.message));
             });
         };
-        this._connector.messages.chatMessageEdited = (notification) => {
+        var chatMessageEdited = (notification) => {
             this._callCallback('chatMessageEdited', notification);
             var readers = this._getChatMessageReaders(notification.chatId);
             readers.forEach(reader => {
                 reader.addOrUpdate(notification.message.messageId, notification.message, exist => update(exist, notification.message));
             });
         };
-        this._connector.messages.chatMessageRemoved = (notification) => {
+        var chatMessageRemoved = (notification) => {
             this._callCallback('chatMessageRemoved', notification);
             var readers = this._getChatMessageReaders(notification.chatId);
             readers.forEach(reader => {
                 reader.addOrUpdate(notification.message.messageId, notification.message, exist => update(exist, notification.message));
             });
         };
-        this._connector.messages.chatMessagesRead = async (notification) => {
+        var chatMessagesRead = async (notification) => {
             this._callCallback('chatMessagesRead', notification);
             var participants = await this._getChatsWithLoad(notification.chatId)
                 .map(chat => chat.participants.find(p => p.userId === notification.initiatorUserId))
                 .filter(r => r);
             participants.forEach(p => p.readIndex = notification.index);
         };
+
+        var cleanableValueSetter = new CleanableValueSetter(this._connector.messages, null);
+        cleanableValueSetter.add('chatMessageAdded', chatMessageAdded);
+        cleanableValueSetter.add('chatMessageEdited', chatMessageEdited);
+        cleanableValueSetter.add('chatMessageRemoved', chatMessageRemoved);
+        cleanableValueSetter.add('chatMessagesRead', chatMessagesRead);
+
+        return () => cleanableValueSetter.clean();
     }
 
     _register(){
-        this._registerChatsNotifications();
-        this._registerChatParticipantsNotifications();
-        this._registerChatMessagesNotifications();
+        var chatsReleaser = this._registerChatsNotifications();
+        var chatParticipantsReleaser = this._registerChatParticipantsNotifications();
+        var chatMessagesReleaser = this._registerChatMessagesNotifications();
+        return () => {
+            chatMessagesReleaser();
+            chatParticipantsReleaser();
+            chatsReleaser();
+        };
     }
 }

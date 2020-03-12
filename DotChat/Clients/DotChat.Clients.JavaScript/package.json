@@ -1,6 +1,6 @@
 {
   "name": "dot-chat-client",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Extensible chat framework for systems with microservice architecture. Javascript client library.",
   "main": "dist/dot-chat-client.js",
   "scripts": {
