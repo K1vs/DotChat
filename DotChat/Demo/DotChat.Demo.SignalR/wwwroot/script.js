@@ -6,6 +6,10 @@
             return;
         }
     
+        var setSummary = function(summary){
+            $('.summary').text('Unread chats: ' + summary.unreadChatsCount + ' Unread messages: ' + summary.unreadMessagesCount);
+        }
+
         var setChats = function(chats){
             if(!chats || chats.length === 0){
                 return;
@@ -16,7 +20,10 @@
             var container = $('.chats-box');
             container.empty();
             for(chatIndex in chats){
-                var chatElem = $("<p></p>").attr('id', chats[chatIndex].chatId).addClass('chat').text(chats[chatIndex].name);
+                var chatElem = $("<p></p>")
+                    .attr('id', chats[chatIndex].chatId)
+                    .addClass('chat')
+                    .text(chats[chatIndex].name);
                 if(chats[chatIndex].chatId === activeChat.chatId){
                     chatElem.addClass("active");
                 }
@@ -42,7 +49,12 @@
                 for(messageIndex in messages){
                     var message = messages[messageIndex];
                     if(message.type === 1){
-                        var msgElem = $("<div></div>").text(message.text.content);
+                        var msgElem = $("<div></div>")
+                            .text(message.text.content)
+                            .attr('index', message.index)
+                            .click(function(){
+                                dotChatClient.readMessage(chat.chatId, $(this).attr('index'));
+                            });
                         if(message.pending){
                             msgElem.addClass("active");
                         }
@@ -70,7 +82,7 @@
         if (window.dotChatClient) {
             window.dotChatClient.dispose();
         }
-        var dotChatClient = new DotChatClient(userId, connector);
+        var dotChatClient = new DotChatClient(userId, connector, null, {onSummaryChanged: setSummary});
         window.dotChatClient = dotChatClient;
         
         var reader = dotChatClient.getChatsReader('tt');
@@ -99,7 +111,6 @@
         
         connection.start().then(function(){
             return dotChatClient.init().then(function(){
-                alert(JSON.stringify(dotChatClient.summary));
                 return reader.open().then(function(){
                     setChats(reader.current);
                 });
@@ -202,7 +213,6 @@ $('.user-select').change(function() {
     
     connection.start().then(function(){
         return dotChatClient.init().then(function(){
-            alert(JSON.stringify(dotChatClient.summary));
             return reader.open().then(function(){
                 setChats(reader.current);
             });

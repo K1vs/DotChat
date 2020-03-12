@@ -118,12 +118,14 @@ export class BufferedPagedReader{
         if(exist){
             if(exist.version == undefined || exist.version < item.version){
                 updateFunc(exist);
+                this._sortBuffer();
+                this._setFrame();
             }
         }else{
-            var index = _.sortedLastIndexBy(this._buffer, item, this._settings.sortKeyFunction);
-            this._buffer.splice(index, 0, item);
+            this._buffer.splice(0, 0, item);
+            this._sortBuffer();
+            this._setFrame();
         }
-        this._setFrame();
     }
 
     update(key, newVersion, updateFunc){
@@ -131,9 +133,10 @@ export class BufferedPagedReader{
         if(exist){
             if(exist.version == undefined || exist.version < newVersion){
                 updateFunc(exist);
+                this._sortBuffer();
+                this._setFrame();
             }
         }
-        this._setFrame();
     }
 
     async _open(){
@@ -147,7 +150,7 @@ export class BufferedPagedReader{
     }
 
     _setFrame(){
-        var frame = this._buffer.slice(-this._frameIndex - this._settings.frameSize, this._frameIndex === 0 ? undefined : - this._frameIndex);
+        var frame = this._buffer.slice(-this._frameIndex - this._settings.frameSize, this._frameIndex === 0 ? undefined : - this._frameIndex).reverse();
         this._frame = frame;
         if(!this.closed){
             this._onFrameChanged.forEach(onFrameChanged => onFrameChanged(frame));
@@ -206,7 +209,7 @@ export class BufferedPagedReader{
         this._buffer.sort((a, b) => {
             var x = this._settings.sortKeyFunction(a); 
             var y = this._settings.sortKeyFunction(b);
-            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+            return ((x > y) ? -1 : ((x < y) ? 1 : 0));
         });
     }
 
