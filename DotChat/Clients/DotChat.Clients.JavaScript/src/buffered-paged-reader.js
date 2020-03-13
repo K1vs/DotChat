@@ -147,6 +147,7 @@ export class BufferedPagedReader{
         this._bufferPreviousCursor = page.previous;
         this._setFrame();
         this._loadPreviousCursors();
+        return this.current;
     }
 
     _setFrame(){

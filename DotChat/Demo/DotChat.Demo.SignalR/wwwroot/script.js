@@ -23,7 +23,7 @@
                 var chatElem = $("<p></p>")
                     .attr('id', chats[chatIndex].chatId)
                     .addClass('chat')
-                    .text(chats[chatIndex].name);
+                    .text(chats[chatIndex].unreadCount + ': ' + chats[chatIndex].name);
                 if(chats[chatIndex].chatId === activeChat.chatId){
                     chatElem.addClass("active");
                 }
@@ -53,7 +53,7 @@
                             .text(message.text.content)
                             .attr('index', message.index)
                             .click(function(){
-                                dotChatClient.readMessage(chat.chatId, $(this).attr('index'));
+                                dotChatClient.readMessages(chat.chatId, $(this).attr('index'));
                             });
                         if(message.pending){
                             msgElem.addClass("active");
@@ -110,7 +110,8 @@
         });      
         
         connection.start().then(function(){
-            return dotChatClient.init().then(function(){
+            return dotChatClient.ready().then(function(client){
+                client.loadSummary().then(setSummary);
                 return reader.open().then(function(){
                     setChats(reader.current);
                 });

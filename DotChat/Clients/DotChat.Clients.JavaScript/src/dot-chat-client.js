@@ -38,15 +38,12 @@ export default class DotChatClient{
         this._initReadersBoxes();
     }
 
-    get summary(){
-        return this._summary;
-    }
-
-    async init(){
-        this._releaser = this._register();
+    async ready(){
+        if(!this._releaser){
+            this._releaser = this._register();
+        }
         await this._connector.start();
-        await this._loadSummary();
-        return this.summary;
+        return this;
     }
 
     dispose(){
@@ -56,6 +53,17 @@ export default class DotChatClient{
         this._getChatReaders(true).forEach(r => r.dispose());
         this._getChatsMessageReaders(true).forEach(r => r.dispose());
         this._initReadersBoxes();
+    }
+
+    get summary(){
+        return this._summary;
+    }
+
+    async loadSummary(reload){
+        if(reload || !this.summary){
+            await this._loadSummary();
+        }
+        return this.summary;
     }
 
     getChatsReader(name, filter){
@@ -180,7 +188,7 @@ export default class DotChatClient{
             messageId: messageId,
             pending: true,
             messageStatus: MessageStatus.actual,
-            index: Number.MAX_VALUE
+            index: Number.MAX_SAFE_INTEGER
         };
         readers.forEach(reader => reader.addOrUpdate(messageId, message, exist => _.merge(exist, message)));
     }
@@ -205,7 +213,7 @@ export default class DotChatClient{
         readers.forEach(reader => reader.addOrUpdate(messageId, {messageId: messageId, ... removedExt}, exist => _.merge(exist, removedExt)));
     }
 
-    async readMessage(chatId, index){
+    async readMessages(chatId, index){
         await this._connector.messages.read(chatId, index);
         this._getChats(chatId).forEach(chat => {
             var exist = chat.participants.find(r => r.userId === this._userId);
@@ -266,19 +274,23 @@ export default class DotChatClient{
         return readers;
     }
 
-    _getChats(chatId){
+    _getChatsWithReaders(chatId){
         var readers = this._getChatReaders();
-        var chats = _.orderBy(readers.map(r => r.get(chatId)).filter(r => r), ['version'], ['desc']);
-        var refChat = chats[0];
-        if(refChat){
-            readers.forEach(r => r.addOrUpdate(chatId, refChat, exist => _.assign(exist, refChat)));
+        var chatsWithReaders = _.orderBy(readers.map(r => ({ chat: r.get(chatId), reader: r })).filter(r => r.chat), 'chat.version', 'desc');
+        var refChatWithReaders = chatsWithReaders[0];
+        if(refChatWithReaders){
+            readers.filter(r => r != refChatWithReaders.reader).forEach(r => r.addOrUpdate(chatId, refChatWithReaders.chat, exist => _.assign(exist, refChatWithReaders.chat)));
         }
-        return chats;
+        return chatsWithReaders;
     }
 
-    async _getChatsWithLoad(chatId){
-        var chats = this._getChats(chatId);
-        if(chats.length === 0){
+    _getChats(chatId){
+        return this._getChatsWithReaders(chatId).map(cwr => cwr.chat);
+    }
+
+    async _getOrLoadChatsWithReaders(chatId){
+        var chatsWithReaders = this._getChatsWithReaders(chatId);
+        if(chatsWithReaders.length === 0){
             var chat;
             try{
                 chat = await this._connector.chats.get(chatId);
@@ -291,9 +303,9 @@ export default class DotChatClient{
             }
             var readers = this._getChatReaders();
             readers.forEach(r => r.addOrUpdate(chatId, chat, exist => _.assign(exist, chat)));
-            chats = this._getChats(chatId);
+            chatsWithReaders = this._getChatsWithReaders(chatId);
         }
-        return chats;
+        return chatsWithReaders;
     }
 
     _callCallback(name, notification){
@@ -352,71 +364,73 @@ export default class DotChatClient{
     }
 
     _registerChatParticipantsNotifications(){
-        var addOrUpdateParticipant = (participant, chat) => {
-            var exist = chat.participants.find(r => r.userId === participant.userId);
-            if(exist){
-                if(exist.version == undefined || exist.version < participant.version){
-                    _.assign(exist, participant);
+        var addOrUpdateParticipant = (participant, chatWithReader) => {
+            chatWithReader.reader.update(chatWithReader.chat.id, Number.MAX_SAFE_INTEGER, (chat) => {
+                var exist = chat.participants.find(r => r.userId === participant.userId);
+                if(exist){
+                    if(exist.version == undefined || exist.version < participant.version){
+                        _.assign(exist, participant);
+                    }else{
+                        return;
+                    }
                 }else{
-                    return;
+                    chat.participants.push(participant);
                 }
-            }else{
-                chat.participants.push(participant);
-            }
-            if(this._userId === participant.userId){
-                chat.lost = participant.chatParticipantStatus === ChatParticipantStatus.removed || 
-                    participant.chatParticipantStatus === ChatParticipantStatus.blocked;  
-            }
+                if(this._userId === participant.userId){
+                    chat.lost = participant.chatParticipantStatus === ChatParticipantStatus.removed || 
+                        participant.chatParticipantStatus === ChatParticipantStatus.blocked;  
+                }
+            });
         };
 
         var chatParticipantAdded = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantAdded', notification);
-            var chats = await this._getChatsWithLoad(notification.chatId);
-            chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
+            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
+            chatsWithReaders.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
         var chatParticipantApplied = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantApplied', notification);
-            var chats = await this._getChatsWithLoad(notification.chatId);
-            chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
+            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
+            chatsWithReaders.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
         var chatParticipantInvited = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantInvited', notification);
-            var chats = await this._getChatsWithLoad(notification.chatId);
-            chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
+            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
+            chatsWithReaders.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
         var chatParticipantTypeChanged = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantTypeChanged', notification);
-            var chats = await this._getChatsWithLoad(notification.chatId);
-            chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
+            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
+            chatsWithReaders.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
         
         var chatParticipantRemoved = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantRemoved', notification);
-            var chats = await this._getChatsWithLoad(notification.chatId);
-            chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
+            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
+            chatsWithReaders.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
         
         var chatParticipantBlocked = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantBlocked', notification);
-            var chats = await this._getChatsWithLoad(notification.chatId);
-            chats.forEach(r => addOrUpdateParticipant(notification.participant, r));
+            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
+            chatsWithReaders.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
         var chatParticipantsAppended = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantsAppended', notification);
-            var chats = await this._getChatsWithLoad(notification.chatId);
+            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
             notification.added.concat(notification.invited).forEach(participant => {
-                chats.forEach(r => addOrUpdateParticipant(participant, r));
+                chatsWithReaders.forEach(r => addOrUpdateParticipant(participant, r));
             });
         };
 
@@ -449,9 +463,47 @@ export default class DotChatClient{
         }
     }
 
+    async _updateChatLasts(chatId, timestamp, index, self){
+        var chatsWithReaders = await this._getOrLoadChatsWithReaders(chatId);
+        chatsWithReaders.forEach((chatWithReader) => {
+            chatWithReader.reader.update(chatWithReader.chat.chatId, Number.MAX_SAFE_INTEGER, (chat) => {
+                if(chat.topIndex <= index){
+                    chat.lastTimestamp = timestamp;
+                    chat.topIndex = index;
+                    var thisParticipant = chat.participants.find(r => r.userId === this._userId);
+                    if(self && thisParticipant.readIndex < index){
+                        thisParticipant.readIndex = index; 
+                        this.readMessages(chatId, index);
+                    }
+                    this._setChatPersonalization(chat, thisParticipant);
+                }
+            });
+        });
+    }
+
+    _setChatPersonalization(chat, thisParticipant){
+        chat.readIndex = thisParticipant.readIndex;
+        chat.unreadCount = chat.topIndex - thisParticipant.readIndex;
+    }
+
     _registerChatMessagesNotifications(){
         var update = (exist, fromNotification) => _.assign(exist, fromNotification, {pending: false});
+        var read = async (chatId, userId, index, force) => {
+            var chatsWithReaders = await this._getOrLoadChatsWithReaders(chatId);
+            chatsWithReaders.forEach((chatWithReader) => {
+                chatWithReader.reader.update(chatWithReader.chat.chatId, Number.MAX_SAFE_INTEGER, (chat) =>{
+                    var participant = chat.participants.find(p => p.userId === userId);
+                    if(force || index > participant.readIndex){
+                        participant.readIndex = index;
+                    }
+                    if(userId === this._userId){
+                        this._setChatPersonalization(chat, participant);
+                    }
+                });
+            });
+        };
         var chatMessageAdded = (notification) => {
+            this._updateChatLasts(notification.chatId, notification.message.timestamp, notification.message.index, notification.initiatorUserId === this._userId);
             if(notification.initiatorUserId !== this._userId){
                 this._loadSummary();
             }
@@ -462,6 +514,7 @@ export default class DotChatClient{
             });
         };
         var chatMessageEdited = (notification) => {
+            this._updateChatLasts(notification.chatId, notification.message.timestamp, notification.message.index, notification.initiatorUserId);
             if(notification.initiatorUserId !== this._userId){
                 this._loadSummary();
             }
@@ -478,18 +531,17 @@ export default class DotChatClient{
             this._callCallback('chatMessageRemoved', notification);
             var readers = this._getChatMessageReaders(notification.chatId);
             readers.forEach(reader => {
-                reader.addOrUpdate(notification.message.messageId, notification.message, exist => update(exist, notification.message));
+                reader.addOrUpdate(notification.messageId, {messageId: notification.messageId}, exist => {
+                    exist.messageStatus = MessageStatus.removed;
+                });
             });
         };
-        var chatMessagesRead = async (notification) => {
+        var chatMessagesRead = (notification) => {
             if(notification.initiatorUserId === this._userId){
                 this._loadSummary();
             }
             this._callCallback('chatMessagesRead', notification);
-            var participants = (await this._getChatsWithLoad(notification.chatId))
-                .map(chat => chat.participants.find(p => p.userId === notification.initiatorUserId))
-                .filter(r => r);
-            participants.forEach(p => p.readIndex = notification.index);
+            read(notification.chatId, notification.initiatorUserId, notification.index, true);
         };
 
         var cleanableValueSetter = new CleanableValueSetter(this._connector.messages, null);
