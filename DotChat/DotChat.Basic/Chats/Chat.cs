@@ -16,12 +16,13 @@
         {
         }
 
-        public Chat(string name, string description, ChatPrivacyMode privacyMode, long version, Guid chatId, List<ChatParticipant> participants, DateTime lastTimestamp, long topIndex) 
-            : base(name, description, privacyMode, version, chatId, participants, lastTimestamp, topIndex)
+        public Chat(string name, string description, ChatPrivacyMode privacyMode, long version, Guid chatId, List<ChatParticipant> participants, DateTime lastTimestamp, long topIndex, Guid? lastMessageId, Guid? lastMessageAuthorId, ChatMessageInfo lastChatMessageInfo) 
+            : base(name, description, privacyMode, version, chatId, participants, lastTimestamp, topIndex, lastMessageId, lastMessageAuthorId, lastChatMessageInfo)
         {
         }
 
-        public Chat(IChatInfo chatInfo, Guid chatId, List<ChatParticipant> participants, DateTime lastTimestamp, long topIndex) : base(chatInfo, chatId, participants, lastTimestamp, topIndex)
+        public Chat(IChatInfo chatInfo, Guid chatId, List<ChatParticipant> participants, DateTime lastTimestamp, long topIndex, Guid? lastMessageId, Guid? lastMessageAuthorId, ChatMessageInfo lastChatMessageInfo)
+            : base(chatInfo, chatId, participants, lastTimestamp, topIndex, lastMessageId, lastMessageAuthorId, lastChatMessageInfo)
         {
         }
     }

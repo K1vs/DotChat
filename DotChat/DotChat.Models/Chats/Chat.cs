@@ -27,21 +27,33 @@
         {
         }
 
-        public Chat(string name, string description, ChatPrivacyMode privacyMode, long version, Guid chatId, TChatParticipantCollection participants, DateTime lastTimestamp, long topIndex, string style = null, string metadata = null) 
+        public Chat(string name, string description, ChatPrivacyMode privacyMode, long version, Guid chatId, TChatParticipantCollection participants, DateTime lastTimestamp, long topIndex, Guid? lastMessageId, Guid? lastMessageAuthorId, TChatMessageInfo lastChatMessageInfo, string style = null, string metadata = null) 
             : base(name, description, privacyMode, version, style, metadata)
         {
             ChatId = chatId;
             Participants = participants;
             LastTimestamp = lastTimestamp;
             TopIndex = topIndex;
+            LastMessageId = lastMessageId;
+            LastMessageAuthorId = lastMessageAuthorId;
+            LastChatMessageInfo = lastChatMessageInfo;
         }
 
-        public Chat(IChatInfo chatInfo, Guid chatId, TChatParticipantCollection participants, DateTime lastTimestamp, long topIndex) 
-            : this(chatInfo.Name, chatInfo.Description, chatInfo.PrivacyMode, chatInfo.Version, chatId, participants, lastTimestamp, topIndex, chatInfo.Style, chatInfo.Metadata) { }
+        public Chat(IChatInfo chatInfo, Guid chatId, TChatParticipantCollection participants, DateTime lastTimestamp, long topIndex, Guid? lastMessageId, Guid? lastMessageAuthorId, TChatMessageInfo lastChatMessageInfo) 
+            : this(chatInfo.Name, chatInfo.Description, chatInfo.PrivacyMode, chatInfo.Version, chatId, participants, lastTimestamp, topIndex, lastMessageId, lastMessageAuthorId, lastChatMessageInfo, chatInfo.Style, chatInfo.Metadata) { }
 
         public Guid ChatId { get; set; }
+
         public TChatParticipantCollection Participants { get; set; }
+
         public DateTime LastTimestamp { get; set; }
+
         public long TopIndex { get; set; }
-}
+
+        public Guid? LastMessageId { get; set; }
+
+        public Guid? LastMessageAuthorId { get; set; }
+
+        public TChatMessageInfo LastChatMessageInfo { get; set; }
+    }
 }

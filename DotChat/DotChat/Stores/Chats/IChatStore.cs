@@ -10,7 +10,7 @@
     using K1vs.DotChat.Messages;
     using K1vs.DotChat.Messages.Typed;
 
-    public interface IChatStore<TChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, in TParticipationCandidateCollection, TParticipationCandidate, in TChatUser, in TChatMessageInfo, in TTextMessage, in TQuoteMessage, in TMessageAttachmentCollection, in TMessageAttachment, in TChatRefMessageCollection, in TChatRefMessage, in TContactMessageCollection, in TContactMessage, in TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, in TPagingOptions> : 
+    public interface IChatStore<TChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, in TParticipationCandidateCollection, TParticipationCandidate, in TChatUser, in TChatMessage, in TChatMessageInfo, in TTextMessage, in TQuoteMessage, in TMessageAttachmentCollection, in TMessageAttachment, in TChatRefMessageCollection, in TChatRefMessage, in TContactMessageCollection, in TContactMessage, in TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, in TPagingOptions> : 
         IReadChatStore<TChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions>
         where TChatsSummary : IPersonalizedChatsSummary
         where TPersonalizedChatCollection : IReadOnlyCollection<TPersonalizedChat>
@@ -22,6 +22,7 @@
         where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
         where TParticipationCandidate : IParticipationCandidate
         where TChatUser : IChatUser
+        where TChatMessage: IChatMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
         where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
         where TTextMessage : ITextMessage
         where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
@@ -40,6 +41,6 @@
         Task<TChat> Create(Guid chatId, TChatInfo chatInfo, TParticipationCandidateCollection toAdd, TParticipationCandidateCollection toInvite, Guid creatorId);
         Task<TChatInfo> UpdateInfo(Guid chatId, TChatInfo chatInfo, Guid modifierId);
         Task<TChatInfo> Delete(Guid chatId, Guid removerId);
-        Task SetTop(Guid chatId, DateTime lastTimestamp, long topIndex);
+        Task SetTop(Guid chatId, TChatMessage topChatMessage);
     }
 }

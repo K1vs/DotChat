@@ -16,7 +16,8 @@
         {
         }
 
-        public PersonalizedChat(string name, string description, ChatPrivacyMode privacyMode, long version, Guid chatId, List<ChatParticipant> participants, DateTime lastTimestamp, long topIndex, long readIndex, long unreadCount) : base(name, description, privacyMode, version, chatId, participants, lastTimestamp, topIndex, readIndex, unreadCount)
+        public PersonalizedChat(string name, string description, ChatPrivacyMode privacyMode, long version, Guid chatId, List<ChatParticipant> participants, DateTime lastTimestamp, long topIndex, Guid? lastMessageId, Guid? lastMessageAuthorId, ChatMessageInfo lastChatMessageInfo, long readIndex, long unreadCount) 
+            : base(name, description, privacyMode, version, chatId, participants, lastTimestamp, topIndex, lastMessageId, lastMessageAuthorId, lastChatMessageInfo, readIndex, unreadCount)
         {
         }
     }

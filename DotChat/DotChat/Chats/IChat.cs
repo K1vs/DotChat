@@ -24,8 +24,8 @@
     {
         long TopIndex { get; }
         DateTime LastTimestamp { get; }
-        //Guid LastAuthorId { get; }
-        //Guid LastMessageId { get; }
-        //TChatMessageInfo LastChatMessageInfo { get; }
+        Guid? LastMessageId { get; }
+        Guid? LastMessageAuthorId { get; }
+        TChatMessageInfo LastChatMessageInfo { get; }
     }
 }

@@ -17,7 +17,7 @@
     using K1vs.DotChat.Models.Messages.Typed;
     using K1vs.DotChat.Basic.Messages.Typed;
 
-    public class InMemoryChatStore: InMemoryReadChatStore, IChatStore<PersonalizedChatsSummary, List<PersonalizedChat>,PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, List<ParticipationCandidate>, ParticipationCandidate, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions>
+    public class InMemoryChatStore: InMemoryReadChatStore, IChatStore<PersonalizedChatsSummary, List<PersonalizedChat>,PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, List<ParticipationCandidate>, ParticipationCandidate, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions>
     {
         public InMemoryChatStore(ChatServicesConfiguration servicesConfiguration, InMemoryStore store) : base(servicesConfiguration, store)
         {
@@ -31,7 +31,7 @@
                 new ChatParticipant(r.ChatParticipantType, ChatParticipantStatus.Active, now, -1, 0, Store.Users[r.UserId]));
             var invited = toInvite.Select(r =>
                 new ChatParticipant(r.ChatParticipantType, ChatParticipantStatus.Active, now, -1, 0, Store.Users[r.UserId]));
-            var chat = new Chat(chatInfo, chatId, added.Concat(invited).ToList(), now, 0);
+            var chat = new Chat(chatInfo, chatId, added.Concat(invited).ToList(), now, 0, null, null, null);
             Store.Chats.TryAdd(chatId, chat);
             return chat;
         }
@@ -55,20 +55,20 @@
             return chat;
         }
 
-        public async Task SetTop(Guid chatId, DateTime lastTimestamp, long topIndex)
+        public async Task SetTop(Guid chatId, ChatMessage topChatMessage)
         {
             await Task.Yield();
             var chat = Store.Chats[chatId];
             lock (chat)
             {
-                if (chat.LastTimestamp < lastTimestamp)
+                if (chat.TopIndex < topChatMessage.Index)
                 {
-                    chat.LastTimestamp = lastTimestamp;
-                }
-
-                if (chat.TopIndex < topIndex)
-                {
-                    chat.TopIndex = topIndex;
+                    chat.LastTimestamp = topChatMessage.Timestamp;
+                    chat.TopIndex = topChatMessage.Index;
+                    chat.LastMessageId = topChatMessage.MessageId;
+                    chat.LastMessageAuthorId = topChatMessage.AuthorId;
+                    chat.LastChatMessageInfo = new ChatMessageInfo(topChatMessage.Type, topChatMessage.Version, topChatMessage.Immutable, topChatMessage.Style, topChatMessage.Metadata,
+                        topChatMessage.Text, topChatMessage.Quote, topChatMessage.MessageAttachments, topChatMessage.ChatRefs, topChatMessage.Contacts);
                 }
             }
         }
