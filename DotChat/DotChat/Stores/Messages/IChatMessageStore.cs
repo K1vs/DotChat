@@ -29,7 +29,7 @@
         where TPagedResult : IPagedResult<TChatMessageCollection, TChatMessage>
         where TPagingOptions : IPagingOptions
     {
-        Task Read(Guid chatId, Guid userId, long index);
+        Task Read(Guid chatId, Guid userId, long index, bool force);
         Task<TChatMessage> Create(Guid chatId, Guid userId, Guid messageId, TChatMessageInfo messageInfo, DateTime timestamp, long index, bool isSystem, Guid creatorId);
         Task<TChatMessage> Update(Guid chatId, Guid messageId, TChatMessageInfo messageInfo, Guid modifierId);
         Task<TChatMessage> Delete(Guid chatId, Guid messageId, Guid removerId);

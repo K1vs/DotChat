@@ -31,7 +31,7 @@
     {
         Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions pagingOptions = default);
         Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, TPagingOptions pagingOptions = default);
-        Task Read(Guid currentUserId, Guid chatId, long index);
+        Task Read(Guid currentUserId, Guid chatId, long index, bool force);
         Task<Guid> Add(Guid currentUserId, Guid chatId, Guid? messageId, TChatMessageInfo messageInfo);
         Task<Guid> Edit(Guid currentUserId, Guid chatId, Guid messageId, TChatMessageInfo messageInfo, Guid? archivedMessageId);
         Task Remove(Guid currentUserId, Guid chatId, Guid messageId);

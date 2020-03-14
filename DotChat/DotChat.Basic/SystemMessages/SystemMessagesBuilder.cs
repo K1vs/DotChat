@@ -39,7 +39,7 @@
                 var addedMessage = new ChatMessageInfo(MessageType.Contact, 0, immutable: true, style: MessageStyle("AddedInitialChatParticipants"), contacts: addedContactMessages);
                 result.Add(addedMessage);
             }
-            var invited = @event.Chat.Participants.Where(r => r.ChatParticipantStatus == ChatParticipantStatus.Active).ToList();
+            var invited = @event.Chat.Participants.Where(r => r.ChatParticipantStatus == ChatParticipantStatus.Invited).ToList();
             if (invited.Any())
             {
                 var invitedContactMessages = invited.Select(r => new ContactMessage(r)).ToList();

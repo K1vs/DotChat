@@ -22,11 +22,14 @@
         {
         }
 
-        public async Task Read(Guid chatId, Guid userId,  long index)
+        public async Task Read(Guid chatId, Guid userId, long index, bool force)
         {
             await Task.Yield();
             var p = Store.Chats[chatId].Participants.FirstOrDefault(r => r.UserId == userId);
-            p.ReadIndex = index;
+            if (force || p.ReadIndex < index)
+            {
+                p.ReadIndex = index;
+            }
         }
 
         public async Task<ChatMessage> Create(Guid chatId, Guid userId, Guid messageId, ChatMessageInfo messageInfo, DateTime timestamp, long index, bool isSystem, Guid creatorId)

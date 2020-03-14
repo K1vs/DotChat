@@ -67,9 +67,14 @@
             return await _chatMessagesService.GetPage(CurrentUserId, chatId, pagingOptions);
         }
 
-        public async Task Read(Guid chatId, long index)
+        public async Task<TChatMessagesPagedResult> GetPage(Guid chatId)
         {
-            await _chatMessagesService.Read(CurrentUserId, chatId, index);
+            return await _chatMessagesService.GetPage(CurrentUserId, chatId);
+        }
+
+        public async Task Read(Guid chatId, long index, bool force)
+        {
+            await _chatMessagesService.Read(CurrentUserId, chatId, index, force);
         }
 
         public async Task<Guid> Add(Guid chatId, Guid? messageId, TChatMessageInfo messageInfo)

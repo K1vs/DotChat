@@ -63,6 +63,11 @@
             return await _chatsService.GetPage(CurrentUserId, pagingOptions);
         }
 
+        public async Task<TPagedResult> GetPage()
+        {
+            return await _chatsService.GetPage(CurrentUserId);
+        }
+
         public async Task<TPersonalizedChat> Get(Guid chatId)
         {
             return await _chatsService.Get(CurrentUserId, chatId);

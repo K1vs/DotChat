@@ -33,7 +33,7 @@
     {
         Task ValidateGetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions pagingOptions, TPagedResult messagesPage, string serviceName, [CallerMemberName] string methodName = null);
         Task ValidateGetPage(Guid currentUserId, Guid chatId, TPagingOptions pagingOptions, TPagedResult messagesPage, string serviceName, [CallerMemberName] string methodName = null);
-        Task ValidateRead(Guid currentUserId, Guid chatId, long index, string serviceName, [CallerMemberName] string methodName = null);
+        Task ValidateRead(Guid currentUserId, Guid chatId, long index, bool force, string serviceName, [CallerMemberName] string methodName = null);
         Task ValidateAdd(Guid currentUserId, Guid chatId, TChatMessageInfo messageInfo, string serviceName, [CallerMemberName] string methodName = null);
         Task ValidateRemove(Guid currentUserId, Guid chatId, Guid messageId, string serviceName, [CallerMemberName] string methodName = null);
         Task ValidateEdit(Guid currentUserId, Guid chatId, Guid messageId, TChatMessageInfo newMessage, string serviceName, [CallerMemberName] string methodName = null);

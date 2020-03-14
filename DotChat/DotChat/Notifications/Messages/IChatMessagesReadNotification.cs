@@ -6,5 +6,6 @@
 
     public interface IChatMessagesReadNotification: IChatMessagesNotification, IChatRelated, IIndexed
     {
+        bool Force { get; }
     }
 }

@@ -38,9 +38,9 @@
             return new RemoveChatMessageCommand(currentUserId, chatId, messageId);
         }
 
-        public IReadChatMessagesCommand BuildReadChatMessagesCommand(Guid currentUserId, Guid chatId, long index)
+        public IReadChatMessagesCommand BuildReadChatMessagesCommand(Guid currentUserId, Guid chatId, long index, bool force)
         {
-            return new ReadChatMessagesCommand(currentUserId, chatId, index);
+            return new ReadChatMessagesCommand(currentUserId, chatId, index, force);
         }
     }
 }

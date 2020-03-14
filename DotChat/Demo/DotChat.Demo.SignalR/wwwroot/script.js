@@ -25,7 +25,7 @@
                 var chatElem = $("<p></p>")
                     .attr('id', chats[chatIndex].chatId)
                     .addClass('chat')
-                    .text(chats[chatIndex].unreadCount + ': ' + chats[chatIndex].name + (chats[chatIndex].lost ? 'Lost' : null));
+                    .text(chats[chatIndex].unreadCount + ': ' + chats[chatIndex].name + (chats[chatIndex].lost ? 'Lost' : ''));
                 if(chats[chatIndex].chatId === activeChat.chatId){
                     chatElem.addClass("active");
                 }
@@ -55,7 +55,7 @@
                             .text(message.text.content)
                             .attr('index', message.index)
                             .click(function(){
-                                dotChatClient.readMessages(chat.chatId, $(this).attr('index'));
+                                dotChatClient.readMessages(chat.chatId, $(this).attr('index'), true);
                             });
                         if(message.pending){
                             msgElem.addClass("active");

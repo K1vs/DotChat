@@ -25,7 +25,7 @@
 
     public class TestChatWorkerModule: ChatWorkerModule
     {
-        public TestChatWorkerModule(InMemoryBus bus, InMemoryStore store) : base(new TestChatServiceModule(bus, store), new ChatWorkersConfiguration())
+        public TestChatWorkerModule(InMemoryBus bus, InMemoryStore store) : base(new TestChatServiceModule(bus, store), new ChatWorkersConfiguration() { DisableSystemMessages = true })
         {
         }
 

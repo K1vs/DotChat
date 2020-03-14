@@ -11,5 +11,6 @@
 
     public interface IChatMessagesReadEvent: IChatMessageEvent, IChatRelated, IIndexed
     {
+        bool Force { get; }
     }
 }

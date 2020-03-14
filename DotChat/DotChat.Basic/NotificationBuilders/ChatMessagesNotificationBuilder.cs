@@ -34,7 +34,7 @@
 
         public IChatMessagesReadNotification BuildChatMessagesReadNotification(IChatMessagesReadEvent @event)
         {
-            return new ChatMessagesReadNotification(@event.InitiatorUserId, @event.ChatId, @event.Index);
+            return new ChatMessagesReadNotification(@event.InitiatorUserId, @event.ChatId, @event.Index, @event.Force);
         }
     }
 }

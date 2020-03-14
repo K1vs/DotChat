@@ -69,7 +69,7 @@
             }
         }
 
-        public virtual async Task ValidateRead(Guid currentUserId, Guid chatId, long index, string serviceName, string methodName = null)
+        public virtual async Task ValidateRead(Guid currentUserId, Guid chatId, long index, bool force, string serviceName, string methodName = null)
         {
             var participant = await _readChatParticipantStore.Retrieve(chatId, currentUserId);
             if (participant == null || participant.ChatParticipantStatus != ChatParticipantStatus.Active)

@@ -98,9 +98,9 @@
 
         public async Task Handle(IReadChatMessagesCommand command, IChatBusContext chatEventPublisher)
         {
-            await _chatMessagesPermissionValidator.ValidateRead(command.InitiatorUserId, command.ChatId, command.Index, WorkerName).ConfigureAwait(false);
-            await _chatMessageStore.Read(command.ChatId, command.InitiatorUserId, command.Index).ConfigureAwait(false);
-            var @event = _chatMessagesEventBuilder.BuildChatMessagesReadEvent(command.InitiatorUserId, command.ChatId, command.Index);
+            await _chatMessagesPermissionValidator.ValidateRead(command.InitiatorUserId, command.ChatId, command.Index, command.Force, WorkerName).ConfigureAwait(false);
+            await _chatMessageStore.Read(command.ChatId, command.InitiatorUserId, command.Index, command.Force).ConfigureAwait(false);
+            var @event = _chatMessagesEventBuilder.BuildChatMessagesReadEvent(command.InitiatorUserId, command.ChatId, command.Index, command.Force);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
     }

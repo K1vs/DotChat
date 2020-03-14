@@ -28,7 +28,11 @@
         public async Task<PagedResult<List<ChatMessage>, ChatMessage>> Retrieve(Guid chatId, IReadOnlyCollection<MessageFilter> filters, PagingOptions pagingOptions)
         {
             await Task.Yield();
-            IEnumerable<ChatMessage> query = Store.Messages[chatId]
+            if(!Store.Messages.TryGetValue(chatId, out var messages))
+            {
+                return new PagedResult<List<ChatMessage>, ChatMessage>(new List<ChatMessage>(), null, null);
+            }
+            IEnumerable<ChatMessage> query = messages
                 .Values
                 .Where(r => filters.Any(filter => filter.Search == null || r.Text.Content.Contains(filter.Search)))
                 .OrderByDescending(r => r.Index);
@@ -45,7 +49,11 @@
         public async Task<PagedResult<List<ChatMessage>, ChatMessage>> Retrieve(Guid chatId, PagingOptions pagingOptions)
         {
             await Task.Yield();
-            IEnumerable<ChatMessage> query = Store.Messages[chatId]
+            if (!Store.Messages.TryGetValue(chatId, out var messages))
+            {
+                return new PagedResult<List<ChatMessage>, ChatMessage>(new List<ChatMessage>(), null, null);
+            }
+            IEnumerable<ChatMessage> query = messages
                 .Values
                 .OrderByDescending(r => r.Index);
             if (!int.TryParse(pagingOptions?.Cursor, out var skip))
@@ -61,7 +69,11 @@
         public async Task<ChatMessage> Retrieve(Guid chatId, Guid messageId)
         {
             await Task.Yield();
-            return Store.Messages[chatId][messageId];
+            if (!Store.Messages.TryGetValue(chatId, out var messages))
+            {
+                return null;
+            }
+            return messages[messageId];
         }
     }
 }

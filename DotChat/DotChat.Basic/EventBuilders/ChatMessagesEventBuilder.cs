@@ -40,9 +40,9 @@
             return new ChatMessageRemovedEvent(initiatorUserId, chatId, chatMessageId, version);
         }
 
-        public IChatMessagesReadEvent BuildChatMessagesReadEvent(Guid initiatorUserId, Guid chatId, long index)
+        public IChatMessagesReadEvent BuildChatMessagesReadEvent(Guid initiatorUserId, Guid chatId, long index, bool force)
         {
-            return new ChatMessagesReadEvent(initiatorUserId, chatId, index);
+            return new ChatMessagesReadEvent(initiatorUserId, chatId, index, force);
         }
     }
 }

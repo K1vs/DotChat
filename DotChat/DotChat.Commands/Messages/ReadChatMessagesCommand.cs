@@ -14,13 +14,15 @@
         {
         }
 
-        public ReadChatMessagesCommand(Guid initiatorUserId, Guid chatId, long index) : base(initiatorUserId)
+        public ReadChatMessagesCommand(Guid initiatorUserId, Guid chatId, long index, bool force) : base(initiatorUserId)
         {
             ChatId = chatId;
             Index = index;
+            Force = Force;
         }
 
         public Guid ChatId { get; set; }
         public long Index { get; set; }
+        public bool Force { get; set; }
     }
 }

@@ -89,11 +89,11 @@
             await _chatCommandSender.Send(command).ConfigureAwait(false);
         }
 
-        public async Task Read(Guid currentUserId, Guid chatId, long index)
+        public async Task Read(Guid currentUserId, Guid chatId, long index, bool force)
         {
-            await _chatMessagesPermissionValidator.ValidateRead(currentUserId, chatId, index, ServiceName)
+            await _chatMessagesPermissionValidator.ValidateRead(currentUserId, chatId, index, force, ServiceName)
                 .ConfigureAwait(false);
-            var command = _chatMessagesCommandBuilder.BuildReadChatMessagesCommand(currentUserId, chatId, index);
+            var command = _chatMessagesCommandBuilder.BuildReadChatMessagesCommand(currentUserId, chatId, index, force);
             await _chatCommandSender.Send(command).ConfigureAwait(false);
         }
     }

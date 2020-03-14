@@ -10,5 +10,6 @@
 
     public interface IReadChatMessagesCommand: ICommand, IChatRelated, IIndexed
     {
+        bool Force { get; }
     }
 }

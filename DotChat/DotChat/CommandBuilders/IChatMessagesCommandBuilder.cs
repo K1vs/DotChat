@@ -25,6 +25,6 @@
         IAddChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> BuildAddChatMessageCommand(Guid currentUserId, Guid chatId, Guid messageId, long index, bool isSystem, TChatMessageInfo chatMessageInfo);
         IEditChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> BuildEditChatMessageCommand(Guid currentUserId, Guid chatId, Guid messageId, TChatMessageInfo chatMessageInfo, Guid? archivedMessageId);
         IRemoveChatMessageCommand BuildRemoveChatMessageCommand(Guid currentUserId, Guid chatId, Guid messageId);
-        IReadChatMessagesCommand BuildReadChatMessagesCommand(Guid currentUserId, Guid chatId, long index);
+        IReadChatMessagesCommand BuildReadChatMessagesCommand(Guid currentUserId, Guid chatId, long index, bool force);
     }
 }

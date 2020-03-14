@@ -213,11 +213,11 @@ export default class DotChatClient{
         readers.forEach(reader => reader.addOrUpdate(messageId, {messageId: messageId, ... removedExt}, exist => _.merge(exist, removedExt)));
     }
 
-    async readMessages(chatId, index){
-        await this._connector.messages.read(chatId, index);
+    async readMessages(chatId, index, force){
+        await this._connector.messages.read(chatId, index, force);
         this._getChats(chatId).forEach(chat => {
             var exist = chat.participants.find(r => r.userId === this._userId);
-            if(exist){
+            if(exist && (exist.readIndex < index || force)){
                 exist.readIndex = index;
             }
         });
@@ -473,7 +473,7 @@ export default class DotChatClient{
                     var thisParticipant = chat.participants.find(r => r.userId === this._userId);
                     if(self && thisParticipant.readIndex < index){
                         thisParticipant.readIndex = index; 
-                        this.readMessages(chatId, index);
+                        this.readMessages(chatId, index, false);
                     }
                     this._setChatPersonalization(chat, thisParticipant);
                 }
