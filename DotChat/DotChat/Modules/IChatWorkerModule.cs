@@ -24,8 +24,8 @@
         where TChatWorkersConfiguration : IChatWorkersConfiguration
         where TPersonalizedChatsSummary : IPersonalizedChatsSummary
         where TPersonalizedChatCollection : IReadOnlyCollection<TPersonalizedChat>
-        where TPersonalizedChat : IPersonalizedChat<TChatParticipantCollection, TChatParticipant>
-        where TChat : IChat<TChatParticipantCollection, TChatParticipant>
+        where TPersonalizedChat : IPersonalizedChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TChat : IChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
         where TChatInfo : IChatInfo
         where TParticipationResultCollection : IReadOnlyCollection<TParticipationResult>
         where TParticipationResult : IParticipationResult<TChatParticipant>
@@ -63,7 +63,7 @@
             RegisterSystemMessagesBuilder(IDependencyRegistrar registrar);
 
 
-        IDependencyRegistrationBuilder<IChatStore<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TParticipationCandidateCollection, TParticipationCandidate, TChatFilter, TChatUserFilter, TMessageFilter, TChatsPagedResult, TPagingOptions>>
+        IDependencyRegistrationBuilder<IChatStore<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TParticipationCandidateCollection, TParticipationCandidate, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TChatsPagedResult, TPagingOptions>>
             RegisterChatStore(IDependencyRegistrar registrar);
 
         IDependencyRegistrationBuilder<IChatParticipantStore<TChatParticipant, TChatUser>> RegisterChatParticipantStore(IDependencyRegistrar registrar);
@@ -82,6 +82,6 @@
         IDependencyRegistrationBuilder<IChatMessageIndexationWorker<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>>
             RegisterChatMessageIndexationWorker(IDependencyRegistrar registrar);
 
-        IDependencyRegistrationBuilder<IChatSystemMessagesWorker<TChat, TChatInfo, TParticipationResultCollection, TParticipationResult, TChatParticipantCollection, TChatParticipant>> RegisterChatSystemMessagesWorker(IDependencyRegistrar registrar);
+        IDependencyRegistrationBuilder<IChatSystemMessagesWorker<TChat, TChatInfo, TParticipationResultCollection, TParticipationResult, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>> RegisterChatSystemMessagesWorker(IDependencyRegistrar registrar);
     }
 }

@@ -18,17 +18,18 @@
     using Notifications.Participants;
     using Participants;
 
-    public class SignalRNotificationSender<TChatsHub, TChatsClient, TChatParticipantsHub, TChatParticipantsClient, TChatMessagesHub, TChatMessagesClient, TPersonalizedChat,
+    public class SignalRNotificationSender<TChatsHub, TChatsClient, TChatParticipantsHub, TChatParticipantsClient, TChatMessagesHub, TChatMessagesClient, TPersonalizedChat, TChat,
         TChatInfo, TParticipationResultCollection, TParticipationResult, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, 
         TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> : INotificationSender
         where TChatsHub : Hub<TChatsClient>
         where TChatParticipantsHub : Hub<TChatParticipantsClient>
         where TChatMessagesHub : Hub<TChatMessagesClient>
-        where TChatsClient: class, IChatsClient<TPersonalizedChat, TChatInfo, TChatParticipantCollection, TChatParticipant>
+        where TChatsClient: class, IChatsClient<TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
         where TChatParticipantsClient: class, IChatParticipantsClient<TParticipationResultCollection, TParticipationResult, TChatParticipant>
         where TChatMessagesClient: class, IChatMessagesClient<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, 
             TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TPersonalizedChat : IPersonalizedChat<TChatParticipantCollection, TChatParticipant>
+        where TPersonalizedChat : IPersonalizedChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TChat : IChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
         where TChatInfo : IChatInfo
         where TParticipationResultCollection : IReadOnlyCollection<TParticipationResult>
         where TParticipationResult : IParticipationResult<TChatParticipant>
@@ -180,7 +181,7 @@
         protected virtual async Task SendChatsNotifications<TNotificationBase>(TNotificationBase notification,
             TChatsClient chatsClient) where TNotificationBase : INotification
         {
-            if (notification is IChatAddedNotification<TPersonalizedChat, TChatParticipantCollection, TChatParticipant>
+            if (notification is IChatAddedNotification<TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
                 chatAddedNotification)
             {
                 await chatsClient.ChatAdded(chatAddedNotification);

@@ -15,6 +15,7 @@
     using Chats;
     using Demo.Others;
     using Exceptions;
+    using K1vs.DotChat.Basic.Messages.Typed;
     using Messages;
     using Models.Chats;
     using Models.Messages.Typed;
@@ -146,7 +147,7 @@
                 {
                     chatId = chatRelated.ChatId;
                 }
-                else if (notification is IHasPersonalizedChat<PersonalizedChat, List<ChatParticipant>, ChatParticipant> hasPersonalizedChat)
+                else if (notification is IHasPersonalizedChat<PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> hasPersonalizedChat)
                 {
                     chatId = hasPersonalizedChat.PersonalizedChat.ChatId;
                 }

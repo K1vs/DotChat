@@ -12,8 +12,8 @@
     using Messages.Typed;
     using Participants;
 
-    public interface ISystemMessagesBuilder<in TChat, in TChatInfo, in TParticipationResultCollection, in TParticipationResult, in TChatParticipantCollection, in TChatParticipant, out TChatUser, out TChatMessageInfo, out TTextMessage, out TQuoteMessage, out TMessageAttachmentCollection, out TMessageAttachment, out TChatRefMessageCollection, out TChatRefMessage, out TContactMessageCollection, out TContactMessage>
-        where TChat: IChat<TChatParticipantCollection, TChatParticipant>
+    public interface ISystemMessagesBuilder<in TChat, in TChatInfo, in TParticipationResultCollection, in TParticipationResult, in TChatParticipantCollection, in TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TChat: IChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
         where TChatInfo: IChatInfo
         where TParticipationResultCollection : IReadOnlyCollection<TParticipationResult>
         where TParticipationResult : IParticipationResult<TChatParticipant>
@@ -30,7 +30,7 @@
         where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
         where TContactMessage: IContactMessage<TChatUser>
     {
-        IReadOnlyCollection<TChatMessageInfo> BuildChatAddedMessage(IChatAddedEvent<TChat, TChatParticipantCollection, TChatParticipant> @event);
+        IReadOnlyCollection<TChatMessageInfo> BuildChatAddedMessage(IChatAddedEvent<TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event);
         TChatMessageInfo BuildChatInfoEditedMessage(IChatInfoEditedEvent<TChatInfo> @event);
         IReadOnlyCollection<TChatMessageInfo> BuildBulkParticipantsAppendedMessages(IChatParticipantsAppendedEvent<TParticipationResultCollection, TParticipationResult, TChatParticipant> @event);
         TChatMessageInfo BuildChatParticipantAddedMessage(IChatParticipantAddedEvent<TChatParticipant> @event);

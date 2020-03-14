@@ -87,9 +87,9 @@
             return registrar.Register<ChatMessageIndexationWorker>().AsSelf().As<IChatMessageIndexationWorker<ChatInfo, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>>().AsTransient();
         }
 
-        public override IDependencyRegistrationBuilder<IChatSystemMessagesWorker<Chat, ChatInfo, List<ParticipationResult>, ParticipationResult, List<ChatParticipant>, ChatParticipant>> RegisterChatSystemMessagesWorker(IDependencyRegistrar registrar)
+        public override IDependencyRegistrationBuilder<IChatSystemMessagesWorker<Chat, ChatInfo, List<ParticipationResult>, ParticipationResult, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>> RegisterChatSystemMessagesWorker(IDependencyRegistrar registrar)
         {
-            return registrar.Register<ChatSystemMessagesWorker>().AsSelf().As<IChatSystemMessagesWorker<Chat, ChatInfo, List<ParticipationResult>, ParticipationResult, List<ChatParticipant>, ChatParticipant>>().AsTransient();
+            return registrar.Register<ChatSystemMessagesWorker>().AsSelf().As<IChatSystemMessagesWorker<Chat, ChatInfo, List<ParticipationResult>, ParticipationResult, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>>().AsTransient();
         }
     }
 }

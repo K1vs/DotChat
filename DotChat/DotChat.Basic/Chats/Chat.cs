@@ -4,10 +4,13 @@
     using System.Collections.Generic;
     using DotChat.Chats;
     using DotChat.Participants;
+    using K1vs.DotChat.Basic.Messages;
+    using K1vs.DotChat.Basic.Messages.Typed;
+    using K1vs.DotChat.Models.Messages.Typed;
     using Models.Chats;
     using Models.Participants;
 
-    public class Chat : Chat<List<ChatParticipant>, ChatParticipant>
+    public class Chat : Chat<ChatInfo, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>
     {
         public Chat()
         {

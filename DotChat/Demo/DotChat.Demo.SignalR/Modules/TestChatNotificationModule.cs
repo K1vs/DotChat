@@ -24,7 +24,7 @@
 
         public override IDependencyRegistrationBuilder<INotificationSender> RegisterNotificationSender(IDependencyRegistrar registrar)
         {
-            return registrar.Register<SignalRNotificationSender<ChatsHub, IChatsClient, ChatParticipantsHub, IChatParticipantsClient, ChatMessagesHub, IChatMessagesClient, PersonalizedChat,
+            return registrar.Register<SignalRNotificationSender<ChatsHub, IChatsClient, ChatParticipantsHub, IChatParticipantsClient, ChatMessagesHub, IChatMessagesClient, PersonalizedChat, Chat,
                 ChatInfo, List<ParticipationResult>, ParticipationResult, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessage, ChatMessageInfo, TextMessage,
                 QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>>()
                 .AsSelf()

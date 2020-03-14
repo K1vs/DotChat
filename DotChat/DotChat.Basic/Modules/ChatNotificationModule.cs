@@ -54,9 +54,9 @@
             return registrar.Register(_chatNotificationsConfiguration).AsSelf().As<IChatNotificationsConfiguration>().AsSingleton();
         }
 
-        public override IDependencyRegistrationBuilder<IChatsNotificationBuilder<PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant>> RegisterChatsNotificationBuilder(IDependencyRegistrar registrar)
+        public override IDependencyRegistrationBuilder<IChatsNotificationBuilder<PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>> RegisterChatsNotificationBuilder(IDependencyRegistrar registrar)
         {
-            return registrar.Register<ChatsNotificationBuilder>().AsSelf().As<IChatsNotificationBuilder<PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant>>().AsTransient();
+            return registrar.Register<ChatsNotificationBuilder>().AsSelf().As<IChatsNotificationBuilder<PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>>().AsTransient();
         }
 
         public override IDependencyRegistrationBuilder<IChatParticipantsNotificationBuilder<List<ParticipationResult>, ParticipationResult, ChatParticipant>> RegisterChatParticipantsNotificationBuilder(IDependencyRegistrar registrar)
@@ -69,9 +69,9 @@
             return registrar.Register<ChatMessagesNotificationBuilder>().AsSelf().As<IChatMessagesNotificationBuilder<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>>().AsTransient();
         }
 
-        public override IDependencyRegistrationBuilder<IChatNotifier<Chat, ChatInfo, List<ChatParticipant>, ChatParticipant>> RegisterChatNotifier(IDependencyRegistrar registrar)
+        public override IDependencyRegistrationBuilder<IChatNotifier<Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>> RegisterChatNotifier(IDependencyRegistrar registrar)
         {
-            return registrar.Register<ChatNotifier>().AsSelf().As<IChatNotifier<Chat, ChatInfo, List<ChatParticipant>, ChatParticipant>>().AsTransient();
+            return registrar.Register<ChatNotifier>().AsSelf().As<IChatNotifier<Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>>().AsTransient();
         }
 
         public override IDependencyRegistrationBuilder<IChatParticipantNotifier<List<ParticipationResult>, ParticipationResult, ChatParticipant>> RegisterChatParticipantNotifier(IDependencyRegistrar registrar)

@@ -4,10 +4,24 @@
     using System.Collections.Generic;
     using DotChat.Chats;
     using DotChat.Participants;
+    using K1vs.DotChat.Messages;
+    using K1vs.DotChat.Messages.Typed;
 
-    public class Chat<TChatParticipantCollection, TChatParticipant> : ChatInfo, IChat<TChatParticipantCollection, TChatParticipant>
+    public class Chat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> 
+        : ChatInfo, IChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TChatInfo : IChatInfo
         where TChatParticipantCollection : IReadOnlyCollection<TChatParticipant>
         where TChatParticipant : IChatParticipant
+        where TChatUser : IChatUser
+        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TTextMessage : ITextMessage
+        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
+        where TMessageAttachment : IMessageAttachment
+        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
+        where TChatRefMessage : IChatRefMessage<TChatInfo>
+        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
+        where TContactMessage : IContactMessage<TChatUser>
     {
         public Chat()
         {

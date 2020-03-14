@@ -27,7 +27,7 @@
             return $"{SystemMessageStyle}.{name}";
         }
 
-        public virtual IReadOnlyCollection<ChatMessageInfo> BuildChatAddedMessage(IChatAddedEvent<Chat, List<ChatParticipant>, ChatParticipant> @event)
+        public virtual IReadOnlyCollection<ChatMessageInfo> BuildChatAddedMessage(IChatAddedEvent<Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> @event)
         {
             var chatMessage = new ChatMessageInfo(MessageType.ChatRef, 0, immutable:true, style: MessageStyle("ChatAdded"), chatRefs: new List<ChatRefMessage>() { new ChatRefMessage(@event.Chat.ChatId, @event.Chat)});
             var result = new List<ChatMessageInfo>{ chatMessage };

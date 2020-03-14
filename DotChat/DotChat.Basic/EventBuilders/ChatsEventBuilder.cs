@@ -11,12 +11,15 @@
     using DotChat.Events.Chat;
     using DotChat.Events.Chats;
     using Events.Chat;
+    using K1vs.DotChat.Basic.Messages;
+    using K1vs.DotChat.Basic.Messages.Typed;
+    using K1vs.DotChat.Models.Messages.Typed;
     using Models.Chats;
     using Models.Participants;
 
-    public class ChatsEventBuilder: IChatsEventBuilder<Chat, ChatInfo, List<ChatParticipant>, ChatParticipant>
+    public class ChatsEventBuilder: IChatsEventBuilder<Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>
     {
-        public IChatAddedEvent<Chat, List<ChatParticipant>, ChatParticipant> BuildChatAddedEvent(Guid initiatorUserId, Chat chat)
+        public IChatAddedEvent<Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildChatAddedEvent(Guid initiatorUserId, Chat chat)
         {
             return new ChatAddedEvent(initiatorUserId, chat);
         }

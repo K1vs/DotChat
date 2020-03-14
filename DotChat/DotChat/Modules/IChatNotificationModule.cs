@@ -20,8 +20,8 @@
         where TChatNotificationsConfiguration : IChatNotificationsConfiguration
         where TPersonalizedChatsSummary : IPersonalizedChatsSummary
         where TPersonalizedChatCollection : IReadOnlyCollection<TPersonalizedChat>
-        where TPersonalizedChat : IPersonalizedChat<TChatParticipantCollection, TChatParticipant>
-        where TChat : IChat<TChatParticipantCollection, TChatParticipant>
+        where TPersonalizedChat : IPersonalizedChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TChat : IChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
         where TChatInfo : IChatInfo
         where TParticipationResultCollection : IReadOnlyCollection<TParticipationResult>
         where TParticipationResult : IParticipationResult<TChatParticipant>
@@ -52,7 +52,7 @@
         IDependencyRegistrationBuilder<TChatNotificationsConfiguration> RegisterChatNotificationsConfiguration(IDependencyRegistrar registrar);
 
 
-        IDependencyRegistrationBuilder<IChatsNotificationBuilder<TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant>> RegisterChatsNotificationBuilder(IDependencyRegistrar registrar);
+        IDependencyRegistrationBuilder<IChatsNotificationBuilder<TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>> RegisterChatsNotificationBuilder(IDependencyRegistrar registrar);
 
         IDependencyRegistrationBuilder<IChatParticipantsNotificationBuilder<TParticipationResultCollection, TParticipationResult, TChatParticipant>> RegisterChatParticipantsNotificationBuilder(IDependencyRegistrar registrar);
 
@@ -60,7 +60,7 @@
             RegisterChatMessagesNotificationBuilder(IDependencyRegistrar registrar);
 
 
-        IDependencyRegistrationBuilder<IChatNotifier<TChat, TChatInfo, TChatParticipantCollection, TChatParticipant>> RegisterChatNotifier(IDependencyRegistrar registrar);
+        IDependencyRegistrationBuilder<IChatNotifier<TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>> RegisterChatNotifier(IDependencyRegistrar registrar);
 
         IDependencyRegistrationBuilder<IChatParticipantNotifier<TParticipationResultCollection, TParticipationResult, TChatParticipant>> RegisterChatParticipantNotifier(IDependencyRegistrar registrar);
 

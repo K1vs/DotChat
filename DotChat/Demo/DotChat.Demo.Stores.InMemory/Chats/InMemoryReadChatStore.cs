@@ -11,11 +11,14 @@
     using DotChat.Chats;
     using DotChat.Participants;
     using DotChat.Stores.Chats;
+    using K1vs.DotChat.Basic.Messages;
+    using K1vs.DotChat.Basic.Messages.Typed;
     using K1vs.DotChat.FrameworkUtils.Extensions;
+    using K1vs.DotChat.Models.Messages.Typed;
     using Models.Chats;
     using Models.Participants;
 
-    public class InMemoryReadChatStore: IReadChatStore<PersonalizedChatsSummary, List<PersonalizedChat>, PersonalizedChat, Chat, List<ChatParticipant>, ChatParticipant, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions>
+    public class InMemoryReadChatStore: IReadChatStore<PersonalizedChatsSummary, List<PersonalizedChat>, PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions>
     {
         protected readonly ChatServicesConfiguration ServicesConfiguration;
         protected readonly InMemoryStore Store;

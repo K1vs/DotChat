@@ -12,20 +12,33 @@
     using Common.Filters;
     using Common.Paging;
     using FrameworkUtils.Extensions;
+    using K1vs.DotChat.Messages;
+    using K1vs.DotChat.Messages.Typed;
     using Participants;
     using Stores.Chats;
     using Stores.Participants;
 
-    public class ChatParticipantsPermissionValidator<TChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatParticipantCollection, TChatParticipant, TParticipationCandidateCollection, TParticipationCandidate, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> : 
+    public class ChatParticipantsPermissionValidator<TChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TParticipationCandidateCollection, TParticipationCandidate, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> : 
         IChatParticipantsPermissionValidator<TParticipationCandidateCollection, TParticipationCandidate>
         where TChatsSummary : IPersonalizedChatsSummary
         where TPersonalizedChatCollection : IReadOnlyCollection<TPersonalizedChat>
-        where TPersonalizedChat : IPersonalizedChat<TChatParticipantCollection, TChatParticipant>
-        where TChat : IChat<TChatParticipantCollection, TChatParticipant>
+        where TPersonalizedChat : IPersonalizedChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TChat : IChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TChatInfo : IChatInfo
         where TChatParticipantCollection : IReadOnlyCollection<TChatParticipant>
         where TChatParticipant : IChatParticipant
         where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
         where TParticipationCandidate : IParticipationCandidate
+        where TChatUser : IChatUser
+        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TTextMessage : ITextMessage
+        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
+        where TMessageAttachment : IMessageAttachment
+        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
+        where TChatRefMessage : IChatRefMessage<TChatInfo>
+        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
+        where TContactMessage : IContactMessage<TChatUser>
         where TChatFilter : IChatFilter<TChatUserFilter, TMessageFilter>
         where TChatUserFilter : IChatUserFilter
         where TMessageFilter : IMessageFilter
@@ -33,7 +46,7 @@
         where TPagingOptions : IPagingOptions
     {
         private readonly IReadChatParticipantStore<TChatParticipant> _readChatParticipantStore;
-        private readonly IReadChatStore<TChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatParticipantCollection, TChatParticipant, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> _readChatStore;
+        private readonly IReadChatStore<TChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> _readChatStore;
 
         protected List<ChatParticipantType> ParticipantsTypesPriority = new List<ChatParticipantType>
         {
@@ -41,7 +54,7 @@
             ChatParticipantType.Participant, ChatParticipantType.Moderator, ChatParticipantType.Admin
         };
 
-        public ChatParticipantsPermissionValidator(IReadChatParticipantStore<TChatParticipant> readChatParticipantStore, IReadChatStore<TChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatParticipantCollection, TChatParticipant, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> readChatStore)
+        public ChatParticipantsPermissionValidator(IReadChatParticipantStore<TChatParticipant> readChatParticipantStore, IReadChatStore<TChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> readChatStore)
         {
             _readChatParticipantStore = readChatParticipantStore;
             _readChatStore = readChatStore;
