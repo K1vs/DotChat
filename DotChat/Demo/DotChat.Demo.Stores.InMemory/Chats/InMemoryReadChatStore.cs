@@ -11,6 +11,7 @@
     using DotChat.Chats;
     using DotChat.Participants;
     using DotChat.Stores.Chats;
+    using K1vs.DotChat.FrameworkUtils.Extensions;
     using Models.Chats;
     using Models.Participants;
 
@@ -72,7 +73,7 @@
         {
             await Task.Yield();
             IEnumerable<PersonalizedChat> query = Store.Chats
-                .Where(r => r.Value.Participants.Any(e => e.UserId == userId))
+                .Where(r => r.Value.Participants.Any(e => e.UserId == userId && e.ChatParticipantStatus.NotIn(ChatParticipantStatus.Removed, ChatParticipantStatus.Blocked)))
                 .Select(r => Store.Personalize(r.Value, userId))
                 .OrderByDescending(r => r.LastTimestamp);
             if (!int.TryParse(pagingOptions?.Cursor, out var skip))

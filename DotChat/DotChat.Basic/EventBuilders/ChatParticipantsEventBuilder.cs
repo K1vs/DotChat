@@ -15,43 +15,43 @@
     public class ChatParticipantsEventBuilder: IChatParticipantsEventBuilder<List<ParticipationResult>, ParticipationResult, ChatParticipant>
     {
         public ParticipationResult BuildParticipationResult(ChatParticipant chatParticipant,
-            ChatParticipantStatus previousChatParticipantStatus)
+            ChatParticipantStatus? previousChatParticipantStatus)
         {
             return new ParticipationResult(previousChatParticipantStatus, chatParticipant);
         }
 
         public IChatParticipantAddedEvent<ChatParticipant> BuildChatParticipantAddedEvent(Guid initiatorUserId, Guid chatId, ChatParticipant chatParticipant,
-            ChatParticipantStatus previousChatParticipantStatus)
+            ChatParticipantStatus? previousChatParticipantStatus)
         {
             return new ChatParticipantAddedEvent<ChatParticipant>(initiatorUserId, chatId, chatParticipant, previousChatParticipantStatus);
         }
 
         public IChatParticipantAppliedEvent<ChatParticipant> BuildChatParticipantAppliedEvent(Guid initiatorUserId, Guid chatId,
-            ChatParticipant chatParticipant, ChatParticipantStatus previousChatParticipantStatus)
+            ChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus)
         {
             return new ChatParticipantAppliedEvent<ChatParticipant>(initiatorUserId, chatId, chatParticipant, previousChatParticipantStatus);
         }
 
         public IChatParticipantInvitedEvent<ChatParticipant> BuildChatParticipantInvitedEvent(Guid initiatorUserId, Guid chatId,
-            ChatParticipant chatParticipant, ChatParticipantStatus previousChatParticipantStatus)
+            ChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus)
         {
             return new ChatParticipantInvitedEvent<ChatParticipant>(initiatorUserId, chatId, chatParticipant, previousChatParticipantStatus);
         }
 
         public IChatParticipantRemovedEvent<ChatParticipant> BuildChatParticipantRemovedEvent(Guid initiatorUserId, Guid chatId,
-            ChatParticipant chatParticipant, ChatParticipantStatus previousChatParticipantStatus)
+            ChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus)
         {
             return new ChatParticipantRemovedEvent<ChatParticipant>(initiatorUserId, chatId, chatParticipant, previousChatParticipantStatus);
         }
 
         public IChatParticipantBlockedEvent<ChatParticipant> BuildChatParticipantBlockedEvent(Guid initiatorUserId, Guid chatId,
-            ChatParticipant chatParticipant, ChatParticipantStatus previousChatParticipantStatus)
+            ChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus)
         {
             return new ChatParticipantBlockedEvent(initiatorUserId, chatId, chatParticipant, previousChatParticipantStatus);
         }
 
         public IChatParticipantTypeChangedEvent<ChatParticipant> BuildChatParticipantTypeChangedEvent(Guid initiatorUserId, Guid chatId,
-            ChatParticipant chatParticipant, ChatParticipantStatus previousChatParticipantStatus)
+            ChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus)
         {
             return new ChatParticipantTypeChangedEvent(initiatorUserId, chatId, chatParticipant);
         }

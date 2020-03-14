@@ -25,5 +25,6 @@ namespace K1vs.DotChat.Messages
         Guid AuthorId { get; }
         MessageStatus MessageStatus { get; }
         Guid? OriginalMessage { get; }
+        bool IsSystem { get; }
     }
 }

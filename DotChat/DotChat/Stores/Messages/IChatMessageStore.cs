@@ -30,7 +30,7 @@
         where TPagingOptions : IPagingOptions
     {
         Task Read(Guid chatId, Guid userId, long index);
-        Task<TChatMessage> Create(Guid chatId, Guid userId, Guid messageId, TChatMessageInfo messageInfo, DateTime timestamp, long index, Guid creatorId);
+        Task<TChatMessage> Create(Guid chatId, Guid userId, Guid messageId, TChatMessageInfo messageInfo, DateTime timestamp, long index, bool isSystem, Guid creatorId);
         Task<TChatMessage> Update(Guid chatId, Guid messageId, TChatMessageInfo messageInfo, Guid modifierId);
         Task<TChatMessage> Delete(Guid chatId, Guid messageId, Guid removerId);
         Task Archive(Guid chatId, Guid originalMessageId, Guid achievedMessageId, TChatMessage messageInfo, Guid archiverId);

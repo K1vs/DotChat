@@ -31,22 +31,34 @@
             _chatParticipantsService = chatParticipantsService;
         }
 
-        public async Task Add(Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style = null,
-            string metadata = null)
+        public async Task Add(Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata)
         {
             await _chatParticipantsService.Add(CurrentUserId, chatId, userId, chatParticipantType, style, metadata);
         }
 
-        public async Task Invite(Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style = null,
-            string metadata = null)
+        public async Task Invite(Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata)
         {
             await _chatParticipantsService.Invite(CurrentUserId, chatId, userId, chatParticipantType, style, metadata);
         }
 
-        public async Task Apply(Guid chatId, ChatParticipantType chatParticipantType, string style = null,
-            string metadata = null)
+        public async Task Apply(Guid chatId, ChatParticipantType chatParticipantType, string style, string metadata)
         {
             await _chatParticipantsService.Apply(CurrentUserId, chatId, chatParticipantType, style, metadata);
+        }
+
+        public async Task Add(Guid chatId, Guid userId, ChatParticipantType chatParticipantType)
+        {
+            await _chatParticipantsService.Add(CurrentUserId, chatId, userId, chatParticipantType, null, null);
+        }
+
+        public async Task Invite(Guid chatId, Guid userId, ChatParticipantType chatParticipantType)
+        {
+            await _chatParticipantsService.Invite(CurrentUserId, chatId, userId, chatParticipantType, null, null);
+        }
+
+        public async Task Apply(Guid chatId, ChatParticipantType chatParticipantType)
+        {
+            await _chatParticipantsService.Apply(CurrentUserId, chatId, chatParticipantType, null, null);
         }
 
         public async Task Remove(Guid chatId, Guid userId)
@@ -59,10 +71,14 @@
             await _chatParticipantsService.Block(CurrentUserId, chatId, userId);
         }
 
-        public async Task ChangeType(Guid chatId, Guid userId, ChatParticipantType chatParticipantType,
-            string style = null, string metadata = null)
+        public async Task ChangeType(Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata)
         {
             await _chatParticipantsService.ChangeType(CurrentUserId, chatId, userId, chatParticipantType, style, metadata);
+        }
+
+        public async Task ChangeType(Guid chatId, Guid userId, ChatParticipantType chatParticipantType)
+        {
+            await _chatParticipantsService.ChangeType(CurrentUserId, chatId, userId, chatParticipantType, null, null);
         }
 
         public async Task Append(Guid chatId, TParticipationCandidateCollection addCandidates, TParticipationCandidateCollection inviteCandidates)

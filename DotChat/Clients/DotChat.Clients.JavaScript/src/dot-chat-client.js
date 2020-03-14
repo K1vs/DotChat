@@ -365,7 +365,7 @@ export default class DotChatClient{
 
     _registerChatParticipantsNotifications(){
         var addOrUpdateParticipant = (participant, chatWithReader) => {
-            chatWithReader.reader.update(chatWithReader.chat.id, Number.MAX_SAFE_INTEGER, (chat) => {
+            chatWithReader.reader.update(chatWithReader.chat.chatId, Number.MAX_SAFE_INTEGER, (chat) => {
                 var exist = chat.participants.find(r => r.userId === participant.userId);
                 if(exist){
                     if(exist.version == undefined || exist.version < participant.version){

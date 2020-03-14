@@ -50,8 +50,11 @@
 
         public async Task Handle(IAddChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> command, IChatBusContext chatEventPublisher)
         {
-            await _chatMessagesPermissionValidator.ValidateAdd(command.InitiatorUserId, command.ChatId, command.MessageInfo, WorkerName).ConfigureAwait(false);
-            var message = await _chatMessageStore.Create(command.ChatId, command.InitiatorUserId, command.MessageId, command.MessageInfo, command.Timestamp, command.Index, command.InitiatorUserId).ConfigureAwait(false);
+            if (!command.IsSystem)
+            {
+                await _chatMessagesPermissionValidator.ValidateAdd(command.InitiatorUserId, command.ChatId, command.MessageInfo, WorkerName).ConfigureAwait(false);
+            }
+            var message = await _chatMessageStore.Create(command.ChatId, command.InitiatorUserId, command.MessageId, command.MessageInfo, command.Timestamp, command.Index, command.IsSystem, command.InitiatorUserId).ConfigureAwait(false);
             if (!ChatWorkersConfiguration.FastMessageMode)
             {
                 var @event = _chatMessagesEventBuilder.BuildChatMessageAddedEvent(command.InitiatorUserId, command.ChatId, message);
@@ -61,8 +64,11 @@
 
         public async Task Handle(IEditChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> command, IChatBusContext chatEventPublisher)
         {
-            await _chatMessagesPermissionValidator.ValidateEdit(command.InitiatorUserId, command.ChatId, command.MessageId, command.MessageInfo, WorkerName).ConfigureAwait(false);
             var currentMessage = await _chatMessageStore.Retrieve(command.ChatId, command.MessageId).ConfigureAwait(false);
+            if (!currentMessage.IsSystem)
+            {
+                await _chatMessagesPermissionValidator.ValidateEdit(command.InitiatorUserId, command.ChatId, command.MessageId, command.MessageInfo, WorkerName).ConfigureAwait(false);
+            }
             if (currentMessage.Immutable)
             {
                 throw new DotChatEditImmutableMessageException(command.MessageId, command.ChatId, command.InitiatorUserId);
@@ -75,8 +81,11 @@
 
         public async Task Handle(IRemoveChatMessageCommand command, IChatBusContext chatEventPublisher)
         {
-            await _chatMessagesPermissionValidator.ValidateRemove(command.InitiatorUserId, command.ChatId, command.MessageId, WorkerName).ConfigureAwait(false);
             var currentMessage = await _chatMessageStore.Retrieve(command.ChatId, command.MessageId).ConfigureAwait(false);
+            if (!currentMessage.IsSystem)
+            {
+                await _chatMessagesPermissionValidator.ValidateRemove(command.InitiatorUserId, command.ChatId, command.MessageId, WorkerName).ConfigureAwait(false);
+            }
             if (currentMessage.Immutable)
             {
                 throw new DotChatRemoveImmutableMessageException(command.MessageId, command.ChatId, command.InitiatorUserId);

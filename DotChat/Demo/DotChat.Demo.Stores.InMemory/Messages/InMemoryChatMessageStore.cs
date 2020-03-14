@@ -29,10 +29,10 @@
             p.ReadIndex = index;
         }
 
-        public async Task<ChatMessage> Create(Guid chatId, Guid userId, Guid messageId, ChatMessageInfo messageInfo, DateTime timestamp, long index, Guid creatorId)
+        public async Task<ChatMessage> Create(Guid chatId, Guid userId, Guid messageId, ChatMessageInfo messageInfo, DateTime timestamp, long index, bool isSystem, Guid creatorId)
         {
             await Task.Yield();
-            var message = new ChatMessage(messageId, timestamp, index, userId, MessageStatus.Actual, null, messageInfo);
+            var message = new ChatMessage(messageId, timestamp, index, userId, MessageStatus.Actual, null, isSystem, messageInfo);
             Store.Messages.AddOrUpdate(chatId, k => new ConcurrentDictionary<Guid, ChatMessage>(Enumerable.Repeat(new KeyValuePair<Guid, ChatMessage>(message.MessageId, message), 1)), (k, ov) =>
                 {
                     ov.TryAdd(message.MessageId, message);
@@ -55,6 +55,7 @@
             message.MessageAttachments = messageInfo.MessageAttachments;
             message.ChatRefs = messageInfo.ChatRefs;
             message.Contacts = messageInfo.Contacts;
+            message.Version += 1;
             return message;
         }
 
@@ -62,6 +63,7 @@
         {
             await Task.Yield();
             Store.Messages[chatId].TryRemove(messageId, out var chatMessage);
+            chatMessage.Version += 1;
             return chatMessage;
         }
 

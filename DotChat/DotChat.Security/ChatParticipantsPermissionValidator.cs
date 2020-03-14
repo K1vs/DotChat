@@ -108,7 +108,7 @@
         {
             var participant = await _readChatParticipantStore.Retrieve(chatId, currentUserId);
             var removedParticipant = await _readChatParticipantStore.Retrieve(chatId, userId);
-            if (CanNotEditParticipant(participant))
+            if (currentUserId != userId && CanNotEditParticipant(participant))
             {
                 throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Remove, ErrorEntity.Participant),
                     serviceName, methodName, chatId, currentUserId);

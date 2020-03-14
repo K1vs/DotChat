@@ -21,5 +21,6 @@
         where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
         where TContactMessage : IContactMessage<TChatUser>
     {
+        bool IsSystem { get; }
     }
 }

@@ -67,7 +67,7 @@
         {
             await _chatMessagesPermissionValidator.ValidateAdd(currentUserId, chatId, messageInfo, ServiceName)
                 .ConfigureAwait(false);
-            var command = _chatMessagesCommandBuilder.BuildIndexChatMessageCommand(currentUserId, chatId, messageId, messageInfo);
+            var command = _chatMessagesCommandBuilder.BuildIndexChatMessageCommand(currentUserId, chatId, messageId, false, messageInfo);
             await _chatCommandSender.Send(command).ConfigureAwait(false);
             return command.MessageId;
         }

@@ -53,12 +53,12 @@
             return await _chatsService.GetSummary(CurrentUserId);
         }
 
-        public async Task<TPagedResult> GetPage(TChatFilter filter, TPagingOptions pagingOptions = default)
+        public async Task<TPagedResult> GetPage(TChatFilter filter, TPagingOptions pagingOptions)
         {
             return await _chatsService.GetPage(CurrentUserId, filter, pagingOptions);
         }
 
-        public async Task<TPagedResult> GetPage(TPagingOptions pagingOptions = default)
+        public async Task<TPagedResult> GetPage(TPagingOptions pagingOptions)
         {
             return await _chatsService.GetPage(CurrentUserId, pagingOptions);
         }

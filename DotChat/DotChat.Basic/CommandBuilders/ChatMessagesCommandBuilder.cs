@@ -16,15 +16,15 @@
 
     public class ChatMessagesCommandBuilder: IChatMessagesCommandBuilder<ChatInfo, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>
     {
-        public IIndexChatMessageCommand<ChatInfo, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildIndexChatMessageCommand(Guid currentUserId, Guid chatId, Guid? messageId, ChatMessageInfo chatMessageInfo)
+        public IIndexChatMessageCommand<ChatInfo, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildIndexChatMessageCommand(Guid currentUserId, Guid chatId, Guid? messageId, bool isSystem, ChatMessageInfo chatMessageInfo)
         {
-            return new IndexChatMessageCommand(currentUserId, chatId, messageId ?? Guid.NewGuid(), chatMessageInfo);
+            return new IndexChatMessageCommand(currentUserId, chatId, messageId ?? Guid.NewGuid(), isSystem, chatMessageInfo);
         }
 
-        public IAddChatMessageCommand<ChatInfo, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildAddChatMessageCommand(Guid currentUserId, Guid chatId, Guid messageId, long index,
+        public IAddChatMessageCommand<ChatInfo, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildAddChatMessageCommand(Guid currentUserId, Guid chatId, Guid messageId, long index, bool isSystem,
             ChatMessageInfo chatMessageInfo)
         {
-            return new AddChatMessageCommand(currentUserId, chatId, messageId, index, chatMessageInfo);
+            return new AddChatMessageCommand(currentUserId, chatId, messageId, index, isSystem, chatMessageInfo);
         }
 
         public IEditChatMessageCommand<ChatInfo, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildEditChatMessageCommand(Guid currentUserId, Guid chatId, Guid messageId,

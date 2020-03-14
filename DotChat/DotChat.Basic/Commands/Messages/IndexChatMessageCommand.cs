@@ -19,7 +19,7 @@
         {
         }
 
-        public IndexChatMessageCommand(Guid initiatorUserId, Guid chatId, Guid messageId, ChatMessageInfo messageInfo) : base(initiatorUserId, chatId, messageId, messageInfo)
+        public IndexChatMessageCommand(Guid initiatorUserId, Guid chatId, Guid messageId, bool isSystem, ChatMessageInfo messageInfo) : base(initiatorUserId, chatId, messageId, isSystem, messageInfo)
         {
         }
     }

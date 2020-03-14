@@ -26,7 +26,7 @@
         {
         }
 
-        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage, MessageType type, long version, bool immutable = false, string style = null, string metadata = null, TTextMessage text = default, TQuoteMessage quote = default, TMessageAttachmentCollection messageAttachments = default, TChatRefMessageCollection chatRefs = default, TContactMessageCollection contacts = default)
+        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage, bool isSystem, MessageType type, long version, bool immutable = false, string style = null, string metadata = null, TTextMessage text = default, TQuoteMessage quote = default, TMessageAttachmentCollection messageAttachments = default, TChatRefMessageCollection chatRefs = default, TContactMessageCollection contacts = default)
             : base(type, version, immutable, style, metadata, text, quote, messageAttachments, chatRefs, contacts)
         {
             MessageId = messageId;
@@ -36,18 +36,20 @@
             MessageStatus = messageStatus;
             OriginalMessage = originalMessage;
             Version = version;
+            IsSystem = isSystem;
         }
 
-        public ChatMessage(IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> messageInfo, Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage)
-            : this(messageId, timestamp, index, authorId, messageStatus, originalMessage, messageInfo.Type, messageInfo.Version, messageInfo.Immutable, messageInfo.Style, messageInfo.Metadata, messageInfo.Text, messageInfo.Quote, messageInfo.MessageAttachments, messageInfo.ChatRefs, messageInfo.Contacts)
+        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage, bool isSystem, IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> messageInfo)
+            : this(messageId, timestamp, index, authorId, messageStatus, originalMessage, isSystem, messageInfo.Type, messageInfo.Version, messageInfo.Immutable, messageInfo.Style, messageInfo.Metadata, messageInfo.Text, messageInfo.Quote, messageInfo.MessageAttachments, messageInfo.ChatRefs, messageInfo.Contacts)
         {              
         }
 
-        public Guid MessageId { get; }
-        public DateTime Timestamp { get; }
-        public long Index { get; }
-        public Guid AuthorId { get; }
-        public MessageStatus MessageStatus { get; }
-        public Guid? OriginalMessage { get; }
+        public Guid MessageId { get; set; }
+        public DateTime Timestamp { get; set; }
+        public long Index { get; set; }
+        public Guid AuthorId { get; set; }
+        public MessageStatus MessageStatus { get; set; }
+        public Guid? OriginalMessage { get; set; }
+        public bool IsSystem { get; set; }
     }
 }

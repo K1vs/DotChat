@@ -23,10 +23,10 @@
             return new ChatMessageAddedEvent(initiatorUserId, chatId, chatMessage);
         }
 
-        public IChatMessageAddedEvent<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildChatMessageAddedEvent(Guid initiatorUserId, Guid chatId, Guid messageId, DateTime timestamp, long index,
+        public IChatMessageAddedEvent<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildChatMessageAddedEvent(Guid initiatorUserId, Guid chatId, Guid messageId, DateTime timestamp, long index, bool isSystem,
             ChatMessageInfo chatMessageInfo)
         {
-            var message = new ChatMessage(messageId, timestamp, index, initiatorUserId, MessageStatus.Actual, null, chatMessageInfo);
+            var message = new ChatMessage(messageId, timestamp, index, initiatorUserId, MessageStatus.Actual, null, isSystem, chatMessageInfo);
             return new ChatMessageAddedEvent(initiatorUserId, chatId, message);
         }
 

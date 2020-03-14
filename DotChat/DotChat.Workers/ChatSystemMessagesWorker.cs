@@ -151,7 +151,7 @@
         {
             if (messageInfo != null)
             {
-                var addMessageCommand = _chatMessagesCommandBuilder.BuildIndexChatMessageCommand(initiatorUserId, chatId, null, messageInfo);
+                var addMessageCommand = _chatMessagesCommandBuilder.BuildIndexChatMessageCommand(initiatorUserId, chatId, null, true, messageInfo);
                 await chatBusContext.CommandSender.Send(addMessageCommand);
             }
         }

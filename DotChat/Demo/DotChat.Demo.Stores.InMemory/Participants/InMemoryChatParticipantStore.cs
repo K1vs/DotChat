@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using DotChat.Participants;
     using DotChat.Stores.Participants;
@@ -35,6 +36,7 @@
                 }
                 else
                 {
+                    exist.Version += 1;
                     exist.ChatParticipantStatus = participantStatus;
                 }
                 return exist;
@@ -53,6 +55,7 @@
             await Task.Yield();
             var p = Store.Chats[chatId].Participants.FirstOrDefault(r => r.UserId == userId);
             p.ChatParticipantType = participantType;
+            p.Version += 1;
             return p;
         }
 
@@ -69,6 +72,7 @@
                 }
                 else
                 {
+                    exist.Version += 1; 
                     exist.ChatParticipantType = participantType;
                     exist.ChatParticipantStatus = participantStatus;
                 }

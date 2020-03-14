@@ -46,7 +46,7 @@
             await _chatParticipantsPermissionValidator.ValidateAdd(command.InitiatorUserId, command.ChatId, command.UserId, command.ChatParticipantType, command.Style, command.Metadata, WorkerName).ConfigureAwait(false);
             var currentParticipant = await _chatParticipantStore.Retrieve(command.ChatId, command.UserId).ConfigureAwait(false);
             var participant = await SetParticipationCandidate(command, ChatParticipantStatus.Active).ConfigureAwait(false);
-            var @event = _chatParticipantsEventBuilder.BuildChatParticipantAddedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant.ChatParticipantStatus);
+            var @event = _chatParticipantsEventBuilder.BuildChatParticipantAddedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant?.ChatParticipantStatus);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 
@@ -55,7 +55,7 @@
             await _chatParticipantsPermissionValidator.ValidateApply(command.InitiatorUserId, command.ChatId, command.ChatParticipantType, command.Style, command.Metadata, WorkerName).ConfigureAwait(false);
             var currentParticipant = await _chatParticipantStore.Retrieve(command.ChatId, command.InitiatorUserId).ConfigureAwait(false);
             var participant = await SetParticipationCandidate(command.ChatId, command.InitiatorUserId, command.ChatParticipantType, ChatParticipantStatus.Applied, command.Style, command.Metadata, command.InitiatorUserId).ConfigureAwait(false);
-            var @event = _chatParticipantsEventBuilder.BuildChatParticipantAppliedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant.ChatParticipantStatus);
+            var @event = _chatParticipantsEventBuilder.BuildChatParticipantAppliedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant?.ChatParticipantStatus);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 
@@ -64,7 +64,7 @@
             await _chatParticipantsPermissionValidator.ValidateInvite(command.InitiatorUserId, command.ChatId, command.UserId, command.ChatParticipantType, command.Style, command.Metadata, WorkerName).ConfigureAwait(false);
             var currentParticipant = await _chatParticipantStore.Retrieve(command.ChatId, command.UserId).ConfigureAwait(false);
             var participant = await SetParticipationCandidate(command, ChatParticipantStatus.Invited).ConfigureAwait(false);
-            var @event = _chatParticipantsEventBuilder.BuildChatParticipantInvitedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant.ChatParticipantStatus);
+            var @event = _chatParticipantsEventBuilder.BuildChatParticipantInvitedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant?.ChatParticipantStatus);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 
@@ -73,7 +73,7 @@
             await _chatParticipantsPermissionValidator.ValidateRemove(command.InitiatorUserId, command.ChatId, command.UserId, WorkerName).ConfigureAwait(false);
             var currentParticipant = await _chatParticipantStore.Retrieve(command.ChatId, command.UserId).ConfigureAwait(false);
             var participant = await SetUser(command, ChatParticipantStatus.Removed).ConfigureAwait(false);
-            var @event = _chatParticipantsEventBuilder.BuildChatParticipantRemovedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant.ChatParticipantStatus);
+            var @event = _chatParticipantsEventBuilder.BuildChatParticipantRemovedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant?.ChatParticipantStatus);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 
@@ -82,7 +82,7 @@
             await _chatParticipantsPermissionValidator.ValidateRemove(command.InitiatorUserId, command.ChatId, command.UserId, WorkerName).ConfigureAwait(false);
             var currentParticipant = await _chatParticipantStore.Retrieve(command.ChatId, command.UserId).ConfigureAwait(false);
             var participant = await SetUser(command, ChatParticipantStatus.Blocked).ConfigureAwait(false);
-            var @event = _chatParticipantsEventBuilder.BuildChatParticipantBlockedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant.ChatParticipantStatus);
+            var @event = _chatParticipantsEventBuilder.BuildChatParticipantBlockedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant?.ChatParticipantStatus);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 
@@ -91,7 +91,7 @@
             await _chatParticipantsPermissionValidator.ValidateChangeType(command.InitiatorUserId, command.ChatId, command.UserId, command.ChatParticipantType, command.Style, command.Metadata, WorkerName).ConfigureAwait(false);
             var currentParticipant = await _chatParticipantStore.Retrieve(command.ChatId, command.UserId).ConfigureAwait(false);
             var participant = await _chatParticipantStore.ChangeType(command.ChatId, command.UserId, command.ChatParticipantType, command.InitiatorUserId).ConfigureAwait(false);
-            var @event = _chatParticipantsEventBuilder.BuildChatParticipantTypeChangedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant.ChatParticipantStatus);
+            var @event = _chatParticipantsEventBuilder.BuildChatParticipantTypeChangedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant?.ChatParticipantStatus);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 
@@ -116,9 +116,10 @@
                     chatParticipants = chatParticipants.Concat(participants);
                 }
                 return chatParticipants
-                    .Join(currentParticipants, r => r.UserId, r => r.UserId, 
-                        (p, cp) => _chatParticipantsEventBuilder.BuildParticipationResult(p, cp.ChatParticipantStatus))
+                    .GroupJoin(currentParticipants, r => r.UserId, r => r.UserId, 
+                        (p, cp) => new { p, cp}).SelectMany(r => r.cp.DefaultIfEmpty(), (tmp, cp) => _chatParticipantsEventBuilder.BuildParticipationResult(tmp.p, cp?.ChatParticipantStatus))
                     .ToList();
+                
             }
 
             var added = await SetStatusGroup(command.ToAdd, ChatParticipantStatus.Active);

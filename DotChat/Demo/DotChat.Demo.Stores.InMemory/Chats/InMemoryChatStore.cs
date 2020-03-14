@@ -40,6 +40,7 @@
             chat.Name = chatInfo.Name;
             chat.Description = chatInfo.Description;
             chat.PrivacyMode = chatInfo.PrivacyMode;
+            chat.Version += 1;
             return chat;
         }
 
@@ -47,6 +48,7 @@
         {
             await Task.Yield();
             Store.Chats.TryRemove(chatId, out var chat);
+            chat.Version += 1;
             return chat;
         }
 

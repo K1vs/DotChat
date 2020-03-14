@@ -55,14 +55,17 @@
 
         public async Task Handle(IIndexChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> command, IChatBusContext chatEventPublisher)
         {
-            await _chatMessagesPermissionValidator.ValidateAdd(command.InitiatorUserId, command.ChatId, command.MessageInfo, WorkerName).ConfigureAwait(false);
+            if (!command.IsSystem)
+            {
+                await _chatMessagesPermissionValidator.ValidateAdd(command.InitiatorUserId, command.ChatId, command.MessageInfo, WorkerName).ConfigureAwait(false);
+            }
             var timestamp = await _chatMessageTimestampGenerator.Generate();
             var index = await _messageIndexGenerator.Generate(command.ChatId).ConfigureAwait(false);
-            var addCommand = _chatMessagesCommandBuilder.BuildAddChatMessageCommand(command.InitiatorUserId, command.ChatId, command.MessageId, index, command.MessageInfo);
+            var addCommand = _chatMessagesCommandBuilder.BuildAddChatMessageCommand(command.InitiatorUserId, command.ChatId, command.MessageId, index, command.IsSystem, command.MessageInfo);
             await chatEventPublisher.CommandSender.Send(addCommand).ConfigureAwait(false);
             if (ChatWorkersConfiguration.FastMessageMode)
             {
-                var @event = _chatMessagesEventBuilder.BuildChatMessageAddedEvent(command.InitiatorUserId, command.ChatId, command.MessageId, timestamp, index, command.MessageInfo);
+                var @event = _chatMessagesEventBuilder.BuildChatMessageAddedEvent(command.InitiatorUserId, command.ChatId, command.MessageId, timestamp, index, command.IsSystem, command.MessageInfo);
                 await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
             }
         }

@@ -57,13 +57,12 @@
             _chatMessagesService = chatMessagesService;
         }
 
-        public async Task<TChatMessagesPagedResult> GetPage(Guid chatId, IReadOnlyCollection<TMessageFilter> filters,
-            TPagingOptions pagingOptions = default)
+        public async Task<TChatMessagesPagedResult> GetPage(Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions pagingOptions)
         {
             return await _chatMessagesService.GetPage(CurrentUserId, chatId, filters, pagingOptions);
         }
 
-        public async Task<TChatMessagesPagedResult> GetPage(Guid chatId, TPagingOptions pagingOptions = default)
+        public async Task<TChatMessagesPagedResult> GetPage(Guid chatId, TPagingOptions pagingOptions)
         {
             return await _chatMessagesService.GetPage(CurrentUserId, chatId, pagingOptions);
         }

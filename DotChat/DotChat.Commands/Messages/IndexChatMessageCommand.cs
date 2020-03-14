@@ -25,11 +25,12 @@
         {
         }
 
-        public IndexChatMessageCommand(Guid initiatorUserId, Guid chatId, Guid messageId, TChatMessageInfo messageInfo) : base(initiatorUserId)
+        public IndexChatMessageCommand(Guid initiatorUserId, Guid chatId, Guid messageId, bool isSystem, TChatMessageInfo messageInfo) : base(initiatorUserId)
         {
             MessageId = messageId;
             ChatId = chatId;
             MessageInfo = messageInfo;
+            IsSystem = isSystem;
         }
 
         public Guid MessageId { get; set; }
@@ -37,5 +38,7 @@
         public Guid ChatId { get; set; }
 
         public TChatMessageInfo MessageInfo { get; set; }
+
+        public bool IsSystem { get; set; }
     }
 }
