@@ -61,7 +61,7 @@
             }
             var timestamp = await _chatMessageTimestampGenerator.Generate();
             var index = await _messageIndexGenerator.Generate(command.ChatId).ConfigureAwait(false);
-            var addCommand = _chatMessagesCommandBuilder.BuildAddChatMessageCommand(command.InitiatorUserId, command.ChatId, command.MessageId, index, command.IsSystem, command.MessageInfo);
+            var addCommand = _chatMessagesCommandBuilder.BuildAddChatMessageCommand(command.InitiatorUserId, command.ChatId, command.MessageId, timestamp, index, command.IsSystem, command.MessageInfo);
             await chatEventPublisher.CommandSender.Send(addCommand).ConfigureAwait(false);
             if (ChatWorkersConfiguration.FastMessageMode)
             {

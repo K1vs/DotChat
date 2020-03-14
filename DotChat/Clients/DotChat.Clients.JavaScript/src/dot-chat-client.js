@@ -143,6 +143,20 @@ export default class DotChatClient{
         return reader;
     }
 
+    getAuthor(chat, message){
+        if(!message.author){
+            if(chat){
+                message.author = chat.participants.find(r => r.userId === message.authorId);
+            }
+            if(!message.author){
+                return {
+                    userId: message.authorId
+                };
+            }
+        }
+        return message.author;
+    }
+
     async addChat(chatInfo, candidates){
         var chatId = await this._connector.chats.add(chatInfo, candidates);
         return chatId;
@@ -463,17 +477,20 @@ export default class DotChatClient{
         }
     }
 
-    async _updateChatLasts(chatId, timestamp, index, self){
+    async _updateChatLasts(chatId, message, self){
         var chatsWithReaders = await this._getOrLoadChatsWithReaders(chatId);
         chatsWithReaders.forEach((chatWithReader) => {
             chatWithReader.reader.update(chatWithReader.chat.chatId, Number.MAX_SAFE_INTEGER, (chat) => {
-                if(chat.topIndex <= index){
-                    chat.lastTimestamp = timestamp;
-                    chat.topIndex = index;
+                if(chat.topIndex <= message.index){
+                    chat.lastTimestamp = message.timestamp;
+                    chat.topIndex = message.index;
+                    chat.lastChatMessageId = message.messageId;
+                    chat.lastMessageAuthorId = message.authorId;
+                    chat.lastChatMessageInfo = message;
                     var thisParticipant = chat.participants.find(r => r.userId === this._userId);
-                    if(self && thisParticipant.readIndex < index){
-                        thisParticipant.readIndex = index; 
-                        this.readMessages(chatId, index, false);
+                    if(self && thisParticipant.readIndex < message.index){
+                        thisParticipant.readIndex = message.index; 
+                        this.readMessages(chatId, message.index, false);
                     }
                     this._setChatPersonalization(chat, thisParticipant);
                 }
@@ -503,7 +520,7 @@ export default class DotChatClient{
             });
         };
         var chatMessageAdded = (notification) => {
-            this._updateChatLasts(notification.chatId, notification.message.timestamp, notification.message.index, notification.initiatorUserId === this._userId);
+            this._updateChatLasts(notification.chatId, notification.message, notification.initiatorUserId === this._userId);
             if(notification.initiatorUserId !== this._userId){
                 this._loadSummary();
             }
@@ -514,7 +531,7 @@ export default class DotChatClient{
             });
         };
         var chatMessageEdited = (notification) => {
-            this._updateChatLasts(notification.chatId, notification.message.timestamp, notification.message.index, notification.initiatorUserId);
+            this._updateChatLasts(notification.chatId, notification.message, notification.initiatorUserId);
             if(notification.initiatorUserId !== this._userId){
                 this._loadSummary();
             }

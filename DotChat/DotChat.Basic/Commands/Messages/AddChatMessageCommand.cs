@@ -19,7 +19,7 @@
         {
         }
 
-        public AddChatMessageCommand(Guid initiatorUserId, Guid chatId, Guid messageId, long index, bool isSystem, ChatMessageInfo messageInfo) : base(initiatorUserId, chatId, messageId, index, isSystem, messageInfo)
+        public AddChatMessageCommand(Guid initiatorUserId, Guid chatId, Guid messageId, DateTime timestamp, long index, bool isSystem, ChatMessageInfo messageInfo) : base(initiatorUserId, chatId, messageId, timestamp, index, isSystem, messageInfo)
         {
         }
     }

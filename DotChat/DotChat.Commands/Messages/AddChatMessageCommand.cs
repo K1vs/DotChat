@@ -25,10 +25,11 @@
         {
         }
 
-        public AddChatMessageCommand(Guid initiatorUserId, Guid chatId, Guid messageId, long index, bool isSystem, TChatMessageInfo messageInfo) : base(initiatorUserId)
+        public AddChatMessageCommand(Guid initiatorUserId, Guid chatId, Guid messageId, DateTime timestamp, long index, bool isSystem, TChatMessageInfo messageInfo) : base(initiatorUserId)
         {
             ChatId = chatId;
             MessageId = messageId;
+            Timestamp = timestamp;
             Index = index;
             MessageInfo = messageInfo;
             IsSystem = isSystem;

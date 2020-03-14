@@ -31,3 +31,6 @@ html, body{
 .chats-box{
     margin: 25px;
 }
+.chat{
+    padding: 10px;
+}

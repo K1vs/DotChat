@@ -22,10 +22,12 @@
             var container = $('.chats-box');
             container.empty();
             for(chatIndex in chats){
-                var chatElem = $("<p></p>")
+                var last = chats[chatIndex].lastChatMessageInfo && chats[chatIndex].lastChatMessageInfo.text && chats[chatIndex].lastChatMessageInfo.text.content;
+                var chatElem = $("<div></div>")
                     .attr('id', chats[chatIndex].chatId)
                     .addClass('chat')
-                    .text(chats[chatIndex].unreadCount + ': ' + chats[chatIndex].name + (chats[chatIndex].lost ? 'Lost' : ''));
+                    .append($('<div></div>').text(chats[chatIndex].unreadCount + ': ' + chats[chatIndex].name + (chats[chatIndex].lost ? 'Lost' : '')))
+                    .append($('<div></div>').text(chats[chatIndex].lastTimestamp + ': ' + (last || '')));
                 if(chats[chatIndex].chatId === activeChat.chatId){
                     chatElem.addClass("active");
                 }
@@ -52,7 +54,7 @@
                     var message = messages[messageIndex];
                     if(message.type === 1){
                         var msgElem = $("<div></div>")
-                            .text(message.text.content)
+                            .text(dotChatClient.getAuthor(chat, message).name + ' ' + message.timestamp + ': ' + message.text.content)
                             .attr('index', message.index)
                             .click(function(){
                                 dotChatClient.readMessages(chat.chatId, $(this).attr('index'), true);

@@ -10,6 +10,7 @@ export class BufferedPagedReader{
     .minBufferSize: number
     .keyFunction : function(item):any
     .sortKeyFunction : function(item):int
+    .reverseFrame: bool
     */
     constructor(loadPage, settings){
         this._loadPage = loadPage;
@@ -151,7 +152,10 @@ export class BufferedPagedReader{
     }
 
     _setFrame(){
-        var frame = this._buffer.slice(-this._frameIndex - this._settings.frameSize, this._frameIndex === 0 ? undefined : - this._frameIndex).reverse();
+        var frame = this._buffer.slice(-this._frameIndex - this._settings.frameSize, this._frameIndex === 0 ? undefined : - this._frameIndex);
+        if(this._settings.reverseFrame){
+            frame = frame.reverse();
+        }
         this._frame = frame;
         if(!this.closed){
             this._onFrameChanged.forEach(onFrameChanged => onFrameChanged(frame));

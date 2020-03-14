@@ -6,5 +6,6 @@ export const messagesSettings = {
     maxBufferSize: 10000,
     minBufferSize: 5000,
     keyFunction: (item) => item.messageId,
-    sortKeyFunction: (item) => item.index
+    sortKeyFunction: (item) => item.index,
+    reverseFrame: true
 };

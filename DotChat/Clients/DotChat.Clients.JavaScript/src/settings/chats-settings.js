@@ -6,5 +6,6 @@ export const chatsSettings = {
     minBufferSize: 500,
     loadSummaryDelay: 5000,
     keyFunction: (item) => item.chatId,
-    sortKeyFunction: (item) => item.lastTimestamp
+    sortKeyFunction: (item) => item.lastTimestamp,
+    reverseFrame: false
 };

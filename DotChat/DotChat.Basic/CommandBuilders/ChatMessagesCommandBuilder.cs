@@ -21,10 +21,10 @@
             return new IndexChatMessageCommand(currentUserId, chatId, messageId ?? Guid.NewGuid(), isSystem, chatMessageInfo);
         }
 
-        public IAddChatMessageCommand<ChatInfo, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildAddChatMessageCommand(Guid currentUserId, Guid chatId, Guid messageId, long index, bool isSystem,
+        public IAddChatMessageCommand<ChatInfo, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildAddChatMessageCommand(Guid currentUserId, Guid chatId, Guid messageId, DateTime timestamp, long index, bool isSystem,
             ChatMessageInfo chatMessageInfo)
         {
-            return new AddChatMessageCommand(currentUserId, chatId, messageId, index, isSystem, chatMessageInfo);
+            return new AddChatMessageCommand(currentUserId, chatId, messageId, timestamp, index, isSystem, chatMessageInfo);
         }
 
         public IEditChatMessageCommand<ChatInfo, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildEditChatMessageCommand(Guid currentUserId, Guid chatId, Guid messageId,
