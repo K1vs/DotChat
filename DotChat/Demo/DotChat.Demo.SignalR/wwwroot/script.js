@@ -135,7 +135,8 @@
                 }
             }).then(function(){
                 $('.input-box').val('');
-            }, function(){
+            }, function(error){
+                console.error(error);
                 alert('sendError');
             });
         });     

@@ -53,7 +53,7 @@ export default class DotChatClient{
             this._releaser();
         }
         this._getChatReaderBoxes().forEach(r => r.reader.dispose());
-        this._getChatsMessageReaders().forEach(r => r.dispose());
+        this._getChatsMessageReaderBoxes().forEach(r => r.reader.dispose());
         this._initReadersBoxes();
     }
 
@@ -198,7 +198,7 @@ export default class DotChatClient{
 
     async addMessage(chatId, messageInfo){
         var messageId = await this._connector.messages.add(chatId, null, messageInfo);
-        var readers = this._getChatMessageReaders(chatId);
+        var readerBoxes = this._getChatMessageReaderBoxes(chatId, {messageId : messageId, ...messageInfo});
         var message = {
             ...messageInfo,
             messageId: messageId,
@@ -206,27 +206,27 @@ export default class DotChatClient{
             messageStatus: MessageStatus.actual,
             index: Number.MAX_SAFE_INTEGER
         };
-        readers.forEach(reader => reader.addOrUpdate(messageId, message, exist => _.merge(exist, message)));
+        readerBoxes.forEach(readerBox => readerBox.reader.addOrUpdate(messageId, message, exist => _.merge(exist, message)));
     }
 
     async editMessage(chatId, messageId, messageInfo){
         await this._connector.messages.edit(chatId, messageId, messageInfo);
-        var readers = this._getChatMessageReaders(chatId);
+        var readerBoxes = this._getChatMessageReaderBoxes(chatId, {messageId : messageId, ...messageInfo});
         var updateExt = {
             pending: true,
             messageStatus: MessageStatus.edited
         };
-        readers.forEach(reader => reader.addOrUpdate(messageId, {...messageInfo, ...updateExt}, exist => _.merge(exist, messageInfo, updateExt)));
+        readerBoxes.forEach(readerBox => readerBox.reader.addOrUpdate(messageId, {...messageInfo, ...updateExt}, exist => _.merge(exist, messageInfo, updateExt)));
     }
 
     async removeMessage(chatId, messageId){
         await this._connector.messages.remove(chatId, messageId);
-        var readers = this._getChatMessageReaders(chatId);
+        var readerBoxes = this._getChatMessageReaderBoxes(chatId, {messageId : messageId});
         var removedExt = {
             pending: true,
             messageStatus: MessageStatus.removed
         };
-        readers.forEach(reader => reader.addOrUpdate(messageId, {messageId: messageId, ... removedExt}, exist => _.merge(exist, removedExt)));
+        readerBoxes.forEach(readerBox => readerBox.reader.addOrUpdate(messageId, {messageId: messageId, ... removedExt}, exist => _.merge(exist, removedExt)));
     }
 
     async readMessages(chatId, index, force){
@@ -282,7 +282,11 @@ export default class DotChatClient{
         }
     }
 
-    _getChatReaderBoxes(){
+    _filterChatReaderBoxes(readerBoxes, chat){
+        return chat ? readerBoxes.filter(r => !r.filter || r.reader.get(chat.chatId) || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(r.filter, chat)): readerBoxes;
+    }
+
+    _getChatReaderBoxes(chat){
         var readers = Object.entries(this._chatsReaders.named)
         .map(([, value]) => value);
         if(this._chatsReaders.default){
@@ -290,7 +294,7 @@ export default class DotChatClient{
                 reader: this._chatsReaders.default
             });
         }
-        return readers;
+        return this._filterChatReaderBoxes(readers, chat);
     }
 
     _getChatsWithReaderBoxes(chatId){
@@ -298,8 +302,7 @@ export default class DotChatClient{
         var chatsWithReaderBoxes = _.orderBy(readerBoxes.map(r => ({ chat: r.reader.get(chatId), readerBox: r })).filter(r => r.chat), 'chat.version', 'desc');
         var refChatWithReaderBox = chatsWithReaderBoxes[0];
         if(refChatWithReaderBox){
-            readerBoxes.filter(r => r != refChatWithReaderBox.reader)
-            .filter(r => !r.filter || r.reader.get(chatId) || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(r.filter, refChatWithReaderBox.chat))
+            this._filterChatReaderBoxes(readerBoxes, refChatWithReaderBox.chat).filter(r => r != refChatWithReaderBox.reader)
             .forEach(r => r.reader.addOrUpdate(chatId, refChatWithReaderBox.chat, exist => _.assign(exist, refChatWithReaderBox.chat)));
             chatsWithReaderBoxes.forEach(chatWithReaderBox => {
                 if(!chatWithReaderBox.chat){
@@ -327,9 +330,8 @@ export default class DotChatClient{
                     participants: []
                 };
             }
-            var readers = this._getChatReaderBoxes();
-            readers.filter(r => !r.filter || r.reader.get(chatId) || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(r.filter, chat))
-            .forEach(r => {
+            var readers = this._getChatReaderBoxes(chat);
+            readers.forEach(r => {
                 r.reader.addOrUpdate(chatId, chat, exist => _.assign(exist, chat));
             });
             chatsWithReaderBoxes = this._getChatsWithReaderBoxes(chatId);
@@ -348,8 +350,7 @@ export default class DotChatClient{
 
     _registerChatsNotifications(){
         var forEachReader = (readerAction, chat) => {
-            this._getChatReaderBoxes()
-            .filter(chatReaderBox => !chatReaderBox.filter || chatReaderBox.reader.get(chat.chatId) || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(chatReaderBox.filter, chat))
+            this._getChatReaderBoxes(chat)
             .forEach(chatReaderBox => readerAction(chatReaderBox.reader, chat));
         };
         var chatAdded = (notification) => {
@@ -467,19 +468,21 @@ export default class DotChatClient{
         return () => cleanableValueSetter.clean();
     }
 
-    _getChatsMessageReaders(){
-        return Object.getOwnPropertyNames(this._messagesReaders).map(chatId => this._getChatMessageReaders(chatId)).flat();
+    _getChatsMessageReaderBoxes(){
+        return Object.getOwnPropertyNames(this._messagesReaders).map(chatId => this._getChatMessageReaderBoxes(chatId)).flat();
     }
 
-    _getChatMessageReaders(chatId){
-        var chatMessagesReaders = this._messagesReaders[chatId];
-        if(chatMessagesReaders){
-            var readers = Object.entries(chatMessagesReaders.named).map(([, value]) => value)
+    _getChatMessageReaderBoxes(chatId, message){
+        var chatMessagesReaderBoxes = this._messagesReaders[chatId];
+        if(chatMessagesReaderBoxes){
+            var readers = Object.entries(chatMessagesReaderBoxes.named).map(([, value]) => value)
             .map(r => r.reader);
-            if(chatMessagesReaders.default){
-                readers.push(chatMessagesReaders.default);
+            if(chatMessagesReaderBoxes.default){
+                readers.push({
+                    reader: chatMessagesReaderBoxes.default
+                });
             }
-            return readers;
+            return readers.filter(r => !r.filter || !message || r.reader.get(message.messageId) || this._settings.messagesSettings.checkFilter && this._settings.messagesSettings.checkFilter(r.filter, message));
         }else{
             return [];
         }
@@ -532,9 +535,9 @@ export default class DotChatClient{
             if(initiatorUserId !== this._userId){
                 this._loadSummary();
             }
-            var readers = this._getChatMessageReaders(chatId);
-            readers.filter(r => !r.filter || r.reader.get(chatId) || this._settings.messagesSettings.checkFilter && this._settings.messagesSettings.checkFilter(r.filter, message)).forEach(reader => {
-                reader.addOrUpdate(message.messageId, message, exist => update(exist, message));
+            var readers = this._getChatMessageReaderBoxes(chatId, message);
+            readers.forEach(readerBox => {
+                readerBox.reader.addOrUpdate(message.messageId, message, exist => update(exist, message));
             });
         };
         var chatMessageAdded = (notification) => {
