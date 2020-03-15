@@ -121,7 +121,8 @@ namespace K1vs.DotChat.Demo.SignalR
             {
                 Name = "TestChat"
             }, new Basic.Participants.ParticipationCandidates(new List<ParticipationCandidate> {
-                new ParticipationCandidate(Users[0].UserId, Participants.ChatParticipantType.Admin)
+                new ParticipationCandidate(Users[0].UserId, Participants.ChatParticipantType.Admin),
+                new ParticipationCandidate(Users[3].UserId, Participants.ChatParticipantType.Admin)
             }, new List<ParticipationCandidate> { })).Wait();
 
             Task.Delay(TimeSpan.FromSeconds(10))

@@ -1,6 +1,6 @@
 {
   "name": "dot-chat-signalr-connector",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Extensible chat framework for systems with microservice architecture. SignalR connector for Javascript client.",
   "main": "dist/dot-chat-signalr-connector.js",
   "scripts": {

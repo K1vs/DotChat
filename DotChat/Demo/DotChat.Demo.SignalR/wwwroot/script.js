@@ -115,7 +115,7 @@
                 }
             ]
         };
-        //var reader = dotChatClient.getChatsReader('tt', chatFilter);
+        var reader = dotChatClient.getChatsReader('tt', chatFilter);
         var reader = dotChatClient.getChatsReader();
         reader.aquire(setChats);
     
