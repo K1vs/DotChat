@@ -47,7 +47,7 @@
             await Notify(@event.ChatId, notification);
         }
 
-        public async Task Handle(IChatMessageRemovedEvent @event, IChatBusContext chatBusContext)
+        public async Task Handle(IChatMessageRemovedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event, IChatBusContext chatBusContext)
         {
             var notification = _chatMessagesNotificationBuilder.BuildChatMessageRemovedNotification(@event);
             await Notify(@event.ChatId, notification);

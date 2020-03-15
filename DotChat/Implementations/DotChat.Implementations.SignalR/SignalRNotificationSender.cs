@@ -125,7 +125,10 @@
                 await chatMessagesClient.ChatMessageEdited(chatMessageEditedNotification);
             }
 
-            if (notification is IChatMessageRemovedNotification chatMessageRemovedNotification)
+            if (notification is IChatMessageRemovedNotification<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo,
+                TTextMessage,
+                TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection,
+                TChatRefMessage, TContactMessageCollection, TContactMessage> chatMessageRemovedNotification)
             {
                 await chatMessagesClient.ChatMessageRemoved(chatMessageRemovedNotification);
             }

@@ -41,7 +41,9 @@
                 TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection,
                 TChatRefMessage, TContactMessageCollection, TContactMessage> notification);
 
-        Task ChatMessageRemoved(IChatMessageRemovedNotification notification);
+        Task ChatMessageRemoved(IChatMessageRemovedNotification<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage,
+                TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection,
+                TChatRefMessage, TContactMessageCollection, TContactMessage> notification);
         Task ChatMessagesRead(IChatMessagesReadNotification notification);
     }
 }

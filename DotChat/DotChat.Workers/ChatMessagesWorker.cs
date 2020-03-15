@@ -92,7 +92,7 @@
             }
             var message = await _chatMessageStore.Delete(command.ChatId, command.MessageId, command.InitiatorUserId).ConfigureAwait(false);
             await _chatMessageStore.Archive(command.ChatId, currentMessage.MessageId, command.MessageId, currentMessage, command.InitiatorUserId).ConfigureAwait(false);
-            var @event = _chatMessagesEventBuilder.BuildChatMessageRemovedEvent(command.InitiatorUserId, command.ChatId, message.MessageId, message.Version);
+            var @event = _chatMessagesEventBuilder.BuildChatMessageRemovedEvent(command.InitiatorUserId, command.ChatId, message);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 

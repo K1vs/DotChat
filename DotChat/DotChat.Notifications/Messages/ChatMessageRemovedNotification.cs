@@ -1,23 +1,39 @@
 ﻿namespace K1vs.DotChat.Notifications.Messages
 {
     using System;
+    using System.Collections.Generic;
     using DotChat.Chats;
     using DotChat.Messages;
     using Events;
+    using K1vs.DotChat.Messages.Typed;
+    using K1vs.DotChat.Participants;
 
-    public class ChatMessageRemovedNotification: Notification, IChatMessageRemovedNotification
+    public class ChatMessageRemovedNotification<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> 
+        : Notification, IChatMessageRemovedNotification<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TChatInfo : IChatInfo
+        where TChatUser : IChatUser
+        where TChatMessage : IChatMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TTextMessage : ITextMessage
+        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
+        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
+        where TMessageAttachment : IMessageAttachment
+        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
+        where TChatRefMessage : IChatRefMessage<TChatInfo>
+        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
+        where TContactMessage : IContactMessage<TChatUser>
     {
         public ChatMessageRemovedNotification()
         {
         }
 
-        public ChatMessageRemovedNotification(Guid initiatorUserId, Guid chatId, Guid messageId) : base(initiatorUserId)
+        public ChatMessageRemovedNotification(Guid initiatorUserId, Guid chatId, TChatMessage message) : base(initiatorUserId)
         {
             ChatId = chatId;
-            MessageId = messageId;
+            Message = message;
         }
 
         public Guid ChatId { get; set; }
-        public Guid MessageId { get; set; }
+        public TChatMessage Message { get; set; }
     }
 }

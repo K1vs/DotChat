@@ -27,9 +27,9 @@
             return new ChatMessageEditedNotification(@event.InitiatorUserId, @event.ChatId, @event.Message);
         }
 
-        public IChatMessageRemovedNotification BuildChatMessageRemovedNotification(IChatMessageRemovedEvent @event)
+        public IChatMessageRemovedNotification<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildChatMessageRemovedNotification(IChatMessageRemovedEvent<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> @event)
         {
-            return new ChatMessageRemovedNotification(@event.InitiatorUserId, @event.ChatId, @event.MessageId);
+            return new ChatMessageRemovedNotification(@event.InitiatorUserId, @event.ChatId, @event.Message);
         }
 
         public IChatMessagesReadNotification BuildChatMessagesReadNotification(IChatMessagesReadEvent @event)
