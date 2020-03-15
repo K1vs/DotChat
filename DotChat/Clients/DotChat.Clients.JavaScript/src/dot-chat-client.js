@@ -20,6 +20,7 @@ export default class DotChatClient{
     ..minBufferSize: number
     ..keyFunction : function(item):any
     ..sortKeyFunction : function(item):int
+    ..checkFilter: function(filter, item): bool
     .messagesSettings
     ..maxReaders: number 
     ..maxNamedReaders: number 
@@ -29,6 +30,7 @@ export default class DotChatClient{
     ..minBufferSize: number
     ..keyFunction : function(item):any
     ..sortKeyFunction : function(item):int
+    ..checkFilter: function(filter, item): bool
     */
     constructor(userId, connector, settings, callbacks){
         this._userId = userId;
@@ -50,7 +52,7 @@ export default class DotChatClient{
         if(this._releaser){
             this._releaser();
         }
-        this._getChatReaders().forEach(r => r.dispose());
+        this._getChatReaderBoxes().forEach(r => r.reader.dispose());
         this._getChatsMessageReaders().forEach(r => r.dispose());
         this._initReadersBoxes();
     }
@@ -280,40 +282,41 @@ export default class DotChatClient{
         }
     }
 
-    _getChatReaders(){
+    _getChatReaderBoxes(){
         var readers = Object.entries(this._chatsReaders.named)
-        .map(([, value]) => value)
-        .map(r => r.reader);
+        .map(([, value]) => value);
         if(this._chatsReaders.default){
-            readers.push(this._chatsReaders.default);
+            readers.push({
+                reader: this._chatsReaders.default
+            });
         }
         return readers;
     }
 
-    _getChatsWithReaders(chatId){
-        var readers = this._getChatReaders();
-        var chatsWithReaders = _.orderBy(readers.map(r => ({ chat: r.get(chatId), reader: r })).filter(r => r.chat), 'chat.version', 'desc');
-        var refChatWithReaders = chatsWithReaders[0];
-        if(refChatWithReaders){
-            readers.filter(r => r != refChatWithReaders.reader)
-            .filter(r => !r.filter || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(r.filter, refChatWithReaders.chat))
-            .forEach(r => r.addOrUpdate(chatId, refChatWithReaders.chat, exist => _.assign(exist, refChatWithReaders.chat)));
-            chatsWithReaders.forEach(chatWithReader => {
-                if(!chatWithReader.chat){
-                    chatWithReader.chat = chatWithReader.reader.get(chatId);
+    _getChatsWithReaderBoxes(chatId){
+        var readerBoxes = this._getChatReaderBoxes();
+        var chatsWithReaderBoxes = _.orderBy(readerBoxes.map(r => ({ chat: r.reader.get(chatId), readerBox: r })).filter(r => r.chat), 'chat.version', 'desc');
+        var refChatWithReaderBox = chatsWithReaderBoxes[0];
+        if(refChatWithReaderBox){
+            readerBoxes.filter(r => r != refChatWithReaderBox.reader)
+            .filter(r => !r.filter || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(r.filter, refChatWithReaderBox.chat))
+            .forEach(r => r.reader.addOrUpdate(chatId, refChatWithReaderBox.chat, exist => _.assign(exist, refChatWithReaderBox.chat)));
+            chatsWithReaderBoxes.forEach(chatWithReaderBox => {
+                if(!chatWithReaderBox.chat){
+                    chatWithReaderBox.chat = chatWithReaderBox.readerBox.reader.get(chatId);
                 }
             });
         }
-        return chatsWithReaders;
+        return chatsWithReaderBoxes;
     }
 
     _getChats(chatId){
-        return this._getChatsWithReaders(chatId).map(cwr => cwr.chat);
+        return this._getChatsWithReaderBoxes(chatId).map(cwrb => cwrb.chat);
     }
 
-    async _getOrLoadChatsWithReaders(chatId){
-        var chatsWithReaders = this._getChatsWithReaders(chatId);
-        if(chatsWithReaders.length === 0){
+    async _getOrLoadChatsWithReaderBoxes(chatId){
+        var chatsWithReaderBoxes = this._getChatsWithReaderBoxes(chatId);
+        if(chatsWithReaderBoxes.length === 0){
             var chat;
             try{
                 chat = await this._connector.chats.get(chatId);
@@ -324,14 +327,14 @@ export default class DotChatClient{
                     participants: []
                 };
             }
-            var readers = this._getChatReaders();
+            var readers = this._getChatReaderBoxes();
             readers.filter(r => !r.filter || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(r.filter, chat))
             .forEach(r => {
-                r.addOrUpdate(chatId, chat, exist => _.assign(exist, chat));
+                r.reader.addOrUpdate(chatId, chat, exist => _.assign(exist, chat));
             });
-            chatsWithReaders = this._getChatsWithReaders(chatId);
+            chatsWithReaderBoxes = this._getChatsWithReaderBoxes(chatId);
         }
-        return chatsWithReaders;
+        return chatsWithReaderBoxes;
     }
 
     _callCallback(name, notification){
@@ -346,15 +349,12 @@ export default class DotChatClient{
     _registerChatsNotifications(){
         var chatAdded = (notification) => {
             this._loadSummary();
-            if(this._chatsReaders.default){
-                this._chatsReaders.default.addOrUpdate(notification.personalizedChat.chatId, notification.personalizedChat,
-                    (exist) => _.assign(exist, notification.personalizedChat));
-            }
-            Object.entries(this._chatsReaders.named).map(([,value]) => value).forEach(namedChatReaderBox => {
-                if(!namedChatReaderBox.filter || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(namedChatReaderBox.filter, notification.personalizedChat)){
-                    namedChatReaderBox.reader.addOrUpdate(notification.personalizedChat.chatId, notification.personalizedChat,
+            this._getChatReaderBoxes()
+            .filter(chatReaderBox => chatReaderBox.filter || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(chatReaderBox.filter, notification.personalizedChat))
+            .map(r => r.reader)
+            .forEach(reader => {
+                reader.addOrUpdate(notification.personalizedChat.chatId, notification.personalizedChat,
                         (exist) => _.assign(exist, notification.personalizedChat));
-                }
             });
             this._callCallback('chatAdded', notification);
         };
@@ -390,8 +390,8 @@ export default class DotChatClient{
     }
 
     _registerChatParticipantsNotifications(){
-        var addOrUpdateParticipant = (participant, chatWithReader) => {
-            chatWithReader.reader.update(chatWithReader.chat.chatId, Number.MAX_SAFE_INTEGER, (chat) => {
+        var addOrUpdateParticipant = (participant, chatWithReaderBox) => {
+            chatWithReaderBox.readerBox.reader.update(chatWithReaderBox.chat.chatId, Number.MAX_SAFE_INTEGER, (chat) => {
                 var exist = chat.participants.find(r => r.userId === participant.userId);
                 if(exist){
                     if(exist.version == undefined || exist.version < participant.version){
@@ -412,51 +412,51 @@ export default class DotChatClient{
         var chatParticipantAdded = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantAdded', notification);
-            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
-            chatsWithReaders.forEach(r => addOrUpdateParticipant(notification.participant, r));
+            var chatsWithReaderBoxes = await this._getOrLoadChatsWithReaderBoxes(notification.chatId);
+            chatsWithReaderBoxes.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
         var chatParticipantApplied = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantApplied', notification);
-            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
-            chatsWithReaders.forEach(r => addOrUpdateParticipant(notification.participant, r));
+            var chatsWithReaderBoxes = await this._getOrLoadChatsWithReaderBoxes(notification.chatId);
+            chatsWithReaderBoxes.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
         var chatParticipantInvited = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantInvited', notification);
-            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
-            chatsWithReaders.forEach(r => addOrUpdateParticipant(notification.participant, r));
+            var chatsWithReaderBoxes = await this._getOrLoadChatsWithReaderBoxes(notification.chatId);
+            chatsWithReaderBoxes.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
         var chatParticipantTypeChanged = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantTypeChanged', notification);
-            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
-            chatsWithReaders.forEach(r => addOrUpdateParticipant(notification.participant, r));
+            var chatsWithReaderBoxes = await this._getOrLoadChatsWithReaderBoxes(notification.chatId);
+            chatsWithReaderBoxes.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
         
         var chatParticipantRemoved = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantRemoved', notification);
-            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
-            chatsWithReaders.forEach(r => addOrUpdateParticipant(notification.participant, r));
+            var chatsWithReaderBoxes = await this._getOrLoadChatsWithReaderBoxes(notification.chatId);
+            chatsWithReaderBoxes.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
         
         var chatParticipantBlocked = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantBlocked', notification);
-            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
-            chatsWithReaders.forEach(r => addOrUpdateParticipant(notification.participant, r));
+            var chatsWithReaderBoxes = await this._getOrLoadChatsWithReaderBoxes(notification.chatId);
+            chatsWithReaderBoxes.forEach(r => addOrUpdateParticipant(notification.participant, r));
         };
 
         var chatParticipantsAppended = async (notification) => {
             this._loadSummary();
             this._callCallback('chatParticipantsAppended', notification);
-            var chatsWithReaders = await this._getOrLoadChatsWithReaders(notification.chatId);
+            var chatsWithReaderBoxes = await this._getOrLoadChatsWithReaderBoxes(notification.chatId);
             notification.added.concat(notification.invited).forEach(participant => {
-                chatsWithReaders.forEach(r => addOrUpdateParticipant(participant, r));
+                chatsWithReaderBoxes.forEach(r => addOrUpdateParticipant(participant, r));
             });
         };
 
@@ -491,9 +491,9 @@ export default class DotChatClient{
     }
 
     async _updateChatLasts(chatId, message, self){
-        var chatsWithReaders = await this._getOrLoadChatsWithReaders(chatId);
-        chatsWithReaders.forEach((chatWithReader) => {
-            chatWithReader.reader.update(chatWithReader.chat.chatId, Number.MAX_SAFE_INTEGER, (chat) => {
+        var chatsWithReaderBoxes = await this._getOrLoadChatsWithReaderBoxes(chatId);
+        chatsWithReaderBoxes.forEach((chatWithReaderBox) => {
+            chatWithReaderBox.readerBox.reader.update(chatWithReaderBox.chat.chatId, Number.MAX_SAFE_INTEGER, (chat) => {
                 if(chat.topIndex <= message.index){
                     chat.lastTimestamp = message.timestamp;
                     chat.topIndex = message.index;
@@ -519,9 +519,9 @@ export default class DotChatClient{
     _registerChatMessagesNotifications(){
         var update = (exist, fromNotification) => _.assign(exist, fromNotification, {pending: false});
         var read = async (chatId, userId, index, force) => {
-            var chatsWithReaders = await this._getOrLoadChatsWithReaders(chatId);
-            chatsWithReaders.forEach((chatWithReader) => {
-                chatWithReader.reader.update(chatWithReader.chat.chatId, Number.MAX_SAFE_INTEGER, (chat) =>{
+            var chatsWithReaderBoxes = await this._getOrLoadChatsWithReaderBoxes(chatId);
+            chatsWithReaderBoxes.forEach((chatWithReaderBox) => {
+                chatWithReaderBox.readerBox.reader.update(chatWithReaderBox.chat.chatId, Number.MAX_SAFE_INTEGER, (chat) =>{
                     var participant = chat.participants.find(p => p.userId === userId);
                     if(force || index > participant.readIndex){
                         participant.readIndex = index;

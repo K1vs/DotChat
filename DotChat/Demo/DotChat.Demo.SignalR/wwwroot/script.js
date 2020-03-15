@@ -98,10 +98,23 @@
         if (window.dotChatClient) {
             window.dotChatClient.dispose();
         }
-        var dotChatClient = new DotChatClient(userId, connector, null, {onSummaryChanged: setSummary});
+        var dotChatClient = new DotChatClient(userId, connector, { chatsSettings:{
+            checkFilter: function(filter, chatItem){
+                return chatItem.participants.some(function(p){
+                    return p.userId === userId && p.chatParticipantStatus === 0;
+                })
+            }
+        } }, {onSummaryChanged: setSummary});
         window.dotChatClient = dotChatClient;
         
-        var reader = dotChatClient.getChatsReader('tt');
+        var reader = dotChatClient.getChatsReader('tt', {
+            userFiltersList: [
+                {
+                    userId: userId,
+                    participantStatus: 0
+                }
+            ]
+        });
         reader.aquire(setChats);
     
         var activeChat = null;
