@@ -107,14 +107,16 @@
         } }, {onSummaryChanged: setSummary});
         window.dotChatClient = dotChatClient;
         
-        var reader = dotChatClient.getChatsReader('tt', {
+        var chatFilter = {
             userFiltersList: [
                 {
                     userId: userId,
                     participantStatus: 0
                 }
             ]
-        });
+        };
+        //var reader = dotChatClient.getChatsReader('tt', chatFilter);
+        var reader = dotChatClient.getChatsReader();
         reader.aquire(setChats);
     
         var activeChat = null;

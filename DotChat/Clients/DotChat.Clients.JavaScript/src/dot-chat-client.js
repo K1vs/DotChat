@@ -299,7 +299,7 @@ export default class DotChatClient{
         var refChatWithReaderBox = chatsWithReaderBoxes[0];
         if(refChatWithReaderBox){
             readerBoxes.filter(r => r != refChatWithReaderBox.reader)
-            .filter(r => !r.filter || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(r.filter, refChatWithReaderBox.chat))
+            .filter(r => !r.filter || r.reader.get(chatId) || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(r.filter, refChatWithReaderBox.chat))
             .forEach(r => r.reader.addOrUpdate(chatId, refChatWithReaderBox.chat, exist => _.assign(exist, refChatWithReaderBox.chat)));
             chatsWithReaderBoxes.forEach(chatWithReaderBox => {
                 if(!chatWithReaderBox.chat){
@@ -328,7 +328,7 @@ export default class DotChatClient{
                 };
             }
             var readers = this._getChatReaderBoxes();
-            readers.filter(r => !r.filter || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(r.filter, chat))
+            readers.filter(r => !r.filter || r.reader.get(chatId) || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(r.filter, chat))
             .forEach(r => {
                 r.reader.addOrUpdate(chatId, chat, exist => _.assign(exist, chat));
             });
@@ -347,37 +347,32 @@ export default class DotChatClient{
     }
 
     _registerChatsNotifications(){
+        var forEachReader = (readerAction, chat) => {
+            this._getChatReaderBoxes()
+            .filter(chatReaderBox => !chatReaderBox.filter || chatReaderBox.reader.get(chat.chatId) || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(chatReaderBox.filter, chat))
+            .forEach(chatReaderBox => readerAction(chatReaderBox.reader, chat));
+        };
         var chatAdded = (notification) => {
             this._loadSummary();
-            this._getChatReaderBoxes()
-            .filter(chatReaderBox => chatReaderBox.filter || this._settings.chatsSettings.checkFilter && this._settings.chatsSettings.checkFilter(chatReaderBox.filter, notification.personalizedChat))
-            .map(r => r.reader)
-            .forEach(reader => {
-                reader.addOrUpdate(notification.personalizedChat.chatId, notification.personalizedChat,
-                        (exist) => _.assign(exist, notification.personalizedChat));
-            });
+            forEachReader((reader, chat) => {
+                reader.addOrUpdate(chat.chatId, chat, (exist) => _.assign(exist, chat));
+            }, notification.personalizedChat);
             this._callCallback('chatAdded', notification);
         };
 
         var chatInfoEdited = (notification) => {
             this._loadSummary();
-            if(this._chatsReaders.default){
-                this._chatsReaders.default.update(notification.chatId, (exist) => _.merge(exist, notification.chatInfo));
-            }
-            Object.entries(this._chatsReaders.named).map(([,value]) => value).forEach(namedChatReaderBox => {
-                namedChatReaderBox.reader.update(notification.chatId, (exist) => _.merge(exist, notification.chatInfo));
-            });
+            forEachReader((reader, chat) => {
+                reader.addOrUpdate(chat.chatId, chat, (exist) => _.assign(exist, chat));
+            }, {...notification.chatInfo, chatId: notification.chatId});
             this._callCallback('chatInfoEdited', notification);
         };
 
         var chatRemoved = (notification) => {
             this._loadSummary();
-            if(this._chatsReaders.default){
-                this._chatsReaders.default.update(notification.chatId, (exist) => exist.removed = true);
-            }
-            Object.entries(this._chatsReaders.named).map(([,value]) => value).forEach(namedChatReaderBox => {
-                namedChatReaderBox.reader.update(notification.chatId, (exist) => exist.removed = true);
-            });
+            forEachReader((reader, chat) => {
+                reader.addOrUpdate(chat.chatId, chat, (exist) => exist.removed = true);
+            }, {chatId: notification.chatId});
             this._callCallback('chatRemoved', notification);
         };
 
@@ -538,7 +533,7 @@ export default class DotChatClient{
                 this._loadSummary();
             }
             var readers = this._getChatMessageReaders(chatId);
-            readers.filter(r => !r.filter || this._settings.messagesSettings.checkFilter && this._settings.messagesSettings.checkFilter(r.filter, message)).forEach(reader => {
+            readers.filter(r => !r.filter || r.reader.get(chatId) || this._settings.messagesSettings.checkFilter && this._settings.messagesSettings.checkFilter(r.filter, message)).forEach(reader => {
                 reader.addOrUpdate(message.messageId, message, exist => update(exist, message));
             });
         };
