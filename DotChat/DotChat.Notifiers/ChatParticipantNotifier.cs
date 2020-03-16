@@ -16,57 +16,57 @@
         where TParticipationResult : IParticipationResult<TChatParticipant>
         where TChatParticipant : IChatParticipant
     {
-        private readonly IChatParticipantsNotificationBuilder<TParticipationResultCollection, TParticipationResult, TChatParticipant> _chatParticipantsNotificationBuilder;
+        protected readonly IChatParticipantsNotificationBuilder<TParticipationResultCollection, TParticipationResult, TChatParticipant> ChatParticipantsNotificationBuilder;
 
         public ChatParticipantNotifier(TChatNotificationsConfiguration chatNotificationsConfiguration, INotificationSender notificationSender, INotificationRouteService notificationRouteService, IChatParticipantsNotificationBuilder<TParticipationResultCollection, TParticipationResult, TChatParticipant> chatParticipantsNotificationBuilder) : base(chatNotificationsConfiguration, notificationSender, notificationRouteService)
         {
-            _chatParticipantsNotificationBuilder = chatParticipantsNotificationBuilder;
+            ChatParticipantsNotificationBuilder = chatParticipantsNotificationBuilder;
         }
 
-        public async Task Handle(IChatParticipantAddedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantAddedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
         {
             await NotificationRouteService.AddUserToChat(@event.Participant.UserId, @event.ChatId);
-            var notification = _chatParticipantsNotificationBuilder.BuildChatParticipantAddedNotification(@event);
+            var notification = ChatParticipantsNotificationBuilder.BuildChatParticipantAddedNotification(@event);
             await Notify(@event.ChatId, notification);
         }
 
-        public async Task Handle(IChatParticipantInvitedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantInvitedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
         {
-            var notification = _chatParticipantsNotificationBuilder.BuildChatParticipantInvitedNotification(@event);
+            var notification = ChatParticipantsNotificationBuilder.BuildChatParticipantInvitedNotification(@event);
             await Notify(@event.ChatId, notification);
         }
 
-        public async Task Handle(IChatParticipantAppliedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantAppliedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
         {
-            var notification = _chatParticipantsNotificationBuilder.BuildChatParticipantAppliedNotification(@event);
+            var notification = ChatParticipantsNotificationBuilder.BuildChatParticipantAppliedNotification(@event);
             await Notify(@event.ChatId, notification);
         }
 
-        public async Task Handle(IChatParticipantRemovedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantRemovedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
         {
-            var notification = _chatParticipantsNotificationBuilder.BuildChatParticipantRemovedNotification(@event);
+            var notification = ChatParticipantsNotificationBuilder.BuildChatParticipantRemovedNotification(@event);
             await Notify(@event.ChatId, notification);
             await NotificationRouteService.RemoveUserFromChat(@event.Participant.UserId, @event.ChatId);
         }
 
-        public async Task Handle(IChatParticipantBlockedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantBlockedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
         {
-            var notification = _chatParticipantsNotificationBuilder.BuildChatParticipantBlockedNotification(@event);
+            var notification = ChatParticipantsNotificationBuilder.BuildChatParticipantBlockedNotification(@event);
             await Notify(@event.ChatId, notification);
             await NotificationRouteService.RemoveUserFromChat(@event.Participant.UserId, @event.ChatId);
         }
 
-        public async Task Handle(IChatParticipantsAppendedEvent<TParticipationResultCollection, TParticipationResult, TChatParticipant> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantsAppendedEvent<TParticipationResultCollection, TParticipationResult, TChatParticipant> @event, IChatBusContext chatBusContext)
         {
             var users = @event.Added.Select(r => r.Participant.UserId);
             await NotificationRouteService.AddUsersToChat(users, @event.ChatId);
-            var notification = _chatParticipantsNotificationBuilder.BuildChatParticipantsAppendedNotification(@event);
+            var notification = ChatParticipantsNotificationBuilder.BuildChatParticipantsAppendedNotification(@event);
             await Notify(@event.ChatId, notification);
         }
 
-        public async Task Handle(IChatParticipantTypeChangedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantTypeChangedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
         {
-            var notification = _chatParticipantsNotificationBuilder.BuildChatParticipantTypeChangedNotification(@event);
+            var notification = ChatParticipantsNotificationBuilder.BuildChatParticipantTypeChangedNotification(@event);
             await Notify(@event.ChatId, notification);
         }
     }

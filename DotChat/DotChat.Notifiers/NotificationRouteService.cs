@@ -14,78 +14,78 @@
         where TChatNotificationsConfiguration : IChatNotificationsConfiguration
         where TChatParticipant : IChatParticipant
     {
-        private readonly TimeSpan _cleanUpInterval;
-        private readonly ConcurrentDictionary<Guid, Task<ConcurrentDictionary<Guid, bool>>> _chats = new ConcurrentDictionary<Guid, Task<ConcurrentDictionary<Guid, bool>>>();
-        private readonly IReadChatParticipantStore<TChatParticipant> _readChatParticipantStore;
-        private readonly Timer _cleanupTimer;
+        protected readonly TimeSpan CleanUpInterval;
+        protected readonly ConcurrentDictionary<Guid, Task<ConcurrentDictionary<Guid, bool>>> Chats = new ConcurrentDictionary<Guid, Task<ConcurrentDictionary<Guid, bool>>>();
+        protected readonly IReadChatParticipantStore<TChatParticipant> ReadChatParticipantStore;
+        protected readonly Timer CleanupTimer;
 
         public NotificationRouteService(IReadChatParticipantStore<TChatParticipant> readChatParticipantStore, TChatNotificationsConfiguration notificationsConfiguration)
         {
-            _readChatParticipantStore = readChatParticipantStore;
-            _cleanUpInterval = notificationsConfiguration.CleanUpInterval;
-            _cleanupTimer = CreateTimer();
+            ReadChatParticipantStore = readChatParticipantStore;
+            CleanUpInterval = notificationsConfiguration.CleanUpInterval;
+            CleanupTimer = CreateTimer();
         }
 
-        public async Task<IEnumerable<Guid>> GetChatUsers(Guid chatId)
+        public virtual async Task<IEnumerable<Guid>> GetChatUsers(Guid chatId)
         {
-            return (await _chats.GetOrAdd(chatId, GetChatUsersDictionary)).Select(r => r.Key);
+            return (await Chats.GetOrAdd(chatId, GetChatUsersDictionary)).Select(r => r.Key);
         }
 
-        public Task ConnectUser(Guid userId, IEnumerable<Guid> chats)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task DisconnectUser(Guid userId)
+        public virtual Task ConnectUser(Guid userId, IEnumerable<Guid> chats)
         {
             return Task.CompletedTask;
         }
 
-        public async Task AddUserToChat(Guid userId, Guid chatId)
+        public virtual Task DisconnectUser(Guid userId)
         {
-            var users = await _chats.GetOrAdd(chatId, GetChatUsersDictionary);
+            return Task.CompletedTask;
+        }
+
+        public virtual async Task AddUserToChat(Guid userId, Guid chatId)
+        {
+            var users = await Chats.GetOrAdd(chatId, GetChatUsersDictionary);
             users.TryAdd(userId, false);
         }
 
-        public async Task AddUsersToChat(IEnumerable<Guid> userIds, Guid chatId)
+        public virtual async Task AddUsersToChat(IEnumerable<Guid> userIds, Guid chatId)
         {
-            var users = await _chats.GetOrAdd(chatId, GetChatUsersDictionary);
+            var users = await Chats.GetOrAdd(chatId, GetChatUsersDictionary);
             foreach (var userId in userIds)
             {
                 users.TryAdd(userId, false);
             }
         }
 
-        public Task RemoveUserFromChat(Guid userId, Guid chatId)
+        public virtual Task RemoveUserFromChat(Guid userId, Guid chatId)
         {
             return Task.CompletedTask;
         }
 
-        public Task RemoveUsersFromChat(IEnumerable<Guid> userIds, Guid chatId)
+        public virtual Task RemoveUsersFromChat(IEnumerable<Guid> userIds, Guid chatId)
         {
             return Task.CompletedTask;
         }
 
-        public Task RemoveChat(Guid chatId)
+        public virtual Task RemoveChat(Guid chatId)
         {
-            _chats.TryRemove(chatId, out _);
+            Chats.TryRemove(chatId, out _);
             return Task.CompletedTask;
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
-            _cleanupTimer?.Dispose();
+            CleanupTimer?.Dispose();
         }
 
-        private async Task<ConcurrentDictionary<Guid, bool>> GetChatUsersDictionary(Guid chatId)
+        protected virtual async Task<ConcurrentDictionary<Guid, bool>> GetChatUsersDictionary(Guid chatId)
         {
-            var userIds = await _readChatParticipantStore.RetrieveIds(chatId);
+            var userIds = await ReadChatParticipantStore.RetrieveIds(chatId);
             return new ConcurrentDictionary<Guid, bool>(userIds.Select(r => new KeyValuePair<Guid, bool>(r, false)));
         }
 
-        private Timer CreateTimer()
+        protected virtual Timer CreateTimer()
         {
-            return new Timer((state) => _chats.Clear(), null, _cleanUpInterval, _cleanUpInterval);
+            return new Timer((state) => Chats.Clear(), null, CleanUpInterval, CleanUpInterval);
         }
     }
 }

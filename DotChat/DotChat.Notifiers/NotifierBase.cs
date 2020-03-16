@@ -19,7 +19,7 @@
             NotificationRouteService = notificationRouteService;
         }
 
-        protected async Task Notify<TNotification>(Guid chatId, TNotification notification)
+        protected virtual async Task Notify<TNotification>(Guid chatId, TNotification notification)
             where TNotification : INotification
         {
             if (NotificationSender.SupportNotifyChatParticipants)

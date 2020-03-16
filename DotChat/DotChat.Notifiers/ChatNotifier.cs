@@ -32,30 +32,30 @@
         where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
         where TContactMessage : IContactMessage<TChatUser>
     {
-        private readonly IChatsNotificationBuilder<TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> _chatsNotificationBuilder;
+        protected readonly IChatsNotificationBuilder<TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> ChatsNotificationBuilder;
 
         public ChatNotifier(TChatNotificationsConfiguration chatNotificationsConfiguration, INotificationSender notificationSender, INotificationRouteService notificationRouteService, IChatsNotificationBuilder<TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> chatsNotificationBuilder) : base(chatNotificationsConfiguration, notificationSender, notificationRouteService)
         {
-            _chatsNotificationBuilder = chatsNotificationBuilder;
+            ChatsNotificationBuilder = chatsNotificationBuilder;
         }
 
-        public async Task Handle(IChatAddedEvent<TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatAddedEvent<TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event, IChatBusContext chatBusContext)
         {
             var userIds = @event.Chat.Participants.Where(r => r.ChatParticipantStatus == ChatParticipantStatus.Active).Select(r => r.UserId);
             await NotificationRouteService.AddUsersToChat(userIds, @event.Chat.ChatId);
-            var notification = _chatsNotificationBuilder.BuildChatAddedNotification(@event);
+            var notification = ChatsNotificationBuilder.BuildChatAddedNotification(@event);
             await Notify(@event.Chat.ChatId, notification);
         }
 
-        public async Task Handle(IChatInfoEditedEvent<TChatInfo> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatInfoEditedEvent<TChatInfo> @event, IChatBusContext chatBusContext)
         {
-            var notification = _chatsNotificationBuilder.BuildChatInfoEditedNotification(@event);
+            var notification = ChatsNotificationBuilder.BuildChatInfoEditedNotification(@event);
             await Notify(@event.ChatId, notification);
         }
 
-        public async Task Handle(IChatRemovedEvent<TChatInfo> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatRemovedEvent<TChatInfo> @event, IChatBusContext chatBusContext)
         {
-            var notification = _chatsNotificationBuilder.BuildChatRemovedNotification(@event);
+            var notification = ChatsNotificationBuilder.BuildChatRemovedNotification(@event);
             await Notify(@event.ChatId, notification);
             await NotificationRouteService.RemoveChat(@event.ChatId);
         }

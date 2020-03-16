@@ -28,34 +28,34 @@
         where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
         where TContactMessage : IContactMessage<TChatUser>
     {
-        private readonly IChatMessagesNotificationBuilder<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> _chatMessagesNotificationBuilder;
+        private readonly IChatMessagesNotificationBuilder<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> ChatMessagesNotificationBuilder;
 
         public ChatMessageNotifier(TChatNotificationsConfiguration chatNotificationsConfiguration, INotificationSender notificationSender, INotificationRouteService notificationRouteService, IChatMessagesNotificationBuilder<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> chatMessagesNotificationBuilder) : base(chatNotificationsConfiguration, notificationSender, notificationRouteService)
         {
-            _chatMessagesNotificationBuilder = chatMessagesNotificationBuilder;
+            ChatMessagesNotificationBuilder = chatMessagesNotificationBuilder;
         }
 
-        public async Task Handle(IChatMessageAddedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatMessageAddedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event, IChatBusContext chatBusContext)
         {
-            var notification = _chatMessagesNotificationBuilder.BuildChatMessageAddedNotification(@event);
+            var notification = ChatMessagesNotificationBuilder.BuildChatMessageAddedNotification(@event);
             await Notify(@event.ChatId, notification);
         }
 
-        public async Task Handle(IChatMessageEditedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatMessageEditedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event, IChatBusContext chatBusContext)
         {
-            var notification = _chatMessagesNotificationBuilder.BuildChatMessageEditedNotification(@event);
+            var notification = ChatMessagesNotificationBuilder.BuildChatMessageEditedNotification(@event);
             await Notify(@event.ChatId, notification);
         }
 
-        public async Task Handle(IChatMessageRemovedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatMessageRemovedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event, IChatBusContext chatBusContext)
         {
-            var notification = _chatMessagesNotificationBuilder.BuildChatMessageRemovedNotification(@event);
+            var notification = ChatMessagesNotificationBuilder.BuildChatMessageRemovedNotification(@event);
             await Notify(@event.ChatId, notification);
         }
 
-        public async Task Handle(IChatMessagesReadEvent @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatMessagesReadEvent @event, IChatBusContext chatBusContext)
         {
-            var notification = _chatMessagesNotificationBuilder.BuildChatMessagesReadNotification(@event);
+            var notification = ChatMessagesNotificationBuilder.BuildChatMessagesReadNotification(@event);
             await Notify(@event.ChatId, notification);
         }
     }
