@@ -159,9 +159,9 @@ export default class DotChatClient{
         return message.author;
     }
 
-    async addChat(chatInfo, candidates){
-        var chatId = await this._connector.chats.add(chatInfo, candidates);
-        return chatId;
+    async addChat(chatId, chatInfo, candidates){
+        var createdChatId = await this._connector.chats.add(chatId, chatInfo, candidates);
+        return createdChatId;
     }
 
     async editChatInfo(chatId, chatInfo){
