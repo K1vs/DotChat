@@ -10,21 +10,21 @@
 
     public class DependencyResolver : IDependencyResolver
     {
-        private readonly IComponentContext _componentContext;
+        protected readonly IComponentContext ComponentContext;
 
         public DependencyResolver(IComponentContext componentContext)
         {
-            _componentContext = componentContext;
+            ComponentContext = componentContext;
         }
 
-        public TService Resolve<TService>()
+        public virtual TService Resolve<TService>()
         {
-            return _componentContext.Resolve<TService>();
+            return ComponentContext.Resolve<TService>();
         }
 
-        public object Resolve(Type type)
+        public virtual object Resolve(Type type)
         {
-            return _componentContext.Resolve(type);
+            return ComponentContext.Resolve(type);
         }
     }
 }

@@ -12,7 +12,7 @@
         where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
         where TParticipationCandidate : IParticipationCandidate
     {
-        IAddChatCommand<TChatInfo, TParticipationCandidateCollection, TParticipationCandidate> BuildAddChatCommand(Guid currentUserId, TChatInfo chatInfo, TParticipationCandidates participationCandidates);
+        IAddChatCommand<TChatInfo, TParticipationCandidateCollection, TParticipationCandidate> BuildAddChatCommand(Guid currentUserId, Guid? chatId, TChatInfo chatInfo, TParticipationCandidates participationCandidates);
         IEditChatInfoCommand<TChatInfo> BuildEditChatCommand(Guid currentUserId, Guid chatId, TChatInfo chatInfo);
         IRemoveChatCommand BuildRemoveChatCommand(Guid currentUserId, Guid chatId);
     }

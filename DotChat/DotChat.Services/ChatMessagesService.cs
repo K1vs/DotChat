@@ -35,66 +35,66 @@
         where TPagedResult : IPagedResult<TChatMessageCollection, TChatMessage>
         where TPagingOptions : IPagingOptions
     {
-        private readonly IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, 
-        TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> _chatMessagesPermissionValidator;
-        private readonly IReadChatMessageStore<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> _readChatMessageStore;
-        private readonly IChatMessagesCommandBuilder<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> _chatMessagesCommandBuilder;
-        private readonly IChatCommandSender _chatCommandSender;
+        protected readonly IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, 
+        TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> ChatMessagesPermissionValidator;
+        protected readonly IReadChatMessageStore<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> ReadChatMessageStore;
+        protected readonly IChatMessagesCommandBuilder<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> ChatMessagesCommandBuilder;
+        protected readonly IChatCommandSender ChatCommandSender;
 
         public ChatMessagesService(TDotChatConfiguration chatServicesConfiguration, IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> chatMessagesPermissionValidator, IReadChatMessageStore<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> readChatMessageStore, IChatMessagesCommandBuilder<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> chatMessagesCommandBuilder, IChatCommandSender chatCommandSender) : base(chatServicesConfiguration)
         {
-            _chatMessagesPermissionValidator = chatMessagesPermissionValidator;
-            _readChatMessageStore = readChatMessageStore;
-            _chatMessagesCommandBuilder = chatMessagesCommandBuilder;
-            _chatCommandSender = chatCommandSender;
+            ChatMessagesPermissionValidator = chatMessagesPermissionValidator;
+            ReadChatMessageStore = readChatMessageStore;
+            ChatMessagesCommandBuilder = chatMessagesCommandBuilder;
+            ChatCommandSender = chatCommandSender;
         }
 
-        public async Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions pagingOptions = default)
+        public virtual async Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions pagingOptions = default)
         {
-            var messagesPage = await _readChatMessageStore.Retrieve(chatId, filters, pagingOptions).ConfigureAwait(false);
-            await _chatMessagesPermissionValidator.ValidateGetPage(currentUserId, chatId, filters, pagingOptions, messagesPage, ServiceName).ConfigureAwait(false);
+            var messagesPage = await ReadChatMessageStore.Retrieve(chatId, filters, pagingOptions).ConfigureAwait(false);
+            await ChatMessagesPermissionValidator.ValidateGetPage(currentUserId, chatId, filters, pagingOptions, messagesPage, ServiceName).ConfigureAwait(false);
             return messagesPage;
         }
 
-        public async Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, TPagingOptions pagingOptions = default)
+        public virtual async Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, TPagingOptions pagingOptions = default)
         {
-            var messagesPage = await _readChatMessageStore.Retrieve(chatId, pagingOptions).ConfigureAwait(false);
-            await _chatMessagesPermissionValidator.ValidateGetPage(currentUserId, chatId, pagingOptions, messagesPage, ServiceName).ConfigureAwait(false);
+            var messagesPage = await ReadChatMessageStore.Retrieve(chatId, pagingOptions).ConfigureAwait(false);
+            await ChatMessagesPermissionValidator.ValidateGetPage(currentUserId, chatId, pagingOptions, messagesPage, ServiceName).ConfigureAwait(false);
             return messagesPage;
         }
 
-        public async Task<Guid> Add(Guid currentUserId, Guid chatId, Guid? messageId, TChatMessageInfo messageInfo)
+        public virtual async Task<Guid> Add(Guid currentUserId, Guid chatId, Guid? messageId, TChatMessageInfo messageInfo)
         {
-            await _chatMessagesPermissionValidator.ValidateAdd(currentUserId, chatId, messageInfo, ServiceName)
+            await ChatMessagesPermissionValidator.ValidateAdd(currentUserId, chatId, messageInfo, ServiceName)
                 .ConfigureAwait(false);
-            var command = _chatMessagesCommandBuilder.BuildIndexChatMessageCommand(currentUserId, chatId, messageId, false, messageInfo);
-            await _chatCommandSender.Send(command).ConfigureAwait(false);
+            var command = ChatMessagesCommandBuilder.BuildIndexChatMessageCommand(currentUserId, chatId, messageId, false, messageInfo);
+            await ChatCommandSender.Send(command).ConfigureAwait(false);
             return command.MessageId;
         }
 
-        public async Task<Guid> Edit(Guid currentUserId, Guid chatId, Guid messageId, TChatMessageInfo messageInfo, Guid? archivedMessageId)
+        public virtual async Task<Guid> Edit(Guid currentUserId, Guid chatId, Guid messageId, TChatMessageInfo messageInfo, Guid? archivedMessageId)
         {
-            await _chatMessagesPermissionValidator.ValidateEdit(currentUserId, chatId, messageId, messageInfo, ServiceName)
+            await ChatMessagesPermissionValidator.ValidateEdit(currentUserId, chatId, messageId, messageInfo, ServiceName)
                 .ConfigureAwait(false);
-            var command = _chatMessagesCommandBuilder.BuildEditChatMessageCommand(currentUserId, chatId, messageId, messageInfo, archivedMessageId);
-            await _chatCommandSender.Send(command).ConfigureAwait(false);
+            var command = ChatMessagesCommandBuilder.BuildEditChatMessageCommand(currentUserId, chatId, messageId, messageInfo, archivedMessageId);
+            await ChatCommandSender.Send(command).ConfigureAwait(false);
             return command.ArchivedMessageId;
         }
 
-        public async Task Remove(Guid currentUserId, Guid chatId, Guid messageId)
+        public virtual async Task Remove(Guid currentUserId, Guid chatId, Guid messageId)
         {
-            await _chatMessagesPermissionValidator.ValidateRemove(currentUserId, chatId, messageId, ServiceName)
+            await ChatMessagesPermissionValidator.ValidateRemove(currentUserId, chatId, messageId, ServiceName)
                 .ConfigureAwait(false);
-            var command = _chatMessagesCommandBuilder.BuildRemoveChatMessageCommand(currentUserId, chatId, messageId);
-            await _chatCommandSender.Send(command).ConfigureAwait(false);
+            var command = ChatMessagesCommandBuilder.BuildRemoveChatMessageCommand(currentUserId, chatId, messageId);
+            await ChatCommandSender.Send(command).ConfigureAwait(false);
         }
 
-        public async Task Read(Guid currentUserId, Guid chatId, long index, bool force)
+        public virtual async Task Read(Guid currentUserId, Guid chatId, long index, bool force)
         {
-            await _chatMessagesPermissionValidator.ValidateRead(currentUserId, chatId, index, force, ServiceName)
+            await ChatMessagesPermissionValidator.ValidateRead(currentUserId, chatId, index, force, ServiceName)
                 .ConfigureAwait(false);
-            var command = _chatMessagesCommandBuilder.BuildReadChatMessagesCommand(currentUserId, chatId, index, force);
-            await _chatCommandSender.Send(command).ConfigureAwait(false);
+            var command = ChatMessagesCommandBuilder.BuildReadChatMessagesCommand(currentUserId, chatId, index, force);
+            await ChatCommandSender.Send(command).ConfigureAwait(false);
         }
     }
 }

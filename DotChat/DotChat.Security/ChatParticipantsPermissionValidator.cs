@@ -45,8 +45,8 @@
         where TPagedResult : IPagedResult<TPersonalizedChatCollection, TPersonalizedChat>
         where TPagingOptions : IPagingOptions
     {
-        private readonly IReadChatParticipantStore<TChatParticipant> _readChatParticipantStore;
-        private readonly IReadChatStore<TChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> _readChatStore;
+        protected readonly IReadChatParticipantStore<TChatParticipant> ReadChatParticipantStore;
+        protected readonly IReadChatStore<TChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> ReadChatStore;
 
         protected List<ChatParticipantType> ParticipantsTypesPriority = new List<ChatParticipantType>
         {
@@ -56,8 +56,8 @@
 
         public ChatParticipantsPermissionValidator(IReadChatParticipantStore<TChatParticipant> readChatParticipantStore, IReadChatStore<TChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> readChatStore)
         {
-            _readChatParticipantStore = readChatParticipantStore;
-            _readChatStore = readChatStore;
+            ReadChatParticipantStore = readChatParticipantStore;
+            ReadChatStore = readChatStore;
         }
 
         protected virtual bool IsHigherParticipantType(ChatParticipantType participantType, ChatParticipantType compareToParticipantType)
@@ -71,7 +71,7 @@
         public virtual async Task ValidateAdd(Guid currentUserId, Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata,
             string serviceName, string methodName = null)
         {
-            var participant = await _readChatParticipantStore.Retrieve(chatId, currentUserId);
+            var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
             if (CanNotAddParticipant(participant))
             {
                 throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Add, ErrorEntity.Participant),
@@ -88,7 +88,7 @@
         public virtual async Task ValidateInvite(Guid currentUserId, Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata,
             string serviceName, string methodName = null)
         {
-            var participant = await _readChatParticipantStore.Retrieve(chatId, currentUserId);
+            var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
             if (CanNotAddParticipant(participant))
             {
                 throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Add, ErrorEntity.Participant),
@@ -105,7 +105,7 @@
         public virtual async Task ValidateApply(Guid currentUserId, Guid chatId, ChatParticipantType chatParticipantType, string serviceName, string style, string metadata,
             string methodName = null)
         {
-            var chat = await _readChatStore.Retrieve(chatId);
+            var chat = await ReadChatStore.Retrieve(chatId);
             if(chat == null)
             {
                 throw new DotChatNotFoundChatException(ErrorModule.Security, ErrorOperation.Get, chatId, currentUserId);
@@ -119,8 +119,8 @@
 
         public virtual async Task ValidateRemove(Guid currentUserId, Guid chatId, Guid userId, string serviceName, string methodName = null)
         {
-            var participant = await _readChatParticipantStore.Retrieve(chatId, currentUserId);
-            var removedParticipant = await _readChatParticipantStore.Retrieve(chatId, userId);
+            var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
+            var removedParticipant = await ReadChatParticipantStore.Retrieve(chatId, userId);
             if (currentUserId != userId && CanNotEditParticipant(participant))
             {
                 throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Remove, ErrorEntity.Participant),
@@ -136,8 +136,8 @@
 
         public virtual async Task ValidateBlock(Guid currentUserId, Guid chatId, Guid userId, string serviceName, string methodName = null)
         {
-            var participant = await _readChatParticipantStore.Retrieve(chatId, currentUserId);
-            var removedParticipant = await _readChatParticipantStore.Retrieve(chatId, userId);
+            var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
+            var removedParticipant = await ReadChatParticipantStore.Retrieve(chatId, userId);
             if (CanNotEditParticipant(participant))
             {
                 throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Remove, ErrorEntity.Participant),
@@ -154,8 +154,8 @@
         public virtual async Task ValidateChangeType(Guid currentUserId, Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata,
             string serviceName, string methodName = null)
         {
-            var participant = await _readChatParticipantStore.Retrieve(chatId, currentUserId);
-            var changedParticipant = await _readChatParticipantStore.Retrieve(chatId, userId);
+            var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
+            var changedParticipant = await ReadChatParticipantStore.Retrieve(chatId, userId);
             if (CanNotEditParticipant(participant))
             {
                 throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Edit, ErrorEntity.Participant),
@@ -172,7 +172,7 @@
         public virtual async Task ValidateAppend(Guid currentUserId, Guid chatId, TParticipationCandidateCollection addCandidates,
             TParticipationCandidateCollection inviteCandidates, string serviceName, string methodName = null)
         {
-            var participant = await _readChatParticipantStore.Retrieve(chatId, currentUserId);
+            var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
             if (CanNotAddParticipant(participant))
             {
                 throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Add, ErrorEntity.Participant),

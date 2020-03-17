@@ -11,27 +11,27 @@
 
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        private readonly ContainerBuilder _containerBuilder;
+        protected readonly ContainerBuilder ContainerBuilder;
 
         public DependencyRegistrar(ContainerBuilder containerBuilder)
         {
-            _containerBuilder = containerBuilder;
+            ContainerBuilder = containerBuilder;
         }
 
-        public IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>()
+        public virtual IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>()
         {
-            return new DependencyRegistrationBuilder<TImplementation, ConcreteReflectionActivatorData, SingleRegistrationStyle>(_containerBuilder.RegisterType<TImplementation>());
+            return new DependencyRegistrationBuilder<TImplementation, ConcreteReflectionActivatorData, SingleRegistrationStyle>(ContainerBuilder.RegisterType<TImplementation>());
         }
 
-        public IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>(TImplementation implementation)
+        public virtual IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>(TImplementation implementation)
             where TImplementation : class
         {
-            return new DependencyRegistrationBuilder<TImplementation, SimpleActivatorData, SingleRegistrationStyle>(_containerBuilder.RegisterInstance(implementation));
+            return new DependencyRegistrationBuilder<TImplementation, SimpleActivatorData, SingleRegistrationStyle>(ContainerBuilder.RegisterInstance(implementation));
         }
 
-        public IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>(Func<IDependencyResolver, TImplementation> factory)
+        public virtual IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>(Func<IDependencyResolver, TImplementation> factory)
         {
-            return new DependencyRegistrationBuilder<TImplementation, SimpleActivatorData, SingleRegistrationStyle>(_containerBuilder.Register(c => factory(new DependencyResolver(c))));
+            return new DependencyRegistrationBuilder<TImplementation, SimpleActivatorData, SingleRegistrationStyle>(ContainerBuilder.Register(c => factory(new DependencyResolver(c))));
         }
     }
 }

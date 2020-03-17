@@ -9,7 +9,7 @@
 
     public class ChatMessageTimestampGenerator: IChatMessageTimestampGenerator
     {
-        public Task<DateTime> Generate()
+        public virtual Task<DateTime> Generate()
         {
             return Task.FromResult(DateTime.UtcNow);
         }

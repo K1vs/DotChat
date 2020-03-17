@@ -13,18 +13,18 @@
 
     public class ChatsCommandBuilder: IChatsCommandBuilder<ChatInfo, ParticipationCandidates, List<ParticipationCandidate>, ParticipationCandidate>
     {
-        public IAddChatCommand<ChatInfo, List<ParticipationCandidate>, ParticipationCandidate> BuildAddChatCommand(Guid currentUserId, ChatInfo chatInfo,
+        public virtual IAddChatCommand<ChatInfo, List<ParticipationCandidate>, ParticipationCandidate> BuildAddChatCommand(Guid currentUserId, Guid? chatId, ChatInfo chatInfo,
             ParticipationCandidates participationCandidates)
         {
-            return new AddChatCommand<ChatInfo, List<ParticipationCandidate>, ParticipationCandidate>(currentUserId, Guid.NewGuid(), chatInfo, participationCandidates.ToAdd, participationCandidates.ToInvite);
+            return new AddChatCommand<ChatInfo, List<ParticipationCandidate>, ParticipationCandidate>(currentUserId, chatId ?? Guid.NewGuid(), chatInfo, participationCandidates.ToAdd, participationCandidates.ToInvite);
         }
 
-        public IEditChatInfoCommand<ChatInfo> BuildEditChatCommand(Guid currentUserId, Guid chatId, ChatInfo chatInfo)
+        public virtual IEditChatInfoCommand<ChatInfo> BuildEditChatCommand(Guid currentUserId, Guid chatId, ChatInfo chatInfo)
         {
             return new EditChatInfoCommand<ChatInfo>(currentUserId, chatId, chatInfo);
         }
 
-        public IRemoveChatCommand BuildRemoveChatCommand(Guid currentUserId, Guid chatId)
+        public virtual IRemoveChatCommand BuildRemoveChatCommand(Guid currentUserId, Guid chatId)
         {
             return new RemoveChatCommand(currentUserId, chatId);
         }

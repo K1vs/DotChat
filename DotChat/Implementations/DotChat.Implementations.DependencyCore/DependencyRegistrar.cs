@@ -6,27 +6,27 @@
 
     public class DependencyRegistrar: IDependencyRegistrar
     {
-        private readonly IServiceCollection _serviceCollection;
+        private readonly IServiceCollection ServiceCollection;
 
         public DependencyRegistrar(IServiceCollection serviceCollection)
         {
-            _serviceCollection = serviceCollection;
+            ServiceCollection = serviceCollection;
         }
 
         public IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>()
         {
-            return new DependencyRegistrationBuilder<TImplementation>(_serviceCollection);
+            return new DependencyRegistrationBuilder<TImplementation>(ServiceCollection);
         }
 
         public IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>(TImplementation implementation)
             where TImplementation : class
         {
-            return new DependencyRegistrationBuilder<TImplementation>(_serviceCollection, implementation);
+            return new DependencyRegistrationBuilder<TImplementation>(ServiceCollection, implementation);
         }
 
         public IDependencyRegistrationBuilder<TImplementation> Register<TImplementation>(Func<IDependencyResolver, TImplementation> factory)
         {
-            return new DependencyRegistrationBuilder<TImplementation>(_serviceCollection, factory);
+            return new DependencyRegistrationBuilder<TImplementation>(ServiceCollection, factory);
         }
     }
 }

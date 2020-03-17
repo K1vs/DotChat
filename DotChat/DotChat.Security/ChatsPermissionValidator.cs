@@ -43,21 +43,21 @@
         where TPagedResult : IPagedResult<TPersonalizedChatCollection, TPersonalizedChat>
         where TPagingOptions : IPagingOptions
     {
-        private readonly IReadChatParticipantStore<TChatParticipant> _readChatParticipantStore;
-        private readonly IReadUserStore<TChatUser> _readUserStore;
+        protected readonly IReadChatParticipantStore<TChatParticipant> ReadChatParticipantStore;
+        protected readonly IReadUserStore<TChatUser> ReadUserStore;
 
         public ChatsPermissionValidator(IReadChatParticipantStore<TChatParticipant> readChatParticipantStore, IReadUserStore<TChatUser> readUserStore)
         {
-            _readChatParticipantStore = readChatParticipantStore;
-            _readUserStore = readUserStore;
+            ReadChatParticipantStore = readChatParticipantStore;
+            ReadUserStore = readUserStore;
         }
 
-        public Task ValidateGetSummary(Guid currentUserId, string serviceName, string methodName = null)
+        public virtual Task ValidateGetSummary(Guid currentUserId, string serviceName, string methodName = null)
         {
             return Task.CompletedTask;
         }
 
-        public Task ValidateGetPage(Guid currentUserId, TPagedResult chatsPage, TChatFilter filter, TPagingOptions pagingOptions,
+        public virtual Task ValidateGetPage(Guid currentUserId, TPagedResult chatsPage, TChatFilter filter, TPagingOptions pagingOptions,
             string serviceName, string methodName = null)
         {
             var noAccess = chatsPage.Items.Where(chat => chat.PrivacyMode.NotIn(ChatPrivacyMode.Public, ChatPrivacyMode.Protected))
@@ -74,7 +74,7 @@
             return Task.CompletedTask;
         }
 
-        public Task ValidateGetPage(Guid currentUserId, TPagedResult chatsPage, TPagingOptions pagingOptions, string serviceName,
+        public virtual Task ValidateGetPage(Guid currentUserId, TPagedResult chatsPage, TPagingOptions pagingOptions, string serviceName,
             string methodName = null)
         {
             var noAccess = chatsPage.Items.Where(chat => chat.PrivacyMode.NotIn(ChatPrivacyMode.Public, ChatPrivacyMode.Protected))
@@ -91,7 +91,7 @@
             return Task.CompletedTask;
         }
 
-        public Task ValidateGet(Guid currentUserId, TPersonalizedChat chat, string serviceName, string methodName = null)
+        public virtual Task ValidateGet(Guid currentUserId, TPersonalizedChat chat, string serviceName, string methodName = null)
         {
             if (chat.PrivacyMode.In(ChatPrivacyMode.Public, ChatPrivacyMode.Protected))
             {
@@ -106,9 +106,9 @@
             return Task.CompletedTask;
         }
 
-        public async Task ValidateAdd(Guid currentUserId, Guid chatId, TChatInfo chatInfo, string serviceName, string methodName = null)
+        public virtual async Task ValidateAdd(Guid currentUserId, Guid chatId, TChatInfo chatInfo, string serviceName, string methodName = null)
         {
-            var user = await _readUserStore.Retrieve(currentUserId);
+            var user = await ReadUserStore.Retrieve(currentUserId);
             if (user == null)
             {
                 throw new DotChatNotFoundUserException(ErrorModule.Security, ErrorOperation.Add, chatId, currentUserId);
@@ -120,10 +120,10 @@
             }
         }
 
-        public async Task ValidateEditInfo(Guid currentUserId, Guid chatId, TChatInfo chatInfo, string serviceName,
+        public virtual async Task ValidateEditInfo(Guid currentUserId, Guid chatId, TChatInfo chatInfo, string serviceName,
             string methodName = null)
         {
-            var participant = await _readChatParticipantStore.Retrieve(chatId, currentUserId);
+            var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
             if (participant == null || participant.ChatParticipantStatus != ChatParticipantStatus.Active || participant.ChatParticipantType.NotIn(ChatParticipantType.Admin, ChatParticipantType.Moderator, ChatParticipantType.Participant))
             {
                 throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Edit, ErrorEntity.ChatInfo),
@@ -131,9 +131,9 @@
             }
         }
 
-        public async Task ValidateRemove(Guid currentUserId, Guid chatId, string serviceName, string methodName = null)
+        public virtual async Task ValidateRemove(Guid currentUserId, Guid chatId, string serviceName, string methodName = null)
         {
-            var participant = await _readChatParticipantStore.Retrieve(chatId, currentUserId);
+            var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
             if (participant == null || participant.ChatParticipantStatus != ChatParticipantStatus.Active || participant.ChatParticipantType.NotIn(ChatParticipantType.Admin))
             {
                 throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Remove, ErrorEntity.Chat),

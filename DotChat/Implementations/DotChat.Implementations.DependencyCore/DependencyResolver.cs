@@ -6,21 +6,21 @@
 
     public class DependencyResolver: IDependencyResolver
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider ServiceProvider;
 
         public DependencyResolver(IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider;
+            ServiceProvider = serviceProvider;
         }
 
-        public TService Resolve<TService>()
+        public virtual TService Resolve<TService>()
         {
-            return _serviceProvider.GetService<TService>();
+            return ServiceProvider.GetService<TService>();
         }
 
-        public object Resolve(Type type)
+        public virtual object Resolve(Type type)
         {
-            return _serviceProvider.GetService(type);
+            return ServiceProvider.GetService(type);
         }
     }
 }

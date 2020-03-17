@@ -37,107 +37,107 @@
         where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
         where TContactMessage : IContactMessage<TChatUser>
     {
-        private readonly ISystemMessagesBuilder<TChat, TChatInfo, TParticipationResultCollection, TParticipationResult,
+        protected readonly ISystemMessagesBuilder<TChat, TChatInfo, TParticipationResultCollection, TParticipationResult,
             TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage,
             TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage,
-            TContactMessageCollection, TContactMessage> _systemMessagesBuilder;
+            TContactMessageCollection, TContactMessage> SystemMessagesBuilder;
 
-        private readonly IChatMessagesCommandBuilder<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> _chatMessagesCommandBuilder;
+        protected readonly IChatMessagesCommandBuilder<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> ChatMessagesCommandBuilder;
 
 
         protected ChatSystemMessagesWorker(TChatWorkersConfiguration chatWorkersConfiguration, ISystemMessagesBuilder<TChat, TChatInfo, TParticipationResultCollection, TParticipationResult, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> systemMessagesBuilder, IChatMessagesCommandBuilder<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> chatMessagesCommandBuilder) : base(chatWorkersConfiguration)
         {
-            _systemMessagesBuilder = systemMessagesBuilder;
-            _chatMessagesCommandBuilder = chatMessagesCommandBuilder;
+            SystemMessagesBuilder = systemMessagesBuilder;
+            ChatMessagesCommandBuilder = chatMessagesCommandBuilder;
         }
 
-        public async Task Handle(IChatParticipantAddedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantAddedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
         {
             if (ChatWorkersConfiguration.DisableSystemMessages)
             {
                 return;
             }
-            var messageInfo = _systemMessagesBuilder.BuildChatParticipantAddedMessage(@event);
+            var messageInfo = SystemMessagesBuilder.BuildChatParticipantAddedMessage(@event);
             await AddMessage(@event, messageInfo, chatBusContext);
         }
 
-        public async Task Handle(IChatParticipantInvitedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantInvitedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
         {
             if (ChatWorkersConfiguration.DisableSystemMessages)
             {
                 return;
             }
-            var messageInfo = _systemMessagesBuilder.BuildChatParticipantInvitedMessage(@event);
+            var messageInfo = SystemMessagesBuilder.BuildChatParticipantInvitedMessage(@event);
             await AddMessage(@event, messageInfo, chatBusContext);
         }
 
-        public async Task Handle(IChatParticipantAppliedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantAppliedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
         {
             if (ChatWorkersConfiguration.DisableSystemMessages)
             {
                 return;
             }
-            var messageInfo = _systemMessagesBuilder.BuildChatParticipantAppliedMessage(@event);
+            var messageInfo = SystemMessagesBuilder.BuildChatParticipantAppliedMessage(@event);
             await AddMessage(@event, messageInfo, chatBusContext);
         }
 
-        public async Task Handle(IChatParticipantRemovedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantRemovedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
         {
             if (ChatWorkersConfiguration.DisableSystemMessages)
             {
                 return;
             }
-            var messageInfo = _systemMessagesBuilder.BuildChatParticipantRemovedMessage(@event);
+            var messageInfo = SystemMessagesBuilder.BuildChatParticipantRemovedMessage(@event);
             await AddMessage(@event, messageInfo, chatBusContext);
         }
 
-        public async Task Handle(IChatParticipantBlockedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantBlockedEvent<TChatParticipant> @event, IChatBusContext chatBusContext)
         {
             if (ChatWorkersConfiguration.DisableSystemMessages)
             {
                 return;
             }
-            var messageInfo = _systemMessagesBuilder.BuildChatParticipantBlockedMessage(@event);
+            var messageInfo = SystemMessagesBuilder.BuildChatParticipantBlockedMessage(@event);
             await AddMessage(@event, messageInfo, chatBusContext);
         }
 
-        public async Task Handle(IChatParticipantsAppendedEvent<TParticipationResultCollection, TParticipationResult, TChatParticipant> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantsAppendedEvent<TParticipationResultCollection, TParticipationResult, TChatParticipant> @event, IChatBusContext chatBusContext)
         {
             if (ChatWorkersConfiguration.DisableSystemMessages)
             {
                 return;
             }
-            var messagesInfo = _systemMessagesBuilder.BuildBulkParticipantsAppendedMessages(@event);
+            var messagesInfo = SystemMessagesBuilder.BuildBulkParticipantsAppendedMessages(@event);
             foreach (var messageInfo in messagesInfo)
             {
                 await AddMessage(@event, messageInfo, chatBusContext);
             }
         }
 
-        public async Task Handle(IChatAddedEvent<TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatAddedEvent<TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event, IChatBusContext chatBusContext)
         {
             if (ChatWorkersConfiguration.DisableSystemMessages)
             {
                 return;
             }
-            var messagesInfo = _systemMessagesBuilder.BuildChatAddedMessage(@event);
+            var messagesInfo = SystemMessagesBuilder.BuildChatAddedMessage(@event);
             foreach (var messageInfo in messagesInfo)
             {
                 await AddMessage(@event.InitiatorUserId, @event.Chat.ChatId, messageInfo, chatBusContext);
             }
         }
 
-        public async Task Handle(IChatInfoEditedEvent<TChatInfo> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatInfoEditedEvent<TChatInfo> @event, IChatBusContext chatBusContext)
         {
             if (ChatWorkersConfiguration.DisableSystemMessages)
             {
                 return;
             }
-            var messageInfo = _systemMessagesBuilder.BuildChatInfoEditedMessage(@event);
+            var messageInfo = SystemMessagesBuilder.BuildChatInfoEditedMessage(@event);
             await AddMessage(@event, messageInfo, chatBusContext);
         }
 
-        private async Task AddMessage<TEvent>(TEvent @event, TChatMessageInfo messageInfo, IChatBusContext chatBusContext)
+        protected virtual async Task AddMessage<TEvent>(TEvent @event, TChatMessageInfo messageInfo, IChatBusContext chatBusContext)
             where TEvent : IEvent, IChatRelated
         {
             if (ChatWorkersConfiguration.DisableSystemMessages)
@@ -147,11 +147,11 @@
             await AddMessage(@event.InitiatorUserId, @event.ChatId, messageInfo, chatBusContext);
         }
 
-        private async Task AddMessage(Guid initiatorUserId, Guid chatId, TChatMessageInfo messageInfo, IChatBusContext chatBusContext)
+        protected virtual async Task AddMessage(Guid initiatorUserId, Guid chatId, TChatMessageInfo messageInfo, IChatBusContext chatBusContext)
         {
             if (messageInfo != null)
             {
-                var addMessageCommand = _chatMessagesCommandBuilder.BuildIndexChatMessageCommand(initiatorUserId, chatId, null, true, messageInfo);
+                var addMessageCommand = ChatMessagesCommandBuilder.BuildIndexChatMessageCommand(initiatorUserId, chatId, null, true, messageInfo);
                 await chatBusContext.CommandSender.Send(addMessageCommand);
             }
         }

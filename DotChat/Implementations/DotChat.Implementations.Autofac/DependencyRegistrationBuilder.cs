@@ -11,50 +11,50 @@
 
     public class DependencyRegistrationBuilder<TImplementation, TActivatorData, TRegistrationStyle> : IDependencyRegistrationBuilder<TImplementation>
     {
-        private readonly IRegistrationBuilder<TImplementation, TActivatorData, TRegistrationStyle> _registrationBuilder;
+        protected readonly IRegistrationBuilder<TImplementation, TActivatorData, TRegistrationStyle> RegistrationBuilder;
 
         public DependencyRegistrationBuilder(IRegistrationBuilder<TImplementation, TActivatorData, TRegistrationStyle> registrationBuilder)
         {
-            _registrationBuilder = registrationBuilder;
+            RegistrationBuilder = registrationBuilder;
         }
 
-        public IDependencyRegistrationBuilder<TImplementation> As<TService>()
+        public virtual IDependencyRegistrationBuilder<TImplementation> As<TService>()
         {
-            _registrationBuilder.As<TService>();
+            RegistrationBuilder.As<TService>();
             return this;
         }
 
-        public IDependencyRegistrationBuilder<TImplementation> As(Type type)
+        public virtual IDependencyRegistrationBuilder<TImplementation> As(Type type)
         {
-            _registrationBuilder.As(type);
+            RegistrationBuilder.As(type);
             return this;
         }
 
-        public IDependencyRegistrationBuilder<TImplementation> AsScoped()
+        public virtual IDependencyRegistrationBuilder<TImplementation> AsScoped()
         {
-            _registrationBuilder.InstancePerLifetimeScope();
+            RegistrationBuilder.InstancePerLifetimeScope();
             return this;
         }
 
-        public IDependencyRegistrationBuilder<TImplementation> AsSelf()
+        public virtual IDependencyRegistrationBuilder<TImplementation> AsSelf()
         {
-            _registrationBuilder.As<TImplementation>();
+            RegistrationBuilder.As<TImplementation>();
             return this;
         }
 
-        public IDependencyRegistrationBuilder<TImplementation> AsSingleton()
+        public virtual IDependencyRegistrationBuilder<TImplementation> AsSingleton()
         {
-            _registrationBuilder.SingleInstance();
+            RegistrationBuilder.SingleInstance();
             return this;
         }
 
-        public IDependencyRegistrationBuilder<TImplementation> AsTransient()
+        public virtual IDependencyRegistrationBuilder<TImplementation> AsTransient()
         {
-            _registrationBuilder.InstancePerDependency();
+            RegistrationBuilder.InstancePerDependency();
             return this;
         }
 
-        public void Build()
+        public virtual void Build()
         {
         }
     }

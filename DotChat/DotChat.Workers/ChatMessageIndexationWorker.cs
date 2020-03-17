@@ -37,35 +37,35 @@
         where TPagedResult : IPagedResult<TChatMessageCollection, TChatMessage>
         where TPagingOptions : IPagingOptions
     {
-        private readonly IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, 
-        TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> _chatMessagesPermissionValidator;
-        private readonly IChatMessageTimestampGenerator _chatMessageTimestampGenerator;
-        private readonly IChatMessageIndexGenerator _messageIndexGenerator;
-        private readonly IChatMessagesEventBuilder<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> _chatMessagesEventBuilder;
-        private readonly IChatMessagesCommandBuilder<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> _chatMessagesCommandBuilder;
+        protected readonly IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, 
+        TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> ChatMessagesPermissionValidator;
+        protected readonly IChatMessageTimestampGenerator ChatMessageTimestampGenerator;
+        protected readonly IChatMessageIndexGenerator _messageIndexGenerator;
+        protected readonly IChatMessagesEventBuilder<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> ChatMessagesEventBuilder;
+        protected readonly IChatMessagesCommandBuilder<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> ChatMessagesCommandBuilder;
 
         protected ChatMessageIndexationWorker(TChatWorkersConfiguration chatWorkersConfiguration, IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> chatMessagesPermissionValidator, IChatMessageTimestampGenerator chatMessageTimestampGenerator, IChatMessageIndexGenerator messageIndexGenerator, IChatMessagesEventBuilder<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> chatMessagesEventBuilder, IChatMessagesCommandBuilder<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> chatMessagesCommandBuilder) : base(chatWorkersConfiguration)
         {
-            _chatMessagesPermissionValidator = chatMessagesPermissionValidator;
-            _chatMessageTimestampGenerator = chatMessageTimestampGenerator;
+            ChatMessagesPermissionValidator = chatMessagesPermissionValidator;
+            ChatMessageTimestampGenerator = chatMessageTimestampGenerator;
             _messageIndexGenerator = messageIndexGenerator;
-            _chatMessagesEventBuilder = chatMessagesEventBuilder;
-            _chatMessagesCommandBuilder = chatMessagesCommandBuilder;
+            ChatMessagesEventBuilder = chatMessagesEventBuilder;
+            ChatMessagesCommandBuilder = chatMessagesCommandBuilder;
         }
 
-        public async Task Handle(IIndexChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> command, IChatBusContext chatEventPublisher)
+        public virtual async Task Handle(IIndexChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> command, IChatBusContext chatEventPublisher)
         {
             if (!command.IsSystem)
             {
-                await _chatMessagesPermissionValidator.ValidateAdd(command.InitiatorUserId, command.ChatId, command.MessageInfo, WorkerName).ConfigureAwait(false);
+                await ChatMessagesPermissionValidator.ValidateAdd(command.InitiatorUserId, command.ChatId, command.MessageInfo, WorkerName).ConfigureAwait(false);
             }
-            var timestamp = await _chatMessageTimestampGenerator.Generate();
+            var timestamp = await ChatMessageTimestampGenerator.Generate();
             var index = await _messageIndexGenerator.Generate(command.ChatId).ConfigureAwait(false);
-            var addCommand = _chatMessagesCommandBuilder.BuildAddChatMessageCommand(command.InitiatorUserId, command.ChatId, command.MessageId, timestamp, index, command.IsSystem, command.MessageInfo);
+            var addCommand = ChatMessagesCommandBuilder.BuildAddChatMessageCommand(command.InitiatorUserId, command.ChatId, command.MessageId, timestamp, index, command.IsSystem, command.MessageInfo);
             await chatEventPublisher.CommandSender.Send(addCommand).ConfigureAwait(false);
             if (ChatWorkersConfiguration.FastMessageMode)
             {
-                var @event = _chatMessagesEventBuilder.BuildChatMessageAddedEvent(command.InitiatorUserId, command.ChatId, command.MessageId, timestamp, index, command.IsSystem, command.MessageInfo);
+                var @event = ChatMessagesEventBuilder.BuildChatMessageAddedEvent(command.InitiatorUserId, command.ChatId, command.MessageId, timestamp, index, command.IsSystem, command.MessageInfo);
                 await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
             }
         }

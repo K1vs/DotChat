@@ -42,7 +42,7 @@
         Task<TPagedResult> GetPage(Guid currentUserId, TChatFilter filter, TPagingOptions pagingOptions = default);
         Task<TPagedResult> GetPage(Guid currentUserId, TPagingOptions pagingOptions = default);
         Task<TPersonalizedChat> Get(Guid currentUserId, Guid chatId);
-        Task<Guid> Add(Guid currentUserId, TChatInfo chatInfo, TParticipationCandidates participationCandidates);
+        Task<Guid> Add(Guid currentUserId, Guid? chatId, TChatInfo chatInfo, TParticipationCandidates participationCandidates);
         Task EditInfo(Guid currentUserId, Guid chatId, TChatInfo chatInfo);
         Task Remove(Guid currentUserId, Guid chatId);
     }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>K1vs.DotChat.Implementations.Autofac</RootNamespace>
-    <Version>1.2.0</Version>
+    <Version>1.3.0</Version>
     <Authors>K1vs</Authors>
     <Description>Extensible chat framework for systems with microservice architecture. DotChat.Dependency implementation via Autofac.</Description>
     <Copyright>2020 K1vs</Copyright>

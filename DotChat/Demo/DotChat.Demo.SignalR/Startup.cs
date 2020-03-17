@@ -117,7 +117,7 @@ namespace K1vs.DotChat.Demo.SignalR
 
             var dotChat = container.Resolve<IDotChat>();
 
-            dotChat.Chats.Add(Users[0].UserId, new ChatInfo
+            dotChat.Chats.Add(Users[0].UserId, null, new ChatInfo
             {
                 Name = "TestChat"
             }, new Basic.Participants.ParticipationCandidates(new List<ParticipationCandidate> {
@@ -127,7 +127,7 @@ namespace K1vs.DotChat.Demo.SignalR
 
             Task.Delay(TimeSpan.FromSeconds(10))
                 .ContinueWith((t) =>
-                dotChat.Chats.Add(Users[0].UserId, new ChatInfo
+                dotChat.Chats.Add(Users[0].UserId, null, new ChatInfo
             {
                 Name = "TestChat2"
             }, new Basic.Participants.ParticipationCandidates(new List<ParticipationCandidate> {

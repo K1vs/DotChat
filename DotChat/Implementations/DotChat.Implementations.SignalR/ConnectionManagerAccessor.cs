@@ -9,7 +9,7 @@
 
     public class ConnectionManagerAccessor : IConnectionManagerAccessor
     {
-        public IConnectionManager ConnectionManager { get; }
+        public virtual IConnectionManager ConnectionManager { get; }
 
         public ConnectionManagerAccessor(IConnectionManager connectionManager)
         {

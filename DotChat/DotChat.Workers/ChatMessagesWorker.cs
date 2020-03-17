@@ -36,71 +36,71 @@
         where TPagedResult : IPagedResult<TChatMessageCollection, TChatMessage>
         where TPagingOptions : IPagingOptions
     {
-        private readonly IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, 
-        TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> _chatMessagesPermissionValidator;
-        private readonly IChatMessageStore<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> _chatMessageStore;
-        private readonly IChatMessagesEventBuilder<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> _chatMessagesEventBuilder;
+        protected readonly IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, 
+        TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> ChatMessagesPermissionValidator;
+        protected readonly IChatMessageStore<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> ChatMessageStore;
+        protected readonly IChatMessagesEventBuilder<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> ChatMessagesEventBuilder;
 
         protected ChatMessagesWorker(TChatWorkersConfiguration chatWorkersConfiguration, IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> chatMessagesPermissionValidator, IChatMessageStore<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> chatMessageStore, IChatMessagesEventBuilder<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> chatMessagesEventBuilder) : base(chatWorkersConfiguration)
         {
-            _chatMessagesPermissionValidator = chatMessagesPermissionValidator;
-            _chatMessageStore = chatMessageStore;
-            _chatMessagesEventBuilder = chatMessagesEventBuilder;
+            ChatMessagesPermissionValidator = chatMessagesPermissionValidator;
+            ChatMessageStore = chatMessageStore;
+            ChatMessagesEventBuilder = chatMessagesEventBuilder;
         }
 
-        public async Task Handle(IAddChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> command, IChatBusContext chatEventPublisher)
+        public virtual async Task Handle(IAddChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> command, IChatBusContext chatEventPublisher)
         {
             if (!command.IsSystem)
             {
-                await _chatMessagesPermissionValidator.ValidateAdd(command.InitiatorUserId, command.ChatId, command.MessageInfo, WorkerName).ConfigureAwait(false);
+                await ChatMessagesPermissionValidator.ValidateAdd(command.InitiatorUserId, command.ChatId, command.MessageInfo, WorkerName).ConfigureAwait(false);
             }
-            var message = await _chatMessageStore.Create(command.ChatId, command.InitiatorUserId, command.MessageId, command.MessageInfo, command.Timestamp, command.Index, command.IsSystem, command.InitiatorUserId).ConfigureAwait(false);
+            var message = await ChatMessageStore.Create(command.ChatId, command.InitiatorUserId, command.MessageId, command.MessageInfo, command.Timestamp, command.Index, command.IsSystem, command.InitiatorUserId).ConfigureAwait(false);
             if (!ChatWorkersConfiguration.FastMessageMode)
             {
-                var @event = _chatMessagesEventBuilder.BuildChatMessageAddedEvent(command.InitiatorUserId, command.ChatId, message);
+                var @event = ChatMessagesEventBuilder.BuildChatMessageAddedEvent(command.InitiatorUserId, command.ChatId, message);
                 await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
             }
         }
 
-        public async Task Handle(IEditChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> command, IChatBusContext chatEventPublisher)
+        public virtual async Task Handle(IEditChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> command, IChatBusContext chatEventPublisher)
         {
-            var currentMessage = await _chatMessageStore.Retrieve(command.ChatId, command.MessageId).ConfigureAwait(false);
+            var currentMessage = await ChatMessageStore.Retrieve(command.ChatId, command.MessageId).ConfigureAwait(false);
             if (!currentMessage.IsSystem)
             {
-                await _chatMessagesPermissionValidator.ValidateEdit(command.InitiatorUserId, command.ChatId, command.MessageId, command.MessageInfo, WorkerName).ConfigureAwait(false);
+                await ChatMessagesPermissionValidator.ValidateEdit(command.InitiatorUserId, command.ChatId, command.MessageId, command.MessageInfo, WorkerName).ConfigureAwait(false);
             }
             if (currentMessage.Immutable)
             {
                 throw new DotChatEditImmutableMessageException(command.MessageId, command.ChatId, command.InitiatorUserId);
             }
-            var message = await _chatMessageStore.Update(command.ChatId, command.MessageId, command.MessageInfo,command.InitiatorUserId).ConfigureAwait(false);
-            await _chatMessageStore.Archive(command.ChatId, currentMessage.MessageId,command.ArchivedMessageId, currentMessage, command.InitiatorUserId).ConfigureAwait(false);
-            var @event = _chatMessagesEventBuilder.BuildChatMessageEditedEvent(command.InitiatorUserId, command.ChatId, message);
+            var message = await ChatMessageStore.Update(command.ChatId, command.MessageId, command.MessageInfo,command.InitiatorUserId).ConfigureAwait(false);
+            await ChatMessageStore.Archive(command.ChatId, currentMessage.MessageId,command.ArchivedMessageId, currentMessage, command.InitiatorUserId).ConfigureAwait(false);
+            var @event = ChatMessagesEventBuilder.BuildChatMessageEditedEvent(command.InitiatorUserId, command.ChatId, message);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 
-        public async Task Handle(IRemoveChatMessageCommand command, IChatBusContext chatEventPublisher)
+        public virtual async Task Handle(IRemoveChatMessageCommand command, IChatBusContext chatEventPublisher)
         {
-            var currentMessage = await _chatMessageStore.Retrieve(command.ChatId, command.MessageId).ConfigureAwait(false);
+            var currentMessage = await ChatMessageStore.Retrieve(command.ChatId, command.MessageId).ConfigureAwait(false);
             if (!currentMessage.IsSystem)
             {
-                await _chatMessagesPermissionValidator.ValidateRemove(command.InitiatorUserId, command.ChatId, command.MessageId, WorkerName).ConfigureAwait(false);
+                await ChatMessagesPermissionValidator.ValidateRemove(command.InitiatorUserId, command.ChatId, command.MessageId, WorkerName).ConfigureAwait(false);
             }
             if (currentMessage.Immutable)
             {
                 throw new DotChatRemoveImmutableMessageException(command.MessageId, command.ChatId, command.InitiatorUserId);
             }
-            var message = await _chatMessageStore.Delete(command.ChatId, command.MessageId, command.InitiatorUserId).ConfigureAwait(false);
-            await _chatMessageStore.Archive(command.ChatId, currentMessage.MessageId, command.MessageId, currentMessage, command.InitiatorUserId).ConfigureAwait(false);
-            var @event = _chatMessagesEventBuilder.BuildChatMessageRemovedEvent(command.InitiatorUserId, command.ChatId, message);
+            var message = await ChatMessageStore.Delete(command.ChatId, command.MessageId, command.InitiatorUserId).ConfigureAwait(false);
+            await ChatMessageStore.Archive(command.ChatId, currentMessage.MessageId, command.MessageId, currentMessage, command.InitiatorUserId).ConfigureAwait(false);
+            var @event = ChatMessagesEventBuilder.BuildChatMessageRemovedEvent(command.InitiatorUserId, command.ChatId, message);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 
-        public async Task Handle(IReadChatMessagesCommand command, IChatBusContext chatEventPublisher)
+        public virtual async Task Handle(IReadChatMessagesCommand command, IChatBusContext chatEventPublisher)
         {
-            await _chatMessagesPermissionValidator.ValidateRead(command.InitiatorUserId, command.ChatId, command.Index, command.Force, WorkerName).ConfigureAwait(false);
-            await _chatMessageStore.Read(command.ChatId, command.InitiatorUserId, command.Index, command.Force).ConfigureAwait(false);
-            var @event = _chatMessagesEventBuilder.BuildChatMessagesReadEvent(command.InitiatorUserId, command.ChatId, command.Index, command.Force);
+            await ChatMessagesPermissionValidator.ValidateRead(command.InitiatorUserId, command.ChatId, command.Index, command.Force, WorkerName).ConfigureAwait(false);
+            await ChatMessageStore.Read(command.ChatId, command.InitiatorUserId, command.Index, command.Force).ConfigureAwait(false);
+            var @event = ChatMessagesEventBuilder.BuildChatMessagesReadEvent(command.InitiatorUserId, command.ChatId, command.Index, command.Force);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
     }

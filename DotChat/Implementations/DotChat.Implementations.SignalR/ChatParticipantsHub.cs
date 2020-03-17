@@ -24,66 +24,66 @@
         where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
         where TParticipationCandidate : IParticipationCandidate
     {
-        private readonly IChatParticipantsService<TParticipationCandidateCollection, TParticipationCandidate> _chatParticipantsService;
+        protected readonly IChatParticipantsService<TParticipationCandidateCollection, TParticipationCandidate> ChatParticipantsService;
 
         public ChatParticipantsHub(IChatParticipantsService<TParticipationCandidateCollection, TParticipationCandidate> chatParticipantsService)
         {
-            _chatParticipantsService = chatParticipantsService;
+            ChatParticipantsService = chatParticipantsService;
         }
 
-        public async Task Add(Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata)
+        public virtual async Task Add(Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata)
         {
-            await _chatParticipantsService.Add(CurrentUserId, chatId, userId, chatParticipantType, style, metadata);
+            await ChatParticipantsService.Add(CurrentUserId, chatId, userId, chatParticipantType, style, metadata);
         }
 
-        public async Task Invite(Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata)
+        public virtual async Task Invite(Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata)
         {
-            await _chatParticipantsService.Invite(CurrentUserId, chatId, userId, chatParticipantType, style, metadata);
+            await ChatParticipantsService.Invite(CurrentUserId, chatId, userId, chatParticipantType, style, metadata);
         }
 
-        public async Task Apply(Guid chatId, ChatParticipantType chatParticipantType, string style, string metadata)
+        public virtual async Task Apply(Guid chatId, ChatParticipantType chatParticipantType, string style, string metadata)
         {
-            await _chatParticipantsService.Apply(CurrentUserId, chatId, chatParticipantType, style, metadata);
+            await ChatParticipantsService.Apply(CurrentUserId, chatId, chatParticipantType, style, metadata);
         }
 
-        public async Task Add(Guid chatId, Guid userId, ChatParticipantType chatParticipantType)
+        public virtual async Task Add(Guid chatId, Guid userId, ChatParticipantType chatParticipantType)
         {
-            await _chatParticipantsService.Add(CurrentUserId, chatId, userId, chatParticipantType, null, null);
+            await ChatParticipantsService.Add(CurrentUserId, chatId, userId, chatParticipantType, null, null);
         }
 
-        public async Task Invite(Guid chatId, Guid userId, ChatParticipantType chatParticipantType)
+        public virtual async Task Invite(Guid chatId, Guid userId, ChatParticipantType chatParticipantType)
         {
-            await _chatParticipantsService.Invite(CurrentUserId, chatId, userId, chatParticipantType, null, null);
+            await ChatParticipantsService.Invite(CurrentUserId, chatId, userId, chatParticipantType, null, null);
         }
 
-        public async Task Apply(Guid chatId, ChatParticipantType chatParticipantType)
+        public virtual async Task Apply(Guid chatId, ChatParticipantType chatParticipantType)
         {
-            await _chatParticipantsService.Apply(CurrentUserId, chatId, chatParticipantType, null, null);
+            await ChatParticipantsService.Apply(CurrentUserId, chatId, chatParticipantType, null, null);
         }
 
-        public async Task Remove(Guid chatId, Guid userId)
+        public virtual async Task Remove(Guid chatId, Guid userId)
         {
-            await _chatParticipantsService.Remove(CurrentUserId, chatId, userId);
+            await ChatParticipantsService.Remove(CurrentUserId, chatId, userId);
         }
 
-        public async Task Block(Guid chatId, Guid userId)
+        public virtual async Task Block(Guid chatId, Guid userId)
         {
-            await _chatParticipantsService.Block(CurrentUserId, chatId, userId);
+            await ChatParticipantsService.Block(CurrentUserId, chatId, userId);
         }
 
-        public async Task ChangeType(Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata)
+        public virtual async Task ChangeType(Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata)
         {
-            await _chatParticipantsService.ChangeType(CurrentUserId, chatId, userId, chatParticipantType, style, metadata);
+            await ChatParticipantsService.ChangeType(CurrentUserId, chatId, userId, chatParticipantType, style, metadata);
         }
 
-        public async Task ChangeType(Guid chatId, Guid userId, ChatParticipantType chatParticipantType)
+        public virtual async Task ChangeType(Guid chatId, Guid userId, ChatParticipantType chatParticipantType)
         {
-            await _chatParticipantsService.ChangeType(CurrentUserId, chatId, userId, chatParticipantType, null, null);
+            await ChatParticipantsService.ChangeType(CurrentUserId, chatId, userId, chatParticipantType, null, null);
         }
 
-        public async Task Append(Guid chatId, TParticipationCandidateCollection addCandidates, TParticipationCandidateCollection inviteCandidates)
+        public virtual async Task Append(Guid chatId, TParticipationCandidateCollection addCandidates, TParticipationCandidateCollection inviteCandidates)
         {
-            await _chatParticipantsService.Append(CurrentUserId, chatId, addCandidates, inviteCandidates);
+            await ChatParticipantsService.Append(CurrentUserId, chatId, addCandidates, inviteCandidates);
         }
 
         protected virtual Guid CurrentUserId => Guid.Parse(Context.User.Identity.Name);

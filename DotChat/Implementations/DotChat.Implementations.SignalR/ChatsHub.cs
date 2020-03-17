@@ -47,57 +47,57 @@
         where TPagedResult : IPagedResult<TPersonalizedChatCollection, TPersonalizedChat>
         where TPagingOptions : IPagingOptions
     {
-        private readonly IChatsService<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant,
+        protected readonly IChatsService<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant,
             TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, 
             TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, 
-            TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> _chatsService;
+            TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> ChatsService;
 
         public ChatsHub(IChatsService<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant,
             TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage,
             TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage,
             TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> chatsService)
         {
-            _chatsService = chatsService;
+            ChatsService = chatsService;
         }
 
-        public async Task<TPersonalizedChatsSummary> GetSummary()
+        public virtual async Task<TPersonalizedChatsSummary> GetSummary()
         {
-            return await _chatsService.GetSummary(CurrentUserId);
+            return await ChatsService.GetSummary(CurrentUserId);
         }
 
-        public async Task<TPagedResult> GetPage(TChatFilter filter, TPagingOptions pagingOptions)
+        public virtual async Task<TPagedResult> GetPage(TChatFilter filter, TPagingOptions pagingOptions)
         {
-            return await _chatsService.GetPage(CurrentUserId, filter, pagingOptions);
+            return await ChatsService.GetPage(CurrentUserId, filter, pagingOptions);
         }
 
-        public async Task<TPagedResult> GetPage(TPagingOptions pagingOptions)
+        public virtual async Task<TPagedResult> GetPage(TPagingOptions pagingOptions)
         {
-            return await _chatsService.GetPage(CurrentUserId, pagingOptions);
+            return await ChatsService.GetPage(CurrentUserId, pagingOptions);
         }
 
-        public async Task<TPagedResult> GetPage()
+        public virtual async Task<TPagedResult> GetPage()
         {
-            return await _chatsService.GetPage(CurrentUserId);
+            return await ChatsService.GetPage(CurrentUserId);
         }
 
-        public async Task<TPersonalizedChat> Get(Guid chatId)
+        public virtual async Task<TPersonalizedChat> Get(Guid chatId)
         {
-            return await _chatsService.Get(CurrentUserId, chatId);
+            return await ChatsService.Get(CurrentUserId, chatId);
         }
 
-        public async Task<Guid> Add(TChatInfo chatInfo, TParticipationCandidates participationCandidates)
+        public virtual async Task<Guid> Add(Guid? chatId, TChatInfo chatInfo, TParticipationCandidates participationCandidates)
         {
-            return await _chatsService.Add(CurrentUserId, chatInfo, participationCandidates);
+            return await ChatsService.Add(CurrentUserId, chatId, chatInfo, participationCandidates);
         }
 
-        public async Task EditInfo(Guid chatId, TChatInfo chatInfo)
+        public virtual async Task EditInfo(Guid chatId, TChatInfo chatInfo)
         {
-            await _chatsService.EditInfo(CurrentUserId, chatId, chatInfo);
+            await ChatsService.EditInfo(CurrentUserId, chatId, chatInfo);
         }
 
-        public async Task Remove(Guid chatId)
+        public virtual async Task Remove(Guid chatId)
         {
-            await _chatsService.Remove(CurrentUserId, chatId);
+            await ChatsService.Remove(CurrentUserId, chatId);
         }
 
         protected virtual Guid CurrentUserId => Guid.Parse(Context.User.Identity.Name);

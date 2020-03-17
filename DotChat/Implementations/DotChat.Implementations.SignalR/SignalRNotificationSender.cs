@@ -69,9 +69,9 @@
 
         public virtual bool SupportNotifyChatParticipants => false;
 
-        protected IHubContext<TChatsClient> ChatsHubContext => _lazyChatsHubContext.Value;
-        protected IHubContext<TChatParticipantsClient> ChatParticipantsHubContext => _lazyChatParticipantsHubContext.Value;
-        protected IHubContext<TChatMessagesClient> ChatMessagesHubContext => _lazyChatMessagesHubContext.Value;
+        protected virtual IHubContext<TChatsClient> ChatsHubContext => _lazyChatsHubContext.Value;
+        protected virtual IHubContext<TChatParticipantsClient> ChatParticipantsHubContext => _lazyChatParticipantsHubContext.Value;
+        protected virtual IHubContext<TChatMessagesClient> ChatMessagesHubContext => _lazyChatMessagesHubContext.Value;
 
         public virtual Task NotifyChatParticipants<TNotificationBase>(TNotificationBase notification, Guid chatId) where TNotificationBase : INotification
         {
@@ -85,7 +85,7 @@
             await SendNotifications(notification, stringUserId);
         }
 
-        private async Task SendNotifications<TNotificationBase>(TNotificationBase notification, List<string> stringUserId)
+        protected virtual async Task SendNotifications<TNotificationBase>(TNotificationBase notification, List<string> stringUserId)
             where TNotificationBase : INotification
         {
             if (notification is IChatsNotification)

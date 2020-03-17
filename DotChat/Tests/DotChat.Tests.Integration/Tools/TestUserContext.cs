@@ -68,7 +68,7 @@
 
         public async Task CreateChat(string name, ChatPrivacyMode privacyMode, params Guid[] userIds)
         {
-            var chatId = await _dotChat.Chats.Add(_userId, new ChatInfo(name, $"{name} description", privacyMode, 0),
+            var chatId = await _dotChat.Chats.Add(_userId, null, new ChatInfo(name, $"{name} description", privacyMode, 0),
                 new ParticipationCandidates(userIds.Concat(Enumerable.Repeat(_userId, 1))
                     .Select(r => new ParticipationCandidate(r, ChatParticipantType.Participant)).ToList(), new List<ParticipationCandidate>()));
             _chatIds.TryAdd(name, chatId);

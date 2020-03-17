@@ -18,29 +18,29 @@
     public class ChatMessagesEventBuilder: IChatMessagesEventBuilder<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage,
         List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage>
     {
-        public IChatMessageAddedEvent<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildChatMessageAddedEvent(Guid initiatorUserId, Guid chatId, ChatMessage chatMessage)
+        public virtual IChatMessageAddedEvent<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildChatMessageAddedEvent(Guid initiatorUserId, Guid chatId, ChatMessage chatMessage)
         {
             return new ChatMessageAddedEvent(initiatorUserId, chatId, chatMessage);
         }
 
-        public IChatMessageAddedEvent<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildChatMessageAddedEvent(Guid initiatorUserId, Guid chatId, Guid messageId, DateTime timestamp, long index, bool isSystem,
+        public virtual IChatMessageAddedEvent<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildChatMessageAddedEvent(Guid initiatorUserId, Guid chatId, Guid messageId, DateTime timestamp, long index, bool isSystem,
             ChatMessageInfo chatMessageInfo)
         {
             var message = new ChatMessage(messageId, timestamp, index, initiatorUserId, MessageStatus.Actual, null, isSystem, chatMessageInfo);
             return new ChatMessageAddedEvent(initiatorUserId, chatId, message);
         }
 
-        public IChatMessageEditedEvent<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildChatMessageEditedEvent(Guid initiatorUserId, Guid chatId, ChatMessage chatMessage)
+        public virtual IChatMessageEditedEvent<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildChatMessageEditedEvent(Guid initiatorUserId, Guid chatId, ChatMessage chatMessage)
         {
             return new ChatMessageEditedEvent(initiatorUserId, chatId, chatMessage);
         }
 
-        public IChatMessageRemovedEvent<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildChatMessageRemovedEvent(Guid initiatorUserId, Guid chatId, ChatMessage chatMessage)
+        public virtual IChatMessageRemovedEvent<ChatInfo, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage> BuildChatMessageRemovedEvent(Guid initiatorUserId, Guid chatId, ChatMessage chatMessage)
         {
             return new ChatMessageRemovedEvent(initiatorUserId, chatId, chatMessage);
         }
 
-        public IChatMessagesReadEvent BuildChatMessagesReadEvent(Guid initiatorUserId, Guid chatId, long index, bool force)
+        public virtual IChatMessagesReadEvent BuildChatMessagesReadEvent(Guid initiatorUserId, Guid chatId, long index, bool force)
         {
             return new ChatMessagesReadEvent(initiatorUserId, chatId, index, force);
         }

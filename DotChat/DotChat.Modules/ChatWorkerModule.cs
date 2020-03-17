@@ -59,24 +59,24 @@
         where TChatMessagesPagedResult : IPagedResult<TChatMessageCollection, TChatMessage>
         where TPagingOptions : IPagingOptions
     {
-        private readonly ChatServiceModule<TDotChatConfiguration, TPersonalizedChatsSummary, TPersonalizedChatCollection,
+        protected readonly ChatServiceModule<TDotChatConfiguration, TPersonalizedChatsSummary, TPersonalizedChatCollection,
             TPersonalizedChat, TChat, TChatInfo, TParticipationResultCollection, TParticipationResult,
             TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate,
             TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageCollection, TChatMessage,
             TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment,
             TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter,
-            TChatUserFilter, TMessageFilter, TChatsPagedResult, TChatMessagesPagedResult, TPagingOptions> _chatServiceModule;
+            TChatUserFilter, TMessageFilter, TChatsPagedResult, TChatMessagesPagedResult, TPagingOptions> ChatServiceModule;
 
         protected ChatWorkerModule(ChatServiceModule<TDotChatConfiguration, TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TParticipationResultCollection, TParticipationResult, TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TChatsPagedResult, TChatMessagesPagedResult, TPagingOptions> chatServiceModule)
         {
-            _chatServiceModule = chatServiceModule;
+            ChatServiceModule = chatServiceModule;
         }
 
         public virtual void Register(IDependencyRegistrar registrar, bool rootModule)
         {
-            if(_chatServiceModule != null)
+            if(ChatServiceModule != null)
             {
-                _chatServiceModule.Register(registrar, false);
+                ChatServiceModule.Register(registrar, false);
             }
             RegisterChatWorkersConfiguration(registrar).Build();
             RegisterChatMessageTimestampGenerator(registrar).Build();
@@ -120,105 +120,105 @@
             RegisterChatMessageIndexationWorker(IDependencyRegistrar registrar);
         
         public abstract IDependencyRegistrationBuilder<IChatSystemMessagesWorker<TChat, TChatInfo, TParticipationResultCollection, TParticipationResult, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>> RegisterChatSystemMessagesWorker(IDependencyRegistrar registrar);
-        
-        public IDependencyRegistrationBuilder<TDotChatConfiguration> RegisterDotChatConfiguration(IDependencyRegistrar registrar)
+
+        public virtual IDependencyRegistrationBuilder<TDotChatConfiguration> RegisterDotChatConfiguration(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterDotChatConfiguration(registrar);
+            return ChatServiceModule.RegisterDotChatConfiguration(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatCommandSender> RegisterChatCommandSender(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatCommandSender> RegisterChatCommandSender(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatCommandSender(registrar);
+            return ChatServiceModule.RegisterChatCommandSender(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatEventPublisher> RegisterChatEventPublisher(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatEventPublisher> RegisterChatEventPublisher(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatEventPublisher(registrar);
+            return ChatServiceModule.RegisterChatEventPublisher(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatsCommandBuilder<TChatInfo, TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate>> RegisterChatsCommandBuilder(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatsCommandBuilder<TChatInfo, TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate>> RegisterChatsCommandBuilder(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatsCommandBuilder(registrar);
+            return ChatServiceModule.RegisterChatsCommandBuilder(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatParticipantsCommandBuilder<TParticipationCandidateCollection, TParticipationCandidate>> RegisterChatParticipantsCommandBuilder(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatParticipantsCommandBuilder<TParticipationCandidateCollection, TParticipationCandidate>> RegisterChatParticipantsCommandBuilder(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatParticipantsCommandBuilder(registrar);
+            return ChatServiceModule.RegisterChatParticipantsCommandBuilder(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatMessagesCommandBuilder<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>> RegisterChatMessagesCommandBuilder(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatMessagesCommandBuilder<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>> RegisterChatMessagesCommandBuilder(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatMessagesCommandBuilder(registrar);
+            return ChatServiceModule.RegisterChatMessagesCommandBuilder(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatsEventBuilder<TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>> RegisterChatsEventBuilder(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatsEventBuilder<TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>> RegisterChatsEventBuilder(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatsEventBuilder(registrar);
+            return ChatServiceModule.RegisterChatsEventBuilder(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatParticipantsEventBuilder<TParticipationResultCollection, TParticipationResult, TChatParticipant>> RegisterChatParticipantsEventBuilder(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatParticipantsEventBuilder<TParticipationResultCollection, TParticipationResult, TChatParticipant>> RegisterChatParticipantsEventBuilder(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatParticipantsEventBuilder(registrar);
+            return ChatServiceModule.RegisterChatParticipantsEventBuilder(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatMessagesEventBuilder<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>> RegisterChatMessagesEventBuilder(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatMessagesEventBuilder<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>> RegisterChatMessagesEventBuilder(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatMessagesEventBuilder(registrar);
+            return ChatServiceModule.RegisterChatMessagesEventBuilder(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IReadChatStore<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TChatsPagedResult, TPagingOptions>> RegisterReadChatStore(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IReadChatStore<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TChatsPagedResult, TPagingOptions>> RegisterReadChatStore(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterReadChatStore(registrar);
+            return ChatServiceModule.RegisterReadChatStore(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IReadChatMessageStore<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TChatMessagesPagedResult, TPagingOptions>> RegisterReadChatMessageStore(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IReadChatMessageStore<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TChatMessagesPagedResult, TPagingOptions>> RegisterReadChatMessageStore(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterReadChatMessageStore(registrar);
+            return ChatServiceModule.RegisterReadChatMessageStore(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IReadChatParticipantStore<TChatParticipant>> RegisterReadChatParticipantStore(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IReadChatParticipantStore<TChatParticipant>> RegisterReadChatParticipantStore(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterReadChatParticipantStore(registrar);
+            return ChatServiceModule.RegisterReadChatParticipantStore(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IReadUserStore<TChatUser>> RegisterReadUserStore(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IReadUserStore<TChatUser>> RegisterReadUserStore(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterReadUserStore(registrar);
+            return ChatServiceModule.RegisterReadUserStore(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatsService<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TChatsPagedResult, TPagingOptions>> RegisterChatsService(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatsService<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TChatsPagedResult, TPagingOptions>> RegisterChatsService(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatsService(registrar);
+            return ChatServiceModule.RegisterChatsService(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatParticipantsService<TParticipationCandidateCollection, TParticipationCandidate>> RegisterChatParticipantsService(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatParticipantsService<TParticipationCandidateCollection, TParticipationCandidate>> RegisterChatParticipantsService(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatParticipantsService(registrar);
+            return ChatServiceModule.RegisterChatParticipantsService(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatMessagesService<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TChatMessagesPagedResult, TPagingOptions>> RegisterChatMessagesService(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatMessagesService<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TChatMessagesPagedResult, TPagingOptions>> RegisterChatMessagesService(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatMessagesService(registrar);
+            return ChatServiceModule.RegisterChatMessagesService(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IDotChat<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TChatsPagedResult, TChatMessagesPagedResult, TPagingOptions>> RegisterDotChat(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IDotChat<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TChatsPagedResult, TChatMessagesPagedResult, TPagingOptions>> RegisterDotChat(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterDotChat(registrar);
+            return ChatServiceModule.RegisterDotChat(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatsPermissionValidator<TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TChatsPagedResult, TPagingOptions>> RegisterChatsPermissionValidator(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatsPermissionValidator<TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TChatsPagedResult, TPagingOptions>> RegisterChatsPermissionValidator(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatsPermissionValidator(registrar);
+            return ChatServiceModule.RegisterChatsPermissionValidator(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatParticipantsPermissionValidator<TParticipationCandidateCollection, TParticipationCandidate>> RegisterChatParticipantsPermissionValidator(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatParticipantsPermissionValidator<TParticipationCandidateCollection, TParticipationCandidate>> RegisterChatParticipantsPermissionValidator(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatParticipantsPermissionValidator(registrar);
+            return ChatServiceModule.RegisterChatParticipantsPermissionValidator(registrar);
         }
 
-        public IDependencyRegistrationBuilder<IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TChatMessagesPagedResult, TPagingOptions>> RegisterChatMessagesPermissionValidator(IDependencyRegistrar registrar)
+        public virtual IDependencyRegistrationBuilder<IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TChatMessagesPagedResult, TPagingOptions>> RegisterChatMessagesPermissionValidator(IDependencyRegistrar registrar)
         {
-            return _chatServiceModule.RegisterChatMessagesPermissionValidator(registrar);
+            return ChatServiceModule.RegisterChatMessagesPermissionValidator(registrar);
         }
     }
 }
