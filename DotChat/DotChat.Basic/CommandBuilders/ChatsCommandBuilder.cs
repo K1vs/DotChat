@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using DotChat.CommandBuilders;
     using DotChat.Commands.Chats;
+    using K1vs.DotChat.Basic.Commands.Chats;
     using Models.Chats;
     using Models.Participants;
     using Participants;
@@ -16,12 +17,12 @@
         public virtual IAddChatCommand<ChatInfo, List<ParticipationCandidate>, ParticipationCandidate> BuildAddChatCommand(Guid currentUserId, Guid? chatId, ChatInfo chatInfo,
             ParticipationCandidates participationCandidates)
         {
-            return new AddChatCommand<ChatInfo, List<ParticipationCandidate>, ParticipationCandidate>(currentUserId, chatId ?? Guid.NewGuid(), chatInfo, participationCandidates.ToAdd, participationCandidates.ToInvite);
+            return new AddChatCommand(currentUserId, chatId ?? Guid.NewGuid(), chatInfo, participationCandidates.ToAdd, participationCandidates.ToInvite);
         }
 
         public virtual IEditChatInfoCommand<ChatInfo> BuildEditChatCommand(Guid currentUserId, Guid chatId, ChatInfo chatInfo)
         {
-            return new EditChatInfoCommand<ChatInfo>(currentUserId, chatId, chatInfo);
+            return new EditChatInfoCommand(currentUserId, chatId, chatInfo);
         }
 
         public virtual IRemoveChatCommand BuildRemoveChatCommand(Guid currentUserId, Guid chatId)
