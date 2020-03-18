@@ -115,7 +115,7 @@
                 }
             ]
         };
-        var reader = dotChatClient.getChatsReader('tt', chatFilter);
+        //var reader = dotChatClient.getChatsReader('tt', chatFilter);
         var reader = dotChatClient.getChatsReader();
         reader.aquire(setChats);
     
@@ -158,8 +158,8 @@
         connection.start().then(function(){
             return dotChatClient.ready().then(function(client){
                 client.loadSummary().then(setSummary);
-                return reader.open().then(function(){
-                    setChats(reader.current);
+                return reader.open().then(function(current){
+                    setChats(current);
                 });
             });
         }).catch(function(){
