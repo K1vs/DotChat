@@ -511,7 +511,7 @@ export default class DotChatClient{
 
     _setChatPersonalization(chat, thisParticipant){
         chat.readIndex = thisParticipant.readIndex;
-        chat.unreadCount = chat.topIndex - thisParticipant.readIndex;
+        chat.unreadCount = Math.max(chat.topIndex - thisParticipant.readIndex, 0);
     }
 
     _registerChatMessagesNotifications(){
