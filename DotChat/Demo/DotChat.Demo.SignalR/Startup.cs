@@ -123,7 +123,13 @@ namespace K1vs.DotChat.Demo.SignalR
             }, new Basic.Participants.ParticipationCandidates(new List<ParticipationCandidate> {
                 new ParticipationCandidate(Users[0].UserId, Participants.ChatParticipantType.Admin),
                 new ParticipationCandidate(Users[3].UserId, Participants.ChatParticipantType.Admin)
-            }, new List<ParticipationCandidate> { })).Wait();
+            }, new List<ParticipationCandidate> { })).ContinueWith(async r => {
+                await Task.Delay(TimeSpan.FromSeconds(10));
+                await dotChat.ChatParticipants.Append(Users[0].UserId, r.Result, new List<ParticipationCandidate> {
+                    new ParticipationCandidate(Users[1].UserId, Participants.ChatParticipantType.Participant),
+                    new ParticipationCandidate(Users[2].UserId, Participants.ChatParticipantType.Participant)
+                }, new List<ParticipationCandidate>());
+            });
 
             Task.Delay(TimeSpan.FromSeconds(10))
                 .ContinueWith((t) =>

@@ -205,6 +205,7 @@ export default class DotChatClient{
             messageId: messageId,
             pending: true,
             messageStatus: MessageStatus.actual,
+            timestamp: new Date(),
             index: Number.MAX_SAFE_INTEGER
         };
         readerBoxes.forEach(readerBox => readerBox.reader.addOrUpdate(messageId, message, exist => _.merge(exist, message)));
@@ -452,8 +453,8 @@ export default class DotChatClient{
             this._loadSummary();
             this._callCallback('chatParticipantsAppended', notification);
             var chatsWithReaderBoxes = await this._getOrLoadChatsWithReaderBoxes(notification.chatId);
-            notification.added.concat(notification.invited).forEach(participant => {
-                chatsWithReaderBoxes.forEach(r => addOrUpdateParticipant(participant, r));
+            notification.added.concat(notification.invited).forEach(participationResult => {
+                chatsWithReaderBoxes.forEach(r => addOrUpdateParticipant(participationResult.participant, r));
             });
         };
 
