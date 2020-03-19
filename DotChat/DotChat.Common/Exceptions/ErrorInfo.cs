@@ -9,7 +9,7 @@
         {
             TraceId = Guid.NewGuid();
             ErrorCode = errorCode;
-            Message = message;
+            Message = $"[{errorCode.Code}] {message}";
             ChatId = chatId;
             UserId = userId;
             Data = data;
