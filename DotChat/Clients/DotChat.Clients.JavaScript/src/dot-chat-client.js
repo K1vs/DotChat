@@ -201,6 +201,7 @@ export default class DotChatClient{
         var readerBoxes = this._getChatMessageReaderBoxes(chatId, {messageId : messageId, ...messageInfo});
         var message = {
             ...messageInfo,
+            authorId: this._userId,
             messageId: messageId,
             pending: true,
             messageStatus: MessageStatus.actual,
