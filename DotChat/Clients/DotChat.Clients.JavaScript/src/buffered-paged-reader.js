@@ -27,7 +27,8 @@ export class BufferedPagedReader{
         if(!this._openPromise){
             this._openPromise = this._open();
         }
-        return await this._openPromise;
+        await this._openPromise;
+        return this.current;
     }
 
     get opened(){
