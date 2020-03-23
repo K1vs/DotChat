@@ -141,6 +141,17 @@ namespace K1vs.DotChat.Demo.SignalR
                 new ParticipationCandidate(Users[1].UserId, Participants.ChatParticipantType.Admin)
             }, new List<ParticipationCandidate> { })));
 
+            foreach (var item in Enumerable.Range(3, 10))
+            {
+                dotChat.Chats.Add(Users[0].UserId, null, new ChatInfo
+                {
+                    Name = $"TestChat{item}"
+                }, new Basic.Participants.ParticipationCandidates(new List<ParticipationCandidate> {
+                    new ParticipationCandidate(Users[0].UserId, Participants.ChatParticipantType.Admin),
+                    new ParticipationCandidate(Users[3].UserId, Participants.ChatParticipantType.Admin)
+                }, new List<ParticipationCandidate> { }));
+            }
+
             config.Resolver = new AutofacDependencyResolver(container);
 
             app.UseAutofacMiddleware(container);

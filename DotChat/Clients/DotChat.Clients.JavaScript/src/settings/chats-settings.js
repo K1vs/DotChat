@@ -1,9 +1,9 @@
 export const chatsSettings = {
-    maxNamedReaders: 5, 
+    maxReaders: 10, 
     pageSize: 200,
-    frameSize: 100,
-    maxBufferSize: 1000,
-    minBufferSize: 500,
+    frameSize: 200,
+    maxBufferSize: 2000,
+    minBufferSize: 1000,
     loadSummaryDelay: 5000,
     keyFunction: (item) => item.chatId,
     sortKeyFunction: (item) => item.lastTimestamp,

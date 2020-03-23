@@ -81,7 +81,7 @@ export default class DotChatClient{
             return this._chatsReaders.default;
         }
         if(this._chatsReaders.named.length > this._settings.chatsSettings.maxNamedReaders){
-            _.remove(this._chatsReaders.named, r => r.closed).forEach(removed => removed.dispose());
+            _.remove(this._chatsReaders.named, r => r.closed).forEach(removed => removed.reader.dispose());
         }
         var createPageOptions = (cursor) => ({
             cursor: cursor,
@@ -119,7 +119,7 @@ export default class DotChatClient{
         }else{
             chatMessagesReaders = {
                 default: null,
-                named: []
+                named: {}
             };
             this._messagesReaders[chatId] = chatMessagesReaders;
         }
@@ -267,18 +267,20 @@ export default class DotChatClient{
 
     _shrinkMessagesReaders(){
         var allChatsMessagesReaders = Object.entries(this._messagesReaders).map(([, value]) => value);
-        var namedCount = _.sum(allChatsMessagesReaders, r => r.named.length);
-        if(namedCount > this._settings.messagesSettings.maxNamedReaders || allChatsMessagesReaders.length > this._settings.messagesSettings.maxNamedReaders){
-            allChatsMessagesReaders.forEach(сhatMessagesReaders => {
-                _.remove(сhatMessagesReaders, r => r.closed)
-                .forEach(removed => removed.dispose());
-            });
-        }
-        if(allChatsMessagesReaders.length > this._settings.messagesSettings.maxNamedReaders){
-            allChatsMessagesReaders.forEach(сhatMessagesReaders => {
-                if(сhatMessagesReaders.default.closed){
-                    сhatMessagesReaders.default.dispose();
-                    сhatMessagesReaders.default = null;
+        var namedCount = _.sumBy(allChatsMessagesReaders, r => Object.getOwnPropertyNames(r.named).length);
+        var defaultCount = allChatsMessagesReaders.filter(r => r.default).length;
+        var totalCount = namedCount + defaultCount;
+        if(totalCount > this._settings.messagesSettings.maxReaders){
+            allChatsMessagesReaders.forEach(r => {
+                Object.entries(r.named).map(([key, value]) => {
+                    if(value.reader.closed){
+                        value.reader.dispose();
+                        r.named[key] = null;
+                    }    
+                });
+                if(r.default && r.default.closed){
+                    r.default.dispose();
+                    r.default = null;
                 }
             });
         }
