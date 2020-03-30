@@ -3,11 +3,12 @@ import {createParticipantsConnector} from './participants.js';
 import {createMessagesConnector} from './messages.js';
 
 export default class DotChatSignalRConnector{
-    constructor(connection, chatsHubName, participantsHubName, messagesHubName){
+    constructor(connection, chatsHubName, participantsHubName, messagesHubName, startOptions){
         this._connection = connection;
         this._chats = createChatsConnector(connection, chatsHubName);
         this._participants = createParticipantsConnector(connection, participantsHubName);
         this._messages = createMessagesConnector(connection, messagesHubName);
+        this._startOptions = Object.assign({ waitForPageLoad: false }, startOptions);
     }
 
     get chats(){
@@ -23,7 +24,7 @@ export default class DotChatSignalRConnector{
     }
 
     start(){
-        var promise = this._connection.start();
+        var promise = this._connection.start(this._startOptions);
         return Promise.resolve(promise);
     }
 }
