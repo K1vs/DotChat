@@ -423,6 +423,7 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <Content Include="wwwroot\package.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Logs\" />
