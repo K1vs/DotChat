@@ -8,6 +8,6 @@
 
     public interface IHasParticipants
     {
-        IEnumerable<IChatParticipant> Participants { get; }
+        IReadOnlyCollection<IChatParticipant> Participants { get; }
     }
 }

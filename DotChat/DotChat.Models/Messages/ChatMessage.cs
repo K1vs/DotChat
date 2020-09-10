@@ -7,26 +7,13 @@
     using DotChat.Messages.Typed;
     using DotChat.Participants;
 
-    public class ChatMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> :
-        ChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>,
-        IChatMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatInfo : IChatInfo
-        where TChatUser : IChatUser
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
+    public class ChatMessage: ChatMessageInfo, IChatMessage
     {
         public ChatMessage()
         {
         }
 
-        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage, bool isSystem, MessageType type, long version, bool immutable = false, string style = null, string metadata = null, TTextMessage text = default, TQuoteMessage quote = default, TMessageAttachmentCollection messageAttachments = default, TChatRefMessageCollection chatRefs = default, TContactMessageCollection contacts = default)
+        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage, bool isSystem, MessageType type, long version, bool immutable = false, string style = null, string metadata = null, ITextMessage text = default, IQuoteMessage quote = default, IReadOnlyCollection<IMessageAttachment> messageAttachments = default, IReadOnlyCollection<IChatRefMessage> chatRefs = default, IReadOnlyCollection<IContactMessage> contacts = default)
             : base(type, version, immutable, style, metadata, text, quote, messageAttachments, chatRefs, contacts)
         {
             MessageId = messageId;
@@ -39,7 +26,7 @@
             IsSystem = isSystem;
         }
 
-        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage, bool isSystem, IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> messageInfo)
+        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage, bool isSystem, IChatMessageInfo messageInfo)
             : this(messageId, timestamp, index, authorId, messageStatus, originalMessage, isSystem, messageInfo.Type, messageInfo.Version, messageInfo.Immutable, messageInfo.Style, messageInfo.Metadata, messageInfo.Text, messageInfo.Quote, messageInfo.MessageAttachments, messageInfo.ChatRefs, messageInfo.Contacts)
         {              
         }

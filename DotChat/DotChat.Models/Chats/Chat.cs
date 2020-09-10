@@ -7,27 +7,13 @@
     using K1vs.DotChat.Messages;
     using K1vs.DotChat.Messages.Typed;
 
-    public class Chat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> 
-        : ChatInfo, IChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatInfo : IChatInfo
-        where TChatParticipantCollection : IReadOnlyCollection<TChatParticipant>
-        where TChatParticipant : IChatParticipant
-        where TChatUser : IChatUser
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
+    public class Chat: ChatInfo, IChat
     {
         public Chat()
         {
         }
 
-        public Chat(string name, string description, ChatPrivacyMode privacyMode, long version, Guid chatId, TChatParticipantCollection participants, DateTime lastTimestamp, long topIndex, Guid? lastMessageId, Guid? lastMessageAuthorId, TChatMessageInfo lastChatMessageInfo, string style = null, string metadata = null) 
+        public Chat(string name, string description, ChatPrivacyMode privacyMode, long version, Guid chatId, IReadOnlyCollection<IChatParticipant> participants, DateTime lastTimestamp, long topIndex, Guid? lastMessageId, Guid? lastMessageAuthorId, IChatMessageInfo lastChatMessageInfo, string style = null, string metadata = null) 
             : base(name, description, privacyMode, version, style, metadata)
         {
             ChatId = chatId;
@@ -39,12 +25,12 @@
             LastChatMessageInfo = lastChatMessageInfo;
         }
 
-        public Chat(IChatInfo chatInfo, Guid chatId, TChatParticipantCollection participants, DateTime lastTimestamp, long topIndex, Guid? lastMessageId, Guid? lastMessageAuthorId, TChatMessageInfo lastChatMessageInfo) 
+        public Chat(IChatInfo chatInfo, Guid chatId, IReadOnlyCollection<IChatParticipant> participants, DateTime lastTimestamp, long topIndex, Guid? lastMessageId, Guid? lastMessageAuthorId, IChatMessageInfo lastChatMessageInfo) 
             : this(chatInfo.Name, chatInfo.Description, chatInfo.PrivacyMode, chatInfo.Version, chatId, participants, lastTimestamp, topIndex, lastMessageId, lastMessageAuthorId, lastChatMessageInfo, chatInfo.Style, chatInfo.Metadata) { }
 
         public Guid ChatId { get; set; }
 
-        public TChatParticipantCollection Participants { get; set; }
+        public IReadOnlyCollection<IChatParticipant> Participants { get; set; }
 
         public DateTime LastTimestamp { get; set; }
 
@@ -54,6 +40,6 @@
 
         public Guid? LastMessageAuthorId { get; set; }
 
-        public TChatMessageInfo LastChatMessageInfo { get; set; }
+        public IChatMessageInfo LastChatMessageInfo { get; set; }
     }
 }

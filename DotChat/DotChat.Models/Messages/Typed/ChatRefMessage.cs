@@ -4,14 +4,13 @@
     using DotChat.Chats;
     using DotChat.Messages.Typed;
 
-    public class ChatRefMessage<TChatInfo> : IChatRefMessage<TChatInfo>
-        where TChatInfo : IChatInfo
+    public class ChatRefMessage: IChatRefMessage
     {
         public ChatRefMessage()
         {
         }
 
-        public ChatRefMessage(Guid chatId, TChatInfo chatInfo, string style = null, string metadata = null)
+        public ChatRefMessage(Guid chatId, IChatInfo chatInfo, string style = null, string metadata = null)
         {
             ChatId = chatId;
             ChatInfo = chatInfo;
@@ -20,7 +19,7 @@
         }
 
         public Guid ChatId { get; set; }
-        public TChatInfo ChatInfo { get; set; }
+        public IChatInfo ChatInfo { get; set; }
         public string Style { get; set; }
         public string Metadata { get; set; }
     }

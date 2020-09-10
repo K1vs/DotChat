@@ -2,20 +2,19 @@
 {
     using DotChat.Participants;
 
-    public class ParticipationResult<TChatParticipant> : IParticipationResult<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public class ParticipationResult<TChatParticipant> : IParticipationResult
     {
         public ParticipationResult()
         {
         }
 
-        public ParticipationResult(ChatParticipantStatus? previousStatus, TChatParticipant participant)
+        public ParticipationResult(ChatParticipantStatus? previousStatus, IChatParticipant participant)
         {
             PreviousStatus = previousStatus;
             Participant = participant;
         }
 
         public ChatParticipantStatus? PreviousStatus { get; set; }
-        public TChatParticipant Participant { get; set; }
+        public IChatParticipant Participant { get; set; }
     }
 }

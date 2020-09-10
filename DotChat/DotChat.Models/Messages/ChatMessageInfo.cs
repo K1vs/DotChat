@@ -7,26 +7,14 @@
     using DotChat.Messages.Typed;
     using DotChat.Participants;
 
-    public class ChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> :
-        IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatInfo : IChatInfo
-        where TChatUser : IChatUser
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
+    public class ChatMessageInfo: IChatMessageInfo
     {
         public ChatMessageInfo()
         {
         }
 
         public ChatMessageInfo(MessageType type, long version, bool immutable = false, string style = null, string metadata = null, 
-            TTextMessage text = default, TQuoteMessage quote = default, TMessageAttachmentCollection messageAttachments = default, TChatRefMessageCollection chatRefs = default, TContactMessageCollection contacts = default)
+            ITextMessage text = default, IQuoteMessage quote = default, IReadOnlyCollection<IMessageAttachment> messageAttachments = default, IReadOnlyCollection<IChatRefMessage> chatRefs = default, IReadOnlyCollection<IContactMessage> contacts = default)
         {
             Type = type;
             Version = version;
@@ -45,10 +33,10 @@
         public bool Immutable { get; set; }
         public string Style { get; set; }
         public string Metadata { get; set; }
-        public TTextMessage Text { get; set; }
-        public TQuoteMessage Quote { get; set; }
-        public TMessageAttachmentCollection MessageAttachments { get; set; }
-        public TChatRefMessageCollection ChatRefs { get; set; }
-        public TContactMessageCollection Contacts { get; set; }
+        public ITextMessage Text { get; set; }
+        public IQuoteMessage Quote { get; set; }
+        public IReadOnlyCollection<IMessageAttachment> MessageAttachments { get; set; }
+        public IReadOnlyCollection<IChatRefMessage> ChatRefs { get; set; }
+        public IReadOnlyCollection<IContactMessage> Contacts { get; set; }
     }
 }

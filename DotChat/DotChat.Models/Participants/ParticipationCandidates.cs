@@ -7,21 +7,19 @@
     using System.Threading.Tasks;
     using DotChat.Participants;
 
-    public class ParticipationCandidates<TParticipationCandidateCollection, TParticipationCandidate> : IHasParticipationCandidates<TParticipationCandidateCollection, TParticipationCandidate>
-        where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
-        where TParticipationCandidate : IParticipationCandidate
+    public class ParticipationCandidates: IHasParticipationCandidates
     {
         public ParticipationCandidates()
         {
         }
 
-        public ParticipationCandidates(TParticipationCandidateCollection add, TParticipationCandidateCollection invite)
+        public ParticipationCandidates(IReadOnlyCollection<IParticipationCandidate> add, IReadOnlyCollection<IParticipationCandidate> invite)
         {
             ToAdd = add;
             ToInvite = invite;
         }
 
-        public TParticipationCandidateCollection ToAdd { get; set; }
-        public TParticipationCandidateCollection ToInvite { get; set; }
+        public IReadOnlyCollection<IParticipationCandidate> ToAdd { get; set; }
+        public IReadOnlyCollection<IParticipationCandidate> ToInvite { get; set; }
     }
 }

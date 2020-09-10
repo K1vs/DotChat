@@ -2,21 +2,20 @@
 {
     using System.Collections.Generic;
 
-    public class PagedResult<TResultCollection, TResult> : IPagedResult<TResultCollection ,TResult>
-        where TResultCollection : IReadOnlyCollection<TResult>
+    public class PagedResult<TResult> : IPagedResult<TResult>
     {
         public PagedResult()
         {
         }
 
-        public PagedResult(TResultCollection items, string previous, string next)
+        public PagedResult(IReadOnlyCollection<TResult> items, string previous, string next)
         {
             Items = items;
             Previous = previous;
             Next = next;
         }
 
-        public TResultCollection Items { get; }
+        public IReadOnlyCollection<TResult> Items { get; }
         public string Previous { get; set; }
         public string Next { get; set; }
     }
