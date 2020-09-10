@@ -2,14 +2,13 @@
 {
     using Configuration;
 
-    public class WorkerBase<TChatWorkersConfiguration>
-        where TChatWorkersConfiguration : IChatWorkersConfiguration
+    public class WorkerBase
     {
         protected readonly string WorkerName;
 
-        protected readonly TChatWorkersConfiguration ChatWorkersConfiguration;
+        protected readonly IChatWorkersConfiguration ChatWorkersConfiguration;
 
-        protected WorkerBase(TChatWorkersConfiguration chatWorkersConfiguration)
+        protected WorkerBase(IChatWorkersConfiguration chatWorkersConfiguration)
         {
             ChatWorkersConfiguration = chatWorkersConfiguration;
             WorkerName = GetType().FullName;

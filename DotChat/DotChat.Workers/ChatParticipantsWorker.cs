@@ -15,25 +15,18 @@
     using Stores.Participants;
     using Stores.Users;
 
-    public class ChatParticipantsWorker<TChatWorkersConfiguration, TParticipationResultCollection, TParticipationResult, TChatParticipant, TParticipationCandidateCollection, TParticipationCandidate, TChatUser> : WorkerBase<TChatWorkersConfiguration>, 
-        IChatParticipantsWorker<TParticipationCandidateCollection, TParticipationCandidate>
-        where TChatWorkersConfiguration : IChatWorkersConfiguration
-        where TParticipationResultCollection : IReadOnlyCollection<TParticipationResult>
-        where TParticipationResult : IParticipationResult<TChatParticipant>
-        where TChatParticipant : IChatParticipant
-        where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
-        where TParticipationCandidate : IParticipationCandidate
-        where TChatUser : IChatUser
+    public class ChatParticipantsWorker: WorkerBase, IChatParticipantsWorker
     {
-        protected readonly IChatParticipantsPermissionValidator<TParticipationCandidateCollection, TParticipationCandidate> ChatParticipantsPermissionValidator;
+        protected readonly IChatParticipantsPermissionValidator ChatParticipantsPermissionValidator;
 
-        protected readonly IChatParticipantStore<TChatParticipant, TChatUser> ChatParticipantStore;
+        protected readonly IChatParticipantStore ChatParticipantStore;
 
-        protected readonly IReadUserStore<TChatUser> ReadUserStore;
+        protected readonly IReadUserStore ReadUserStore;
 
-        protected readonly IChatParticipantsEventBuilder<TParticipationResultCollection, TParticipationResult, TChatParticipant> ChatParticipantsEventBuilder;
+        protected readonly IChatParticipantsEventBuilder ChatParticipantsEventBuilder;
 
-        protected ChatParticipantsWorker(TChatWorkersConfiguration chatWorkersConfiguration, IChatParticipantsPermissionValidator<TParticipationCandidateCollection, TParticipationCandidate> chatParticipantsPermissionValidator, IChatParticipantStore<TChatParticipant, TChatUser> chatParticipantStore, IReadUserStore<TChatUser> readUserStore, IChatParticipantsEventBuilder<TParticipationResultCollection, TParticipationResult, TChatParticipant> chatParticipantsEventBuilder) : base(chatWorkersConfiguration)
+        protected ChatParticipantsWorker(IChatWorkersConfiguration chatWorkersConfiguration, IChatParticipantsPermissionValidator chatParticipantsPermissionValidator, IChatParticipantStore chatParticipantStore, IReadUserStore readUserStore, IChatParticipantsEventBuilder chatParticipantsEventBuilder) 
+            : base(chatWorkersConfiguration)
         {
             ChatParticipantsPermissionValidator = chatParticipantsPermissionValidator;
             ChatParticipantStore = chatParticipantStore;
@@ -95,7 +88,7 @@
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 
-        public virtual async Task Handle(IAppendChatParticipantsCommand<TParticipationCandidateCollection, TParticipationCandidate> command, IChatBusContext chatEventPublisher)
+        public virtual async Task Handle(IAppendChatParticipantsCommand command, IChatBusContext chatEventPublisher)
         {
             await ChatParticipantsPermissionValidator.ValidateAppend(command.InitiatorUserId, command.ChatId, command.ToAdd, command.ToInvite, WorkerName).ConfigureAwait(false);
             var currentParticipants = await ChatParticipantStore.RetrieveList(command.ChatId, command.ToAdd.Concat(command.ToInvite).Select(r => r.UserId));
@@ -105,9 +98,9 @@
                 .Select(r => ReadUserStore.Customize(r.User, r.Candidate.Style, r.Candidate.Metadata))
                 .ToList();
 
-            async Task<IReadOnlyCollection<TParticipationResult>> SetStatusGroup(IReadOnlyCollection<TParticipationCandidate> candidates, ChatParticipantStatus status)
+            async Task<IReadOnlyCollection<IParticipationResult>> SetStatusGroup(IReadOnlyCollection<IParticipationCandidate> candidates, ChatParticipantStatus status)
             {
-                IEnumerable<TChatParticipant> chatParticipants = Enumerable.Empty<TChatParticipant>();
+                IEnumerable<IChatParticipant> chatParticipants = Enumerable.Empty<IChatParticipant>();
                 foreach (var group in candidates.GroupBy(r => r.ChatParticipantType))
                 {
                     var participants = await ChatParticipantStore.Set(command.ChatId,
@@ -128,7 +121,7 @@
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 
-        protected virtual async Task<TChatParticipant> SetParticipationCandidate(Guid chatId, Guid userId, ChatParticipantType participantType, ChatParticipantStatus participantStatus, string style, string metadata, Guid setterId)
+        protected virtual async Task<IChatParticipant> SetParticipationCandidate(Guid chatId, Guid userId, ChatParticipantType participantType, ChatParticipantStatus participantStatus, string style, string metadata, Guid setterId)
         {
             var user = await ReadUserStore.Retrieve(userId).ConfigureAwait(false);
             user = ReadUserStore.Customize(user, style, metadata);
@@ -136,20 +129,20 @@
                 participantStatus, setterId).ConfigureAwait(false);
         }
 
-        protected virtual Task<TChatParticipant> SetParticipationCandidate<TCommand>(TCommand command, ChatParticipantStatus participantStatus)
+        protected virtual Task<IChatParticipant> SetParticipationCandidate<TCommand>(TCommand command, ChatParticipantStatus participantStatus)
             where TCommand : IHasInitiator, IChatRelated, IParticipationCandidate
         {
             return SetParticipationCandidate(command.ChatId, command.UserId, command.ChatParticipantType, participantStatus, command.Style, command.Metadata,
                 command.InitiatorUserId);
         }
 
-        protected virtual async Task<TChatParticipant> SetUser(Guid chatId, Guid userId, ChatParticipantStatus participantStatus, Guid setterId)
+        protected virtual async Task<IChatParticipant> SetUser(Guid chatId, Guid userId, ChatParticipantStatus participantStatus, Guid setterId)
         {
             var user = await ReadUserStore.Retrieve(userId).ConfigureAwait(false);
             return await ChatParticipantStore.Set(chatId, user, participantStatus, setterId).ConfigureAwait(false);
         }
 
-        protected virtual Task<TChatParticipant> SetUser<TCommand>(TCommand command, ChatParticipantStatus participantStatus)
+        protected virtual Task<IChatParticipant> SetUser<TCommand>(TCommand command, ChatParticipantStatus participantStatus)
             where TCommand : IHasInitiator, IChatRelated, IUserRelated
         {
             return SetUser(command.ChatId, command.UserId, participantStatus, command.InitiatorUserId);
