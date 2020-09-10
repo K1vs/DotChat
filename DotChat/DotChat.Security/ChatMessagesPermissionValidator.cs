@@ -17,39 +17,18 @@
     using Stores.Messages;
     using Stores.Participants;
 
-    public class ChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatParticipant, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage,
-            TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> : 
-        IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, 
-            TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions>
-        where TChatInfo : IChatInfo
-        where TChatParticipant : IChatParticipant
-        where TChatUser : IChatUser
-        where TChatMessageCollection : IReadOnlyCollection<TChatMessage>
-        where TChatMessage : IChatMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
-        where TMessageFilter : IMessageFilter
-        where TPagedResult : IPagedResult<TChatMessageCollection, TChatMessage>
-        where TPagingOptions : IPagingOptions
+    public class ChatMessagesPermissionValidator: IChatMessagesPermissionValidator
     {
-        protected readonly IReadChatParticipantStore<TChatParticipant> ReadChatParticipantStore;
-        protected readonly IReadChatMessageStore<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> ReadChatMessageStore;
+        protected readonly IReadChatParticipantStore ReadChatParticipantStore;
+        protected readonly IReadChatMessageStore ReadChatMessageStore;
 
-        public ChatMessagesPermissionValidator(IReadChatParticipantStore<TChatParticipant> readChatParticipantStore, IReadChatMessageStore<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> readChatMessageStore)
+        public ChatMessagesPermissionValidator(IReadChatParticipantStore readChatParticipantStore, IReadChatMessageStore readChatMessageStore)
         {
             ReadChatParticipantStore = readChatParticipantStore;
             ReadChatMessageStore = readChatMessageStore;
         }
 
-        public virtual async Task ValidateGetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions pagingOptions,
-            TPagedResult messagesPage, string serviceName, string methodName = null)
+        public virtual async Task ValidateGetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<IMessageFilter> filters, IPagingOptions pagingOptions, IPagedResult<IChatMessage> messagesPage, string serviceName, string methodName = null)
         {
             var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
             if (participant == null || participant.ChatParticipantStatus != ChatParticipantStatus.Active)
@@ -59,7 +38,7 @@
             }
         }
 
-        public async Task ValidateGetPage(Guid currentUserId, Guid chatId, TPagingOptions pagingOptions, TPagedResult messagesPage, string serviceName, [CallerMemberName] string methodName = null)
+        public async Task ValidateGetPage(Guid currentUserId, Guid chatId, IPagingOptions pagingOptions, IPagedResult<IChatMessage> messagesPage, string serviceName, [CallerMemberName] string methodName = null)
         {
             var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
             if (participant == null || participant.ChatParticipantStatus != ChatParticipantStatus.Active)
@@ -79,8 +58,7 @@
             }
         }
 
-        public virtual async Task ValidateAdd(Guid currentUserId, Guid chatId, TChatMessageInfo messageInfo, string serviceName,
-            string methodName = null)
+        public virtual async Task ValidateAdd(Guid currentUserId, Guid chatId, IChatMessageInfo messageInfo, string serviceName, string methodName = null)
         {
             var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
             if (IsBadParticipant(participant))
@@ -106,8 +84,7 @@
             }
         }
 
-        public virtual async Task ValidateEdit(Guid currentUserId, Guid chatId, Guid messageId, TChatMessageInfo newMessage, string serviceName,
-            string methodName = null)
+        public virtual async Task ValidateEdit(Guid currentUserId, Guid chatId, Guid messageId, IChatMessageInfo newMessage, string serviceName, string methodName = null)
         {
             var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
             if (IsBadParticipant(participant))
@@ -123,7 +100,7 @@
             }
         }
 
-        protected virtual bool IsBadParticipant(TChatParticipant participant)
+        protected virtual bool IsBadParticipant(IChatParticipant participant)
         {
             return participant == null || participant.ChatParticipantStatus != ChatParticipantStatus.Active ||
                    participant.ChatParticipantType.NotIn(ChatParticipantType.Admin, ChatParticipantType.Moderator, ChatParticipantType.Participant, ChatParticipantType.MessagingOnlyParticipant);

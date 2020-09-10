@@ -15,33 +15,14 @@
     using Security;
     using Stores.Messages;
 
-    public class ChatMessagesService<TDotChatConfiguration, TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> : ServiceBase<TDotChatConfiguration>, 
-        IChatMessagesService<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions>
-        where TDotChatConfiguration : IChatServicesConfiguration
-        where TChatInfo : IChatInfo
-        where TChatUser : IChatUser
-        where TChatMessageCollection : IReadOnlyCollection<TChatMessage>
-        where TChatMessage : IChatMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
-        where TMessageFilter : IMessageFilter
-        where TPagedResult : IPagedResult<TChatMessageCollection, TChatMessage>
-        where TPagingOptions : IPagingOptions
+    public class ChatMessagesService : ServiceBase, IChatMessagesService
     {
-        protected readonly IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, 
-        TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> ChatMessagesPermissionValidator;
-        protected readonly IReadChatMessageStore<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> ReadChatMessageStore;
-        protected readonly IChatMessagesCommandBuilder<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> ChatMessagesCommandBuilder;
+        protected readonly IChatMessagesPermissionValidator ChatMessagesPermissionValidator;
+        protected readonly IReadChatMessageStore ReadChatMessageStore;
+        protected readonly IChatMessagesCommandBuilder ChatMessagesCommandBuilder;
         protected readonly IChatCommandSender ChatCommandSender;
 
-        public ChatMessagesService(TDotChatConfiguration chatServicesConfiguration, IChatMessagesPermissionValidator<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> chatMessagesPermissionValidator, IReadChatMessageStore<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter, TPagedResult, TPagingOptions> readChatMessageStore, IChatMessagesCommandBuilder<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> chatMessagesCommandBuilder, IChatCommandSender chatCommandSender) : base(chatServicesConfiguration)
+        public ChatMessagesService(IChatServicesConfiguration chatServicesConfiguration, IChatMessagesPermissionValidator chatMessagesPermissionValidator, IReadChatMessageStore readChatMessageStore, IChatMessagesCommandBuilder chatMessagesCommandBuilder, IChatCommandSender chatCommandSender) : base(chatServicesConfiguration)
         {
             ChatMessagesPermissionValidator = chatMessagesPermissionValidator;
             ReadChatMessageStore = readChatMessageStore;
@@ -49,21 +30,21 @@
             ChatCommandSender = chatCommandSender;
         }
 
-        public virtual async Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions pagingOptions = default)
+        public virtual async Task<IPagedResult<IChatMessage>> GetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<IMessageFilter> filters, IPagingOptions pagingOptions = default)
         {
             var messagesPage = await ReadChatMessageStore.Retrieve(chatId, filters, pagingOptions).ConfigureAwait(false);
             await ChatMessagesPermissionValidator.ValidateGetPage(currentUserId, chatId, filters, pagingOptions, messagesPage, ServiceName).ConfigureAwait(false);
             return messagesPage;
         }
 
-        public virtual async Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, TPagingOptions pagingOptions = default)
+        public virtual async Task<IPagedResult<IChatMessage>> GetPage(Guid currentUserId, Guid chatId, IPagingOptions pagingOptions = default)
         {
             var messagesPage = await ReadChatMessageStore.Retrieve(chatId, pagingOptions).ConfigureAwait(false);
             await ChatMessagesPermissionValidator.ValidateGetPage(currentUserId, chatId, pagingOptions, messagesPage, ServiceName).ConfigureAwait(false);
             return messagesPage;
         }
 
-        public virtual async Task<Guid> Add(Guid currentUserId, Guid chatId, Guid? messageId, TChatMessageInfo messageInfo)
+        public virtual async Task<Guid> Add(Guid currentUserId, Guid chatId, Guid? messageId, IChatMessageInfo messageInfo)
         {
             await ChatMessagesPermissionValidator.ValidateAdd(currentUserId, chatId, messageInfo, ServiceName)
                 .ConfigureAwait(false);
@@ -72,7 +53,7 @@
             return command.MessageId;
         }
 
-        public virtual async Task<Guid> Edit(Guid currentUserId, Guid chatId, Guid messageId, TChatMessageInfo messageInfo, Guid? archivedMessageId)
+        public virtual async Task<Guid> Edit(Guid currentUserId, Guid chatId, Guid messageId, IChatMessageInfo messageInfo, Guid? archivedMessageId)
         {
             await ChatMessagesPermissionValidator.ValidateEdit(currentUserId, chatId, messageId, messageInfo, ServiceName)
                 .ConfigureAwait(false);

@@ -15,43 +15,14 @@
     using Security;
     using Stores.Chats;
 
-    public class ChatsService<TDotChatConfiguration, TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> : ServiceBase<TDotChatConfiguration>, 
-        IChatsService<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions>
-        where TDotChatConfiguration : IChatServicesConfiguration
-        where TPersonalizedChatsSummary : IPersonalizedChatsSummary
-        where TPersonalizedChatCollection : IReadOnlyCollection<TPersonalizedChat>
-        where TPersonalizedChat : IPersonalizedChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChat: IChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatInfo : IChatInfo
-        where TChatParticipantCollection : IReadOnlyCollection<TChatParticipant>
-        where TChatParticipant : IChatParticipant
-        where TParticipationCandidates : IHasParticipationCandidates<TParticipationCandidateCollection, TParticipationCandidate>
-        where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
-        where TParticipationCandidate : IParticipationCandidate
-        where TChatUser : IChatUser
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
-        where TChatFilter : IChatFilter<TChatUserFilter, TMessageFilter>
-        where TChatUserFilter : IChatUserFilter
-        where TMessageFilter : IMessageFilter
-        where TPagedResult : IPagedResult<TPersonalizedChatCollection, TPersonalizedChat>
-        where TPagingOptions : IPagingOptions
+    public class ChatsService: ServiceBase, IChatsService
     {
-        protected readonly IChatsPermissionValidator<TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> ChatsPermissionValidator;
-        protected readonly IReadChatStore<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> ReadChatStore;
-        protected readonly IChatsCommandBuilder<TChatInfo, TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate> ChatsCommandBuilder;
+        protected readonly IChatsPermissionValidator ChatsPermissionValidator;
+        protected readonly IReadChatStore ReadChatStore;
+        protected readonly IChatsCommandBuilder ChatsCommandBuilder;
         protected readonly IChatCommandSender ChatCommandSender;
 
-        public ChatsService(TDotChatConfiguration chatServicesConfiguration, IChatsPermissionValidator<TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> chatsPermissionValidator,
-            IReadChatStore<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> readChatStore, 
-            IChatsCommandBuilder<TChatInfo, TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate> chatsCommandBuilder, IChatCommandSender chatCommandSender) : base(chatServicesConfiguration)
+        public ChatsService(IChatServicesConfiguration chatServicesConfiguration, IChatsPermissionValidator chatsPermissionValidator, IReadChatStore readChatStore, IChatsCommandBuilder chatsCommandBuilder, IChatCommandSender chatCommandSender) : base(chatServicesConfiguration)
         {
             ChatsPermissionValidator = chatsPermissionValidator;
             ReadChatStore = readChatStore;
@@ -59,34 +30,34 @@
             ChatCommandSender = chatCommandSender;
         }
 
-        public virtual async Task<TPersonalizedChatsSummary> GetSummary(Guid currentUserId)
+        public virtual async Task<IPersonalizedChatsSummary> GetSummary(Guid currentUserId)
         {
             await ChatsPermissionValidator.ValidateGetSummary(currentUserId, ServiceName);
             return await ReadChatStore.RetrievePersonalizedSummary(currentUserId);
         }
 
-        public virtual async Task<TPersonalizedChat> Get(Guid currentUserId, Guid chatId)
+        public virtual async Task<IPersonalizedChat> Get(Guid currentUserId, Guid chatId)
         {
             var chat = await ReadChatStore.RetrievePersonalized(chatId, currentUserId);
             await ChatsPermissionValidator.ValidateGet(currentUserId, chat, ServiceName);
             return chat;
         }
 
-        public virtual async Task<TPagedResult> GetPage(Guid currentUserId, TChatFilter filter, TPagingOptions pagingOptions = default)
+        public virtual async Task<IPagedResult<IPersonalizedChat>> GetPage(Guid currentUserId, IChatFilter filter, IPagingOptions pagingOptions = default)
         {
             var chatsPage = await ReadChatStore.RetrievePersonalizedPage(currentUserId, filter, pagingOptions).ConfigureAwait(false);
             await ChatsPermissionValidator.ValidateGetPage(currentUserId, chatsPage, filter, pagingOptions, ServiceName).ConfigureAwait(false);
             return chatsPage;
         }
 
-        public virtual async Task<TPagedResult> GetPage(Guid currentUserId, TPagingOptions pagingOptions = default)
+        public virtual async Task<IPagedResult<IPersonalizedChat>> GetPage(Guid currentUserId, IPagingOptions pagingOptions = default)
         {
             var chatsPage = await ReadChatStore.RetrievePersonalizedPage(currentUserId, pagingOptions).ConfigureAwait(false);
             await ChatsPermissionValidator.ValidateGetPage(currentUserId, chatsPage, pagingOptions, ServiceName).ConfigureAwait(false);
             return chatsPage;
         }
 
-        public virtual async Task<Guid> Add(Guid currentUserId, Guid? chatId, TChatInfo chatInfo, TParticipationCandidates participationCandidates)
+        public virtual async Task<Guid> Add(Guid currentUserId, Guid? chatId, IChatInfo chatInfo, IHasParticipationCandidates participationCandidates)
         {
             var command = ChatsCommandBuilder.BuildAddChatCommand(currentUserId, chatId, chatInfo, participationCandidates);
             await ChatsPermissionValidator.ValidateAdd(currentUserId, command.ChatId, chatInfo, ServiceName).ConfigureAwait(false);
@@ -94,7 +65,7 @@
             return command.ChatId;
         }
 
-        public virtual async Task EditInfo(Guid currentUserId, Guid chatId, TChatInfo chatInfo)
+        public virtual async Task EditInfo(Guid currentUserId, Guid chatId, IChatInfo chatInfo)
         {
             await ChatsPermissionValidator.ValidateEditInfo(currentUserId, chatId, chatInfo, ServiceName).ConfigureAwait(false);
             var command = ChatsCommandBuilder.BuildEditChatCommand(currentUserId, chatId, chatInfo);

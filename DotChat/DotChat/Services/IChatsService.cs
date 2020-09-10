@@ -14,8 +14,8 @@
     public interface IChatsService
     {
         Task<IPersonalizedChatsSummary> GetSummary(Guid currentUserId);
-        Task<IPagedResult<IPersonalizedChatsSummary>> GetPage(Guid currentUserId, IChatFilter filter, IPagingOptions pagingOptions = default);
-        Task<IPagedResult<IPersonalizedChatsSummary>> GetPage(Guid currentUserId, IPagingOptions pagingOptions = default);
+        Task<IPagedResult<IPersonalizedChat>> GetPage(Guid currentUserId, IChatFilter filter, IPagingOptions pagingOptions = default);
+        Task<IPagedResult<IPersonalizedChat>> GetPage(Guid currentUserId, IPagingOptions pagingOptions = default);
         Task<IPersonalizedChat> Get(Guid currentUserId, Guid chatId);
         Task<Guid> Add(Guid currentUserId, Guid? chatId, IChatInfo chatInfo, IHasParticipationCandidates participationCandidates);
         Task EditInfo(Guid currentUserId, Guid chatId, IChatInfo chatInfo);

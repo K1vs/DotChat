@@ -2,13 +2,12 @@
 {
     using Configuration;
 
-    public abstract class ServiceBase<TDotChatConfiguration>
-        where TDotChatConfiguration : IChatServicesConfiguration
+    public abstract class ServiceBase
     {
         protected readonly string ServiceName;
-        protected readonly TDotChatConfiguration ChatServicesConfiguration;
+        protected readonly IChatServicesConfiguration ChatServicesConfiguration;
 
-        protected ServiceBase(TDotChatConfiguration chatServicesConfiguration)
+        protected ServiceBase(IChatServicesConfiguration chatServicesConfiguration)
         {
             ChatServicesConfiguration = chatServicesConfiguration;
             ServiceName = GetType().FullName;

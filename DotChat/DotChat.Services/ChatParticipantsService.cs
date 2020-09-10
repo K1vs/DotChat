@@ -9,16 +9,13 @@
     using Participants;
     using Security;
 
-    public class ChatParticipantsService<TDotChatConfiguration, TParticipationCandidateCollection, TParticipationCandidate> : ServiceBase<TDotChatConfiguration>, IChatParticipantsService<TParticipationCandidateCollection, TParticipationCandidate>
-        where TDotChatConfiguration : IChatServicesConfiguration
-        where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
-        where TParticipationCandidate : IParticipationCandidate
+    public class ChatParticipantsService<TDotChatConfiguration, TParticipationCandidateCollection, TParticipationCandidate> : ServiceBase, IChatParticipantsService
     {
-        protected readonly IChatParticipantsPermissionValidator<TParticipationCandidateCollection, TParticipationCandidate> ChatParticipantsPermissionValidator;
-        protected readonly IChatParticipantsCommandBuilder<TParticipationCandidateCollection, TParticipationCandidate> ChatParticipantsCommandBuilder;
+        protected readonly IChatParticipantsPermissionValidator ChatParticipantsPermissionValidator;
+        protected readonly IChatParticipantsCommandBuilder ChatParticipantsCommandBuilder;
         protected readonly IChatCommandSender ChatCommandSender;
 
-        public ChatParticipantsService(TDotChatConfiguration chatServicesConfiguration, IChatParticipantsPermissionValidator<TParticipationCandidateCollection, TParticipationCandidate> chatParticipantsPermissionValidator, IChatParticipantsCommandBuilder<TParticipationCandidateCollection, TParticipationCandidate> chatParticipantsCommandBuilder, IChatCommandSender chatCommandSender) : base(chatServicesConfiguration)
+        public ChatParticipantsService(IChatServicesConfiguration chatServicesConfiguration, IChatParticipantsPermissionValidator chatParticipantsPermissionValidator, IChatParticipantsCommandBuilder chatParticipantsCommandBuilder, IChatCommandSender chatCommandSender) : base(chatServicesConfiguration)
         {
             ChatParticipantsPermissionValidator = chatParticipantsPermissionValidator;
             ChatParticipantsCommandBuilder = chatParticipantsCommandBuilder;
@@ -73,8 +70,7 @@
             await ChatCommandSender.Send(command).ConfigureAwait(false);
         }
 
-        public virtual async Task Append(Guid currentUserId, Guid chatId, TParticipationCandidateCollection addCandidates,
-            TParticipationCandidateCollection inviteCandidates)
+        public virtual async Task Append(Guid currentUserId, Guid chatId, IReadOnlyCollection<IParticipationCandidate> addCandidates, IReadOnlyCollection<IParticipationCandidate> inviteCandidates)
         {
             await ChatParticipantsPermissionValidator.ValidateAppend(currentUserId, chatId, addCandidates, inviteCandidates, ServiceName)
                 .ConfigureAwait(false);
