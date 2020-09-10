@@ -4,14 +4,13 @@
     using Chats;
     using K1vs.DotChat.Participants;
 
-    public class ChatParticipantBlockedEvent<TChatParticipant>: Event, IChatParticipantBlockedEvent<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public class ChatParticipantBlockedEvent: Event, IChatParticipantBlockedEvent
     {
         public ChatParticipantBlockedEvent()
         {
         }
 
-        public ChatParticipantBlockedEvent(Guid initiatorUserId, Guid chatId, TChatParticipant participant, ChatParticipantStatus? previousStatus) : base(initiatorUserId)
+        public ChatParticipantBlockedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant participant, ChatParticipantStatus? previousStatus) : base(initiatorUserId)
         {
             ChatId = chatId;
             Participant = participant;
@@ -19,7 +18,7 @@
         }
 
         public Guid ChatId { get; set; }
-        public TChatParticipant Participant { get; set; }
+        public IChatParticipant Participant { get; set; }
         public ChatParticipantStatus? PreviousStatus { get; set; }
     }
 }

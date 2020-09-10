@@ -18,7 +18,7 @@
         {
             ChatId = chatId;
             Index = index;
-            Force = Force;
+            Force = force;
         }
 
         public Guid ChatId { get; set; }

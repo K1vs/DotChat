@@ -7,25 +7,13 @@
     using DotChat.Messages.Typed;
     using DotChat.Participants;
 
-    public class EditChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>: Command,
-        IEditChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> 
-        where TChatInfo : IChatInfo
-        where TChatUser : IChatUser
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
+    public class EditChatMessageCommand: Command, IEditChatMessageCommand
     {
         public EditChatMessageCommand()
         {
         }
 
-        public EditChatMessageCommand(Guid initiatorUserId, Guid chatId, Guid messageId, TChatMessageInfo messageInfo, Guid archivedMessageId) : base(initiatorUserId)
+        public EditChatMessageCommand(Guid initiatorUserId, Guid chatId, Guid messageId, IChatMessageInfo messageInfo, Guid archivedMessageId) : base(initiatorUserId)
         {
             ChatId = chatId;
             MessageId = messageId;
@@ -35,7 +23,7 @@
 
         public Guid ChatId { get; set; }
         public Guid MessageId { get; set; }
-        public TChatMessageInfo MessageInfo { get; set; }
+        public IChatMessageInfo MessageInfo { get; set; }
         public Guid ArchivedMessageId { get; set; }
     }
 }

@@ -5,16 +5,13 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public class AddChatCommand<TChatInfo, TParticipationCandidateCollection, TParticipationCandidate> : Command, IAddChatCommand<TChatInfo, TParticipationCandidateCollection, TParticipationCandidate>
-        where TChatInfo: IChatInfo
-        where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
-        where TParticipationCandidate : IParticipationCandidate
+    public class AddChatCommand: Command, IAddChatCommand
     {
         public AddChatCommand()
         {
         }
 
-        public AddChatCommand(Guid initiatorUserId, Guid chatId, TChatInfo chatInfo, TParticipationCandidateCollection add, TParticipationCandidateCollection invite) : base(initiatorUserId)
+        public AddChatCommand(Guid initiatorUserId, Guid chatId, IChatInfo chatInfo, IReadOnlyCollection<IParticipationCandidate> add, IReadOnlyCollection<IParticipationCandidate> invite) : base(initiatorUserId)
         {
             ChatId = chatId;
             ChatInfo = chatInfo;
@@ -23,8 +20,11 @@
         }
 
         public Guid ChatId { get; set; }
-        public TChatInfo ChatInfo { get; set; }
-        public TParticipationCandidateCollection ToAdd { get; set; }
-        public TParticipationCandidateCollection ToInvite { get; set; }
+
+        public IChatInfo ChatInfo { get; set; }
+
+        public IReadOnlyCollection<IParticipationCandidate> ToAdd { get; set; }
+
+        public IReadOnlyCollection<IParticipationCandidate> ToInvite { get; set; }
     }
 }

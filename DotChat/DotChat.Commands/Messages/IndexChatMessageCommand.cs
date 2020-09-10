@@ -7,25 +7,13 @@
     using DotChat.Messages.Typed;
     using DotChat.Participants;
 
-    public class IndexChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>: Command,
-        IIndexChatMessageCommand<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatInfo : IChatInfo
-        where TChatUser : IChatUser
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
+    public class IndexChatMessageCommand: Command, IIndexChatMessageCommand
     {
         public IndexChatMessageCommand()
         {
         }
 
-        public IndexChatMessageCommand(Guid initiatorUserId, Guid chatId, Guid messageId, bool isSystem, TChatMessageInfo messageInfo) : base(initiatorUserId)
+        public IndexChatMessageCommand(Guid initiatorUserId, Guid chatId, Guid messageId, bool isSystem, IChatMessageInfo messageInfo) : base(initiatorUserId)
         {
             MessageId = messageId;
             ChatId = chatId;
@@ -37,7 +25,7 @@
 
         public Guid ChatId { get; set; }
 
-        public TChatMessageInfo MessageInfo { get; set; }
+        public IChatMessageInfo MessageInfo { get; set; }
 
         public bool IsSystem { get; set; }
     }

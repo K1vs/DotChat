@@ -8,20 +8,19 @@
     using Chats;
     using DotChat.Participants;
 
-    public class ChatParticipantTypeChangedEvent<TChatParticipant>: Event, IChatParticipantTypeChangedEvent<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public class ChatParticipantTypeChangedEvent: Event, IChatParticipantTypeChangedEvent
     {
         public ChatParticipantTypeChangedEvent()
         {
         }
 
-        public ChatParticipantTypeChangedEvent(Guid initiatorUserId, Guid chatId, TChatParticipant participant) : base(initiatorUserId)
+        public ChatParticipantTypeChangedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant participant) : base(initiatorUserId)
         {
             ChatId = chatId;
             Participant = participant;
         }
 
         public Guid ChatId { get; set; }
-        public TChatParticipant Participant { get; set; }
+        public IChatParticipant Participant { get; set; }
     }
 }
