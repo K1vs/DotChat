@@ -4,20 +4,19 @@
     using DotChat.Chats;
     using Events;
 
-    public class ChatInfoEditedNotification<TChatInfo>: Notification, IChatInfoEditedNotification<TChatInfo>
-        where TChatInfo : IChatInfo
+    public class ChatInfoEditedNotification: Notification, IChatInfoEditedNotification
     {
         public ChatInfoEditedNotification()
         {
         }
 
-        public ChatInfoEditedNotification(Guid initiatorUserId, Guid chatId, TChatInfo chatInfo) : base(initiatorUserId)
+        public ChatInfoEditedNotification(Guid initiatorUserId, Guid chatId, IChatInfo chatInfo) : base(initiatorUserId)
         {
             ChatId = chatId;
             ChatInfo = chatInfo;
         }
 
         public Guid ChatId { get; set; }
-        public TChatInfo ChatInfo { get; set; }
+        public IChatInfo ChatInfo { get; set; }
     }
 }

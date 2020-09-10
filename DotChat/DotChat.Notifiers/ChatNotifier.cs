@@ -12,34 +12,16 @@
     using NotificationBuilders;
     using Participants;
 
-    public class ChatNotifier<TChatNotificationsConfiguration, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> :
-        NotifierBase<TChatNotificationsConfiguration>,
-        IChatNotifier<TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatNotificationsConfiguration : IChatNotificationsConfiguration
-        where TPersonalizedChat : IPersonalizedChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChat : IChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatInfo : IChatInfo
-        where TChatParticipantCollection : IReadOnlyCollection<TChatParticipant>
-        where TChatParticipant : IChatParticipant
-        where TChatUser : IChatUser
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
+    public class ChatNotifier: NotifierBase, IChatNotifier
     {
-        protected readonly IChatsNotificationBuilder<TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> ChatsNotificationBuilder;
+        protected readonly IChatsNotificationBuilder ChatsNotificationBuilder;
 
-        public ChatNotifier(TChatNotificationsConfiguration chatNotificationsConfiguration, INotificationSender notificationSender, INotificationRouteService notificationRouteService, IChatsNotificationBuilder<TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> chatsNotificationBuilder) : base(chatNotificationsConfiguration, notificationSender, notificationRouteService)
+        public ChatNotifier(IChatNotificationsConfiguration chatNotificationsConfiguration, INotificationSender notificationSender, INotificationRouteService notificationRouteService, IChatsNotificationBuilder chatsNotificationBuilder) : base(chatNotificationsConfiguration, notificationSender, notificationRouteService)
         {
             ChatsNotificationBuilder = chatsNotificationBuilder;
         }
 
-        public virtual async Task Handle(IChatAddedEvent<TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatAddedEvent @event, IChatBusContext chatBusContext)
         {
             var userIds = @event.Chat.Participants.Where(r => r.ChatParticipantStatus == ChatParticipantStatus.Active).Select(r => r.UserId);
             await NotificationRouteService.AddUsersToChat(userIds, @event.Chat.ChatId);
@@ -47,13 +29,13 @@
             await Notify(@event.Chat.ChatId, notification);
         }
 
-        public virtual async Task Handle(IChatInfoEditedEvent<TChatInfo> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatInfoEditedEvent @event, IChatBusContext chatBusContext)
         {
             var notification = ChatsNotificationBuilder.BuildChatInfoEditedNotification(@event);
             await Notify(@event.ChatId, notification);
         }
 
-        public virtual async Task Handle(IChatRemovedEvent<TChatInfo> @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatRemovedEvent @event, IChatBusContext chatBusContext)
         {
             var notification = ChatsNotificationBuilder.BuildChatRemovedNotification(@event);
             await Notify(@event.ChatId, notification);

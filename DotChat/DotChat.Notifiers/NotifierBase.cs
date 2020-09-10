@@ -5,14 +5,13 @@
     using Configuration;
     using Notifications;
 
-    public class NotifierBase<TChatNotificationsConfiguration>
-        where TChatNotificationsConfiguration : IChatNotificationsConfiguration
+    public class NotifierBase
     {
-        protected readonly TChatNotificationsConfiguration ChatNotificationsConfiguration;
+        protected readonly IChatNotificationsConfiguration ChatNotificationsConfiguration;
         protected readonly INotificationSender NotificationSender;
         protected readonly INotificationRouteService NotificationRouteService;
 
-        public NotifierBase(TChatNotificationsConfiguration chatNotificationsConfiguration, INotificationSender notificationSender, INotificationRouteService notificationRouteService)
+        public NotifierBase(IChatNotificationsConfiguration chatNotificationsConfiguration, INotificationSender notificationSender, INotificationRouteService notificationRouteService)
         {
             ChatNotificationsConfiguration = chatNotificationsConfiguration;
             NotificationSender = notificationSender;

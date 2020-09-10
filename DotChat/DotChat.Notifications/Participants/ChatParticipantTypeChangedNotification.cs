@@ -7,20 +7,19 @@
     using System.Threading.Tasks;
     using DotChat.Participants;
 
-    public class ChatParticipantTypeChangedNotification<TChatParticipant> : Notification, IChatParticipantTypeChangedNotification<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public class ChatParticipantTypeChangedNotification : Notification, IChatParticipantTypeChangedNotification
     {
         public ChatParticipantTypeChangedNotification()
         {
         }
 
-        public ChatParticipantTypeChangedNotification(Guid initiatorUserId, Guid chatId, TChatParticipant participant) : base(initiatorUserId)
+        public ChatParticipantTypeChangedNotification(Guid initiatorUserId, Guid chatId, IChatParticipant participant) : base(initiatorUserId)
         {
             ChatId = chatId;
             Participant = participant;
         }
 
         public Guid ChatId { get; set; }
-        public TChatParticipant Participant { get; set; }
+        public IChatParticipant Participant { get; set; }
     }
 }

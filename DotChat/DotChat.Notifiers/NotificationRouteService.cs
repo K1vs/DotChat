@@ -10,16 +10,14 @@
     using Participants;
     using Stores.Participants;
 
-    public class NotificationRouteService<TChatNotificationsConfiguration, TChatParticipant> : INotificationRouteService, IDisposable
-        where TChatNotificationsConfiguration : IChatNotificationsConfiguration
-        where TChatParticipant : IChatParticipant
+    public class NotificationRouteService: INotificationRouteService, IDisposable
     {
         protected readonly TimeSpan CleanUpInterval;
         protected readonly ConcurrentDictionary<Guid, Task<ConcurrentDictionary<Guid, bool>>> Chats = new ConcurrentDictionary<Guid, Task<ConcurrentDictionary<Guid, bool>>>();
-        protected readonly IReadChatParticipantStore<TChatParticipant> ReadChatParticipantStore;
+        protected readonly IReadChatParticipantStore ReadChatParticipantStore;
         protected readonly Timer CleanupTimer;
 
-        public NotificationRouteService(IReadChatParticipantStore<TChatParticipant> readChatParticipantStore, TChatNotificationsConfiguration notificationsConfiguration)
+        public NotificationRouteService(IReadChatParticipantStore readChatParticipantStore, IChatNotificationsConfiguration notificationsConfiguration)
         {
             ReadChatParticipantStore = readChatParticipantStore;
             CleanUpInterval = notificationsConfiguration.CleanUpInterval;

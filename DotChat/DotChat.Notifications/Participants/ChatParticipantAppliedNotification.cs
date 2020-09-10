@@ -5,20 +5,19 @@
     using DotChat.Participants;
     using Events;
 
-    public class ChatParticipantAppliedNotification<TChatParticipant>: Notification, IChatParticipantAppliedNotification<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public class ChatParticipantAppliedNotification: Notification, IChatParticipantAppliedNotification
     {
         public ChatParticipantAppliedNotification()
         {
         }
 
-        public ChatParticipantAppliedNotification(Guid initiatorUserId, Guid chatId, TChatParticipant participant) : base(initiatorUserId)
+        public ChatParticipantAppliedNotification(Guid initiatorUserId, Guid chatId, IChatParticipant participant) : base(initiatorUserId)
         {
             ChatId = chatId;
             Participant = participant;
         }
 
         public Guid ChatId { get; set; }
-        public TChatParticipant Participant { get; set; }
+        public IChatParticipant Participant { get; set; }
     }
 }
