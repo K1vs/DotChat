@@ -1,8 +1,7 @@
 ﻿namespace K1vs.DotChat.Chats
 {
-    public interface IHasChatInfo<out TChatInfo>
-        where TChatInfo : IChatInfo
+    public interface IHasChatInfo
     {
-        TChatInfo ChatInfo { get; }
+        IChatInfo ChatInfo { get; }
     }
 }

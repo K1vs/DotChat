@@ -3,9 +3,7 @@
     using DotChat.Chats;
     using Events;
 
-    public interface IChatInfoEditedNotification<out TChatInfo> 
-        : IChatsNotification, IChatRelated, IHasChatInfo<TChatInfo>
-        where TChatInfo : IChatInfo
+    public interface IChatInfoEditedNotification: IChatsNotification, IChatRelated, IHasChatInfo
     {
     }
 }

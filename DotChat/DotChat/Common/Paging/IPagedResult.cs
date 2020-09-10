@@ -2,10 +2,9 @@
 {
     using System.Collections.Generic;
 
-    public interface IPagedResult<out TResultCollection, out TResult>
-        where TResultCollection: IReadOnlyCollection<TResult>
+    public interface IPagedResult<out TResult>
     {
-        TResultCollection Items { get; }
+        IReadOnlyCollection<TResult> Items { get; }
         string Previous { get; }
         string Next { get; }
     }

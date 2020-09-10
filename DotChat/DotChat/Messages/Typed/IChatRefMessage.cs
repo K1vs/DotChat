@@ -8,9 +8,8 @@
     using Chats;
     using Common;
 
-    public interface IChatRefMessage<out TChatInfo>: ICustomizable, IChatRelated
-        where TChatInfo: IChatInfo
+    public interface IChatRefMessage: ICustomizable, IChatRelated
     {
-        TChatInfo ChatInfo { get; }
+        IChatInfo ChatInfo { get; }
     }
 }

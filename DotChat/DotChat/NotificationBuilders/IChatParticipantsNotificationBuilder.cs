@@ -6,17 +6,14 @@
     using Notifications.Participants;
     using Participants;
 
-    public interface IChatParticipantsNotificationBuilder<TParticipationResultCollection, TParticipationResult, TChatParticipant>
-        where TParticipationResultCollection : IReadOnlyCollection<TParticipationResult>
-        where TParticipationResult : IParticipationResult<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public interface IChatParticipantsNotificationBuilder
     {
-        IChatParticipantAddedNotification<TChatParticipant> BuildChatParticipantAddedNotification(IChatParticipantAddedEvent<TChatParticipant> @event);
-        IChatParticipantAppliedNotification<TChatParticipant> BuildChatParticipantAppliedNotification(IChatParticipantAppliedEvent<TChatParticipant> @event);
-        IChatParticipantInvitedNotification<TChatParticipant> BuildChatParticipantInvitedNotification(IChatParticipantInvitedEvent<TChatParticipant> @event);
-        IChatParticipantRemovedNotification<TChatParticipant> BuildChatParticipantRemovedNotification(IChatParticipantRemovedEvent<TChatParticipant> @event);
-        IChatParticipantBlockedNotification<TChatParticipant> BuildChatParticipantBlockedNotification(IChatParticipantBlockedEvent<TChatParticipant> @event);
-        IChatParticipantsAppendedNotification<TParticipationResultCollection, TParticipationResult, TChatParticipant> BuildChatParticipantsAppendedNotification(IChatParticipantsAppendedEvent<TParticipationResultCollection, TParticipationResult, TChatParticipant> @event);
-        IChatParticipantTypeChangedNotification<TChatParticipant> BuildChatParticipantTypeChangedNotification(IChatParticipantTypeChangedEvent<TChatParticipant> @event);
+        IChatParticipantAddedNotification BuildChatParticipantAddedNotification(IChatParticipantAddedEvent @event);
+        IChatParticipantAppliedNotification BuildChatParticipantAppliedNotification(IChatParticipantAppliedEvent @event);
+        IChatParticipantInvitedNotification BuildChatParticipantInvitedNotification(IChatParticipantInvitedEvent @event);
+        IChatParticipantRemovedNotification BuildChatParticipantRemovedNotification(IChatParticipantRemovedEvent @event);
+        IChatParticipantBlockedNotification BuildChatParticipantBlockedNotification(IChatParticipantBlockedEvent @event);
+        IChatParticipantsAppendedNotification BuildChatParticipantsAppendedNotification(IChatParticipantsAppendedEvent @event);
+        IChatParticipantTypeChangedNotification BuildChatParticipantTypeChangedNotification(IChatParticipantTypeChangedEvent @event);
     }
 }

@@ -11,29 +11,13 @@
     using Messages.Typed;
     using Participants;
 
-    public interface IChatMessagesService<in TChatInfo, in TChatUser, in TChatMessageCollection, in TChatMessage, in TChatMessageInfo, in TTextMessage, in TQuoteMessage, in TMessageAttachmentCollection, in TMessageAttachment, in TChatRefMessageCollection, in TChatRefMessage, in TContactMessageCollection, in TContactMessage, in TMessageFilter, TPagedResult, in TPagingOptions>
-        where TChatInfo : IChatInfo
-        where TChatUser : IChatUser
-        where TChatMessageCollection: IReadOnlyCollection<TChatMessage>
-        where TChatMessage : IChatMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
-        where TMessageFilter : IMessageFilter
-        where TPagedResult : IPagedResult<TChatMessageCollection, TChatMessage>
-        where TPagingOptions : IPagingOptions
+    public interface IChatMessagesService
     {
-        Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions pagingOptions = default);
-        Task<TPagedResult> GetPage(Guid currentUserId, Guid chatId, TPagingOptions pagingOptions = default);
+        Task<IPagedResult<IChatMessage>> GetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<IMessageFilter> filters, IPagingOptions pagingOptions = default);
+        Task<IPagedResult<IChatMessage>> GetPage(Guid currentUserId, Guid chatId, IPagingOptions pagingOptions = default);
         Task Read(Guid currentUserId, Guid chatId, long index, bool force);
-        Task<Guid> Add(Guid currentUserId, Guid chatId, Guid? messageId, TChatMessageInfo messageInfo);
-        Task<Guid> Edit(Guid currentUserId, Guid chatId, Guid messageId, TChatMessageInfo messageInfo, Guid? archivedMessageId);
+        Task<Guid> Add(Guid currentUserId, Guid chatId, Guid? messageId, IChatMessageInfo messageInfo);
+        Task<Guid> Edit(Guid currentUserId, Guid chatId, Guid messageId, IChatMessageInfo messageInfo, Guid? archivedMessageId);
         Task Remove(Guid currentUserId, Guid chatId, Guid messageId);
     }
 }

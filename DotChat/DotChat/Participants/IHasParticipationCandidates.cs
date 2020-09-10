@@ -2,11 +2,9 @@
 {
     using System.Collections.Generic;
 
-    public interface IHasParticipationCandidates<out TParticipationCandidateCollection, out TParticipationCandidate>
-        where TParticipationCandidateCollection: IReadOnlyCollection<TParticipationCandidate>
-        where TParticipationCandidate: IParticipationCandidate
+    public interface IHasParticipationCandidates
     {
-        TParticipationCandidateCollection ToAdd { get; }
-        TParticipationCandidateCollection ToInvite { get; }
+        IReadOnlyCollection<IParticipationCandidate> ToAdd { get; }
+        IReadOnlyCollection<IParticipationCandidate> ToInvite { get; }
     }
 }

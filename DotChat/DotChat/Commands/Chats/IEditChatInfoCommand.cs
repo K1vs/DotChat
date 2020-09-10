@@ -2,8 +2,7 @@
 {
     using DotChat.Chats;
 
-    public interface IEditChatInfoCommand<out TChatInfo> : ICommand, IChatRelated, IHasChatInfo<TChatInfo>
-        where TChatInfo : IChatInfo
+    public interface IEditChatInfoCommand: ICommand, IChatRelated, IHasChatInfo
     {
     }
 }

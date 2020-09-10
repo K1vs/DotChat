@@ -7,11 +7,10 @@
     using System.Threading.Tasks;
     using DotChat.Participants;
 
-    public interface IReadChatParticipantStore<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public interface IReadChatParticipantStore
     {
         Task<IReadOnlyCollection<Guid>> RetrieveIds(Guid chatId);
-        Task<IReadOnlyCollection<TChatParticipant>> RetrieveList(Guid chatId, IEnumerable<Guid> participantsIds);
-        Task<TChatParticipant> Retrieve(Guid chatId, Guid userId);
+        Task<IReadOnlyCollection<IChatParticipant>> RetrieveList(Guid chatId, IEnumerable<Guid> participantsIds);
+        Task<IChatParticipant> Retrieve(Guid chatId, Guid userId);
     }
 }

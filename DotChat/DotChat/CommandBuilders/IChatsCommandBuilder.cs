@@ -6,14 +6,10 @@
     using Commands.Chats;
     using Participants;
 
-    public interface IChatsCommandBuilder<TChatInfo, in TParticipationCandidates, out TParticipationCandidateCollection, out TParticipationCandidate>
-        where TChatInfo : IChatInfo
-        where TParticipationCandidates: IHasParticipationCandidates<TParticipationCandidateCollection, TParticipationCandidate>
-        where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
-        where TParticipationCandidate : IParticipationCandidate
+    public interface IChatsCommandBuilder
     {
-        IAddChatCommand<TChatInfo, TParticipationCandidateCollection, TParticipationCandidate> BuildAddChatCommand(Guid currentUserId, Guid? chatId, TChatInfo chatInfo, TParticipationCandidates participationCandidates);
-        IEditChatInfoCommand<TChatInfo> BuildEditChatCommand(Guid currentUserId, Guid chatId, TChatInfo chatInfo);
+        IAddChatCommand BuildAddChatCommand(Guid currentUserId, Guid? chatId, IChatInfo chatInfo, IHasParticipationCandidates participationCandidates);
+        IEditChatInfoCommand BuildEditChatCommand(Guid currentUserId, Guid chatId, IChatInfo chatInfo);
         IRemoveChatCommand BuildRemoveChatCommand(Guid currentUserId, Guid chatId);
     }
 }

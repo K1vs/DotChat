@@ -9,12 +9,9 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public interface IChatParticipantsAppendedEvent<out TParticipationResultCollection, out TParticipationResult, out TChatParticipant> : IChatParticipantEvent, IChatRelated
-        where TParticipationResultCollection: IReadOnlyCollection<TParticipationResult>
-        where TParticipationResult : IParticipationResult<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public interface IChatParticipantsAppendedEvent: IChatParticipantEvent, IChatRelated
     {
-        TParticipationResultCollection Added { get; }
-        TParticipationResultCollection Invited { get; }
+        IReadOnlyCollection<IParticipationResult> Added { get; }
+        IReadOnlyCollection<IParticipationResult> Invited { get; }
     }
 }

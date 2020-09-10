@@ -5,18 +5,15 @@
     using Events.Participants;
     using Participants;
 
-    public interface IChatParticipantsEventBuilder<out TParticipationResultCollection, TParticipationResult, TChatParticipant>
-        where TParticipationResultCollection: IReadOnlyCollection<TParticipationResult>
-        where TParticipationResult: IParticipationResult<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public interface IChatParticipantsEventBuilder
     {
-        TParticipationResult BuildParticipationResult(TChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
-        IChatParticipantAddedEvent<TChatParticipant> BuildChatParticipantAddedEvent(Guid initiatorUserId, Guid chatId, TChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
-        IChatParticipantAppliedEvent<TChatParticipant> BuildChatParticipantAppliedEvent(Guid initiatorUserId, Guid chatId, TChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
-        IChatParticipantInvitedEvent<TChatParticipant> BuildChatParticipantInvitedEvent(Guid initiatorUserId, Guid chatId, TChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
-        IChatParticipantRemovedEvent<TChatParticipant> BuildChatParticipantRemovedEvent(Guid initiatorUserId, Guid chatId, TChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
-        IChatParticipantBlockedEvent<TChatParticipant> BuildChatParticipantBlockedEvent(Guid initiatorUserId, Guid chatId, TChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
-        IChatParticipantTypeChangedEvent<TChatParticipant> BuildChatParticipantTypeChangedEvent(Guid initiatorUserId, Guid chatId, TChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
-        IChatParticipantsAppendedEvent<TParticipationResultCollection, TParticipationResult, TChatParticipant> BuildChatParticipantsAppendedEvent(Guid initiatorUserId, Guid chatId, IReadOnlyCollection<TParticipationResult> added, IReadOnlyCollection<TParticipationResult> invited);
+        IParticipationResult BuildParticipationResult(IChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
+        IChatParticipantAddedEvent BuildChatParticipantAddedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
+        IChatParticipantAppliedEvent BuildChatParticipantAppliedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
+        IChatParticipantInvitedEvent BuildChatParticipantInvitedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
+        IChatParticipantRemovedEvent BuildChatParticipantRemovedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
+        IChatParticipantBlockedEvent BuildChatParticipantBlockedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
+        IChatParticipantTypeChangedEvent BuildChatParticipantTypeChangedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
+        IChatParticipantsAppendedEvent BuildChatParticipantsAppendedEvent(Guid initiatorUserId, Guid chatId, IReadOnlyCollection<IParticipationResult> added, IReadOnlyCollection<IParticipationResult> invited);
     }
 }

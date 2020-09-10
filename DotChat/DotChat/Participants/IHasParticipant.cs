@@ -6,9 +6,8 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public interface IHasParticipant<out TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public interface IHasParticipant
     {
-        TChatParticipant Participant { get; }
+        IChatParticipant Participant { get; }
     }
 }

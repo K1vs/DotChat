@@ -5,13 +5,11 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IChatParticipantStore<TChatParticipant, in TChatUser> : IReadChatParticipantStore<TChatParticipant>
-        where TChatUser : IChatUser
-        where TChatParticipant : IChatParticipant
+    public interface IChatParticipantStore: IReadChatParticipantStore
     {
-        Task<TChatParticipant> Set(Guid chatId, TChatUser chatUser, ChatParticipantType participantType, ChatParticipantStatus participantStatus, Guid setterId);
-        Task<TChatParticipant> Set(Guid chatId, TChatUser chatUser, ChatParticipantStatus participantStatus, Guid setterId);
-        Task<IReadOnlyCollection<TChatParticipant>> Set(Guid chatId, IEnumerable<TChatUser> chatUsers, ChatParticipantType participantType, ChatParticipantStatus participantStatus, Guid setterId);
-        Task<TChatParticipant> ChangeType(Guid chatId, Guid userId, ChatParticipantType participantType, Guid setterId);
+        Task<IChatParticipant> Set(Guid chatId, IChatUser chatUser, ChatParticipantType participantType, ChatParticipantStatus participantStatus, Guid setterId);
+        Task<IChatParticipant> Set(Guid chatId, IChatUser chatUser, ChatParticipantStatus participantStatus, Guid setterId);
+        Task<IReadOnlyCollection<IChatParticipant>> Set(Guid chatId, IEnumerable<IChatUser> chatUsers, ChatParticipantType participantType, ChatParticipantStatus participantStatus, Guid setterId);
+        Task<IChatParticipant> ChangeType(Guid chatId, Guid userId, ChatParticipantType participantType, Guid setterId);
     }
 }

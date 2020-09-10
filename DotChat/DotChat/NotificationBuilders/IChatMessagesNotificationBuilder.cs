@@ -9,26 +9,11 @@
     using Notifications.Messages;
     using Participants;
 
-    public interface IChatMessagesNotificationBuilder<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatInfo : IChatInfo
-        where TChatUser : IChatUser
-        where TChatMessage : IChatMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
+    public interface IChatMessagesNotificationBuilder
     {
-        IChatMessageAddedNotification<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> BuildChatMessageAddedNotification(
-            IChatMessageAddedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event);
-        IChatMessageEditedNotification<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> BuildChatMessageEditedNotification(
-            IChatMessageEditedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event);
-        IChatMessageRemovedNotification<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> BuildChatMessageRemovedNotification(
-            IChatMessageRemovedEvent<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage> @event);
+        IChatMessageAddedNotification BuildChatMessageAddedNotification(IChatMessageAddedEvent @event);
+        IChatMessageEditedNotification BuildChatMessageEditedNotification(IChatMessageEditedEvent @event);
+        IChatMessageRemovedNotification BuildChatMessageRemovedNotification(IChatMessageRemovedEvent @event);
         IChatMessagesReadNotification BuildChatMessagesReadNotification(IChatMessagesReadEvent @event);
     }
 }

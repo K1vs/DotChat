@@ -5,17 +5,14 @@
     using Handlers;
     using Participants;
 
-    public interface IChatParticipantNotifier<in TParticipationResultCollection, in TParticipationResult, in TChatParticipant> :
-        IHandleEvent<IChatParticipantAddedEvent<TChatParticipant>>,
-        IHandleEvent<IChatParticipantInvitedEvent<TChatParticipant>>,
-        IHandleEvent<IChatParticipantAppliedEvent<TChatParticipant>>,
-        IHandleEvent<IChatParticipantRemovedEvent<TChatParticipant>>,
-        IHandleEvent<IChatParticipantBlockedEvent<TChatParticipant>>,
-        IHandleEvent<IChatParticipantsAppendedEvent<TParticipationResultCollection, TParticipationResult, TChatParticipant>>,
-        IHandleEvent<IChatParticipantTypeChangedEvent<TChatParticipant>> 
-        where TParticipationResultCollection : IReadOnlyCollection<TParticipationResult>
-        where TParticipationResult : IParticipationResult<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public interface IChatParticipantNotifier:
+        IHandleEvent<IChatParticipantAddedEvent>,
+        IHandleEvent<IChatParticipantInvitedEvent>,
+        IHandleEvent<IChatParticipantAppliedEvent>,
+        IHandleEvent<IChatParticipantRemovedEvent>,
+        IHandleEvent<IChatParticipantBlockedEvent>,
+        IHandleEvent<IChatParticipantsAppendedEvent>,
+        IHandleEvent<IChatParticipantTypeChangedEvent> 
     {
     }
 }

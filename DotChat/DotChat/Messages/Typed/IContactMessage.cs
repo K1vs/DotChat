@@ -3,9 +3,8 @@
     using Common;
     using K1vs.DotChat.Participants;
 
-    public interface IContactMessage<out TChatUser>: ICustomizable
-        where TChatUser: IChatUser
+    public interface IContactMessage: ICustomizable
     {
-        TChatUser Contact { get; }
+        IChatUser Contact { get; }
     }
 }

@@ -7,8 +7,7 @@
     using System.Threading.Tasks;
     using Events.Participants;
 
-    public interface IParticipationResult<out TChatParticipant>: IHasParticipant<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public interface IParticipationResult: IHasParticipant
     {
         ChatParticipantStatus? PreviousStatus { get; }
     }

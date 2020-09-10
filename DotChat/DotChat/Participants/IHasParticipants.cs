@@ -6,10 +6,8 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public interface IHasParticipants<out TChatParticipantCollection, out TChatParticipant>
-        where TChatParticipantCollection : IReadOnlyCollection<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public interface IHasParticipants
     {
-        TChatParticipantCollection Participants { get; }
+        IEnumerable<IChatParticipant> Participants { get; }
     }
 }

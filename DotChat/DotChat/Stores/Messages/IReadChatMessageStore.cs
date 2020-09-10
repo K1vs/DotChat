@@ -11,26 +11,10 @@
     using DotChat.Messages.Typed;
     using DotChat.Participants;
 
-    public interface IReadChatMessageStore<in TChatInfo, in TChatUser, TChatMessageCollection, TChatMessage, in TChatMessageInfo, in TTextMessage, in TQuoteMessage, in TMessageAttachmentCollection, in TMessageAttachment, in TChatRefMessageCollection, in TChatRefMessage, in TContactMessageCollection, in TContactMessage, in TMessageFilter, TPagedResult, in TPagingOptions>
-        where TChatInfo : IChatInfo
-        where TChatUser : IChatUser
-        where TChatMessageCollection : IReadOnlyCollection<TChatMessage>
-        where TChatMessage : IChatMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
-        where TMessageFilter : IMessageFilter
-        where TPagedResult : IPagedResult<TChatMessageCollection, TChatMessage>
-        where TPagingOptions : IPagingOptions
+    public interface IReadChatMessageStore
     {
-        Task<TPagedResult> Retrieve(Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions options);
-        Task<TPagedResult> Retrieve(Guid chatId, TPagingOptions options);
-        Task<TChatMessage> Retrieve(Guid chatId, Guid messageId);
+        Task<IPagedResult<IChatMessage>> Retrieve(Guid chatId, IReadOnlyCollection<IMessageFilter> filters, IPagingOptions options);
+        Task<IPagedResult<IChatMessage>> Retrieve(Guid chatId, IPagingOptions options);
+        Task<IChatMessage> Retrieve(Guid chatId, Guid messageId);
     }
 }

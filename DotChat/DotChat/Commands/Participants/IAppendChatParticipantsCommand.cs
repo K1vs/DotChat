@@ -8,9 +8,7 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public interface IAppendChatParticipantsCommand<out TParticipationCandidateCollection, out TParticipationCandidate> : ICommand, IChatRelated, IHasParticipationCandidates<TParticipationCandidateCollection, TParticipationCandidate>
-        where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
-        where TParticipationCandidate : IParticipationCandidate
+    public interface IAppendChatParticipantsCommand: ICommand, IChatRelated, IHasParticipationCandidates
     {
     }
 }

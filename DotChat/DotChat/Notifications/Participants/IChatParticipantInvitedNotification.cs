@@ -4,8 +4,7 @@
     using DotChat.Participants;
     using Events;
 
-    public interface IChatParticipantInvitedNotification<out TChatParticipant> : IChatParticipantsNotification, IChatRelated, IHasParticipant<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public interface IChatParticipantInvitedNotification: IChatParticipantsNotification, IChatRelated, IHasParticipant
     {
     }
 }

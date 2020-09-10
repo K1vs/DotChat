@@ -3,12 +3,10 @@
     using System.Collections.Generic;
     using Chats;
 
-    public interface IChatFilter<out TChatUserFilter, out TMessageFilter>
-        where TChatUserFilter: IChatUserFilter
-        where TMessageFilter: IMessageFilter
+    public interface IChatFilter
     {
-        IReadOnlyCollection<TChatUserFilter> UserFilters { get; }
-        IReadOnlyCollection<TMessageFilter> MessageFilters { get;  }
+        IReadOnlyCollection<IChatUserFilter> UserFilters { get; }
+        IReadOnlyCollection<IMessageFilter> MessageFilters { get;  }
         string Search { get; }
         bool SearchInDescription { get; }
     }

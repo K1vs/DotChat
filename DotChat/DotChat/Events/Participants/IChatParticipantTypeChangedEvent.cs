@@ -9,8 +9,7 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public interface IChatParticipantTypeChangedEvent<out TChatParticipant> : IChatParticipantEvent, IChatRelated, IHasParticipant<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public interface IChatParticipantTypeChangedEvent: IChatParticipantEvent, IChatRelated, IHasParticipant
     {
     }
 }

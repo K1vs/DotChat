@@ -5,16 +5,14 @@
     using Handlers;
     using Participants;
 
-    public interface IChatParticipantsWorker<in TParticipationCandidateCollection, in TParticipationCandidate> :
+    public interface IChatParticipantsWorker:
         IHandleCommand<IAddChatParticipantCommand>,
         IHandleCommand<IApplyToChatCommand>,
         IHandleCommand<IInviteChatParticipantCommand>,
         IHandleCommand<IRemoveChatParticipantCommand>,
         IHandleCommand<IBlockChatParticipantCommand>,
         IHandleCommand<IChangeChatParticipantTypeCommand>,
-        IHandleCommand<IAppendChatParticipantsCommand<TParticipationCandidateCollection, TParticipationCandidate>>
-        where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
-        where TParticipationCandidate : IParticipationCandidate
+        IHandleCommand<IAppendChatParticipantsCommand>
     {
     }
 }
