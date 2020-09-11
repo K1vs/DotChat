@@ -4,7 +4,7 @@
     using Chats;
     using DotChat.Chats;
 
-    public class ChatInfoEditedEvent<TChatInfo>: Event, IChatInfoEditedEvent
+    public class ChatInfoEditedEvent: Event, IChatInfoEditedEvent
     {
         public ChatInfoEditedEvent()
         {

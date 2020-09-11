@@ -429,10 +429,6 @@
     <Folder Include="Logs\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DotChat.Basic\DotChat.Basic.csproj">
-      <Project>{406835e3-eafd-40aa-a5bd-142eb94286b2}</Project>
-      <Name>DotChat.Basic</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\DotChat.Commands\DotChat.Commands.csproj">
       <Project>{88071eca-8a29-4952-91db-f833d869b77b}</Project>
       <Name>DotChat.Commands</Name>
@@ -452,10 +448,6 @@
     <ProjectReference Include="..\..\DotChat.Models\DotChat.Models.csproj">
       <Project>{4566dc55-99b2-4ae3-a554-2a929c4794c2}</Project>
       <Name>DotChat.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\DotChat.Modules\DotChat.Modules.csproj">
-      <Project>{659ccebb-e507-44db-9e42-e56d196d82bb}</Project>
-      <Name>DotChat.Modules</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\DotChat.Notifications\DotChat.Notifications.csproj">
       <Project>{5be540cc-599e-4777-b83f-dbb073193ecf}</Project>

@@ -61,10 +61,8 @@
     <ProjectReference Include="..\..\Demo\DotChat.Demo.Bus.InMemory\DotChat.Demo.Bus.InMemory.csproj" />
     <ProjectReference Include="..\..\Demo\DotChat.Demo.Others\DotChat.Demo.Others.csproj" />
     <ProjectReference Include="..\..\Demo\DotChat.Demo.Stores.InMemory\DotChat.Demo.Stores.InMemory.csproj" />
-    <ProjectReference Include="..\..\DotChat.Basic\DotChat.Basic.csproj" />
     <ProjectReference Include="..\..\DotChat.Common\DotChat.Common.csproj" />
     <ProjectReference Include="..\..\DotChat.Models\DotChat.Models.csproj" />
-    <ProjectReference Include="..\..\DotChat.Modules\DotChat.Modules.csproj" />
     <ProjectReference Include="..\..\DotChat.Notifications\DotChat.Notifications.csproj" />
     <ProjectReference Include="..\..\DotChat.Notifiers\DotChat.Notifiers.csproj" />
     <ProjectReference Include="..\..\DotChat.Workers\DotChat.Workers.csproj" />

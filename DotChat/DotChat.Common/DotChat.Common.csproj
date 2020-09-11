@@ -28,6 +28,10 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\DotChat.Commands\DotChat.Commands.csproj" />
+    <ProjectReference Include="..\DotChat.Events\DotChat.Events.csproj" />
+    <ProjectReference Include="..\DotChat.Models\DotChat.Models.csproj" />
+    <ProjectReference Include="..\DotChat.Notifications\DotChat.Notifications.csproj" />
     <ProjectReference Include="..\DotChat\DotChat.csproj" />
   </ItemGroup>
 

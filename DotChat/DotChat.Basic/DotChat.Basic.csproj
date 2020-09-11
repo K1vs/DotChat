@@ -32,7 +32,6 @@
     <ProjectReference Include="..\DotChat.Common\DotChat.Common.csproj" />
     <ProjectReference Include="..\DotChat.Events\DotChat.Events.csproj" />
     <ProjectReference Include="..\DotChat.Models\DotChat.Models.csproj" />
-    <ProjectReference Include="..\DotChat.Modules\DotChat.Modules.csproj" />
     <ProjectReference Include="..\DotChat.Notifications\DotChat.Notifications.csproj" />
     <ProjectReference Include="..\DotChat.Notifiers\DotChat.Notifiers.csproj" />
     <ProjectReference Include="..\DotChat.Security\DotChat.Security.csproj" />

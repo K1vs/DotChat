@@ -2,7 +2,7 @@
 {
     using DotChat.Participants;
 
-    public class ParticipationResult<TChatParticipant> : IParticipationResult
+    public class ParticipationResult: IParticipationResult
     {
         public ParticipationResult()
         {

@@ -13,7 +13,7 @@
         IChatParticipantInvitedEvent BuildChatParticipantInvitedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
         IChatParticipantRemovedEvent BuildChatParticipantRemovedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
         IChatParticipantBlockedEvent BuildChatParticipantBlockedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
-        IChatParticipantTypeChangedEvent BuildChatParticipantTypeChangedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant chatParticipant, ChatParticipantStatus? previousChatParticipantStatus);
+        IChatParticipantTypeChangedEvent BuildChatParticipantTypeChangedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant chatParticipant);
         IChatParticipantsAppendedEvent BuildChatParticipantsAppendedEvent(Guid initiatorUserId, Guid chatId, IReadOnlyCollection<IParticipationResult> added, IReadOnlyCollection<IParticipationResult> invited);
     }
 }
