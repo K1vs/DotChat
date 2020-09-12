@@ -84,7 +84,7 @@
             await ChatParticipantsPermissionValidator.ValidateChangeType(command.InitiatorUserId, command.ChatId, command.UserId, command.ChatParticipantType, command.Style, command.Metadata, WorkerName).ConfigureAwait(false);
             var currentParticipant = await ChatParticipantStore.Retrieve(command.ChatId, command.UserId).ConfigureAwait(false);
             var participant = await ChatParticipantStore.ChangeType(command.ChatId, command.UserId, command.ChatParticipantType, command.InitiatorUserId).ConfigureAwait(false);
-            var @event = ChatParticipantsEventBuilder.BuildChatParticipantTypeChangedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant?.ChatParticipantStatus);
+            var @event = ChatParticipantsEventBuilder.BuildChatParticipantTypeChangedEvent(command.InitiatorUserId, command.ChatId, participant);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 

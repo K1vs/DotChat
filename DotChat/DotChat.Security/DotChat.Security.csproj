@@ -28,7 +28,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\DotChat.Common\DotChat.Common.csproj" />
     <ProjectReference Include="..\DotChat.FrameworkUtils\DotChat.FrameworkUtils.csproj" />
     <ProjectReference Include="..\DotChat\DotChat.csproj" />
   </ItemGroup>

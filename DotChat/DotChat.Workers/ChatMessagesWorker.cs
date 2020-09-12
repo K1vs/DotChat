@@ -5,11 +5,11 @@
     using Bus;
     using Chats;
     using Commands.Messages;
-    using Common.Exceptions.Rules;
     using Common.Filters;
     using Common.Paging;
     using Configuration;
     using EventBuilders;
+    using K1vs.DotChat.Exceptions;
     using Messages;
     using Messages.Typed;
     using Participants;
@@ -52,7 +52,11 @@
             }
             if (currentMessage.Immutable)
             {
-                throw new DotChatEditImmutableMessageException(command.MessageId, command.ChatId, command.InitiatorUserId);
+                throw new DotChatException(ExceptionCode.RulesViolationEditImmutable, new {
+                    command.MessageId,
+                    command.ChatId,
+                    command.InitiatorUserId
+                });
             }
             var message = await ChatMessageStore.Update(command.ChatId, command.MessageId, command.MessageInfo,command.InitiatorUserId).ConfigureAwait(false);
             await ChatMessageStore.Archive(command.ChatId, currentMessage.MessageId,command.ArchivedMessageId, currentMessage, command.InitiatorUserId).ConfigureAwait(false);
@@ -69,7 +73,12 @@
             }
             if (currentMessage.Immutable)
             {
-                throw new DotChatRemoveImmutableMessageException(command.MessageId, command.ChatId, command.InitiatorUserId);
+                throw new DotChatException(ExceptionCode.RulesViolationEditImmutable, new
+                {
+                    command.MessageId,
+                    command.ChatId,
+                    command.InitiatorUserId
+                });
             }
             var message = await ChatMessageStore.Delete(command.ChatId, command.MessageId, command.InitiatorUserId).ConfigureAwait(false);
             await ChatMessageStore.Archive(command.ChatId, currentMessage.MessageId, command.MessageId, currentMessage, command.InitiatorUserId).ConfigureAwait(false);

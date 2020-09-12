@@ -24,5 +24,13 @@
         {
             return !obj.In(comparer, other);
         }
+
+        public static IDictionary<string, object> ConvertToDictionary(this object obj)
+        {
+            var type = obj.GetType();
+            var props = type.GetProperties();
+            var result = props.ToDictionary(x => x.Name, x => x.GetValue(obj, null));
+            return result;
+        }
     }
 }

@@ -7,9 +7,6 @@
     using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
     using Common;
-    using Common.Exceptions;
-    using Common.Exceptions.Access;
-    using Common.Exceptions.NotFound;
     using Common.Filters;
     using Common.Paging;
     using FrameworkUtils.Extensions;
@@ -18,15 +15,15 @@
     using Stores.Users;
     using K1vs.DotChat.Messages;
     using K1vs.DotChat.Messages.Typed;
+    using K1vs.DotChat.Exceptions;
 
-    public class ChatsPermissionValidator: IChatsPermissionValidator
+    public class ChatsPermissionValidator: BasePermissionValidator, IChatsPermissionValidator
     {
-        protected readonly IReadChatParticipantStore ReadChatParticipantStore;
         protected readonly IReadUserStore ReadUserStore;
 
         public ChatsPermissionValidator(IReadChatParticipantStore readChatParticipantStore, IReadUserStore readUserStore)
+            : base(readChatParticipantStore)
         {
-            ReadChatParticipantStore = readChatParticipantStore;
             ReadUserStore = readUserStore;
         }
 
@@ -38,34 +35,14 @@
         public virtual Task ValidateGetPage(Guid currentUserId, IPagedResult<IPersonalizedChat> chatsPage, IChatFilter filter, IPagingOptions pagingOptions,
             string serviceName, string methodName = null)
         {
-            var noAccess = chatsPage.Items.Where(chat => chat.PrivacyMode.NotIn(ChatPrivacyMode.Public, ChatPrivacyMode.Protected))
-                .FirstOrDefault(chat =>
-                {
-                    var participant = chat.Participants.FirstOrDefault(r => r.UserId == currentUserId);
-                    return participant == null || participant.ChatParticipantStatus != ChatParticipantStatus.Active;
-                });
-            if (noAccess != null)
-            {
-                throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Get, ErrorEntity.PersonalizedChat),
-                    serviceName, methodName, noAccess.ChatId, currentUserId);
-            }
+            CheckCanGetPage(currentUserId, chatsPage, serviceName, methodName);
             return Task.CompletedTask;
         }
 
         public virtual Task ValidateGetPage(Guid currentUserId, IPagedResult<IPersonalizedChat> chatsPage, IPagingOptions pagingOptions, string serviceName,
             string methodName = null)
         {
-            var noAccess = chatsPage.Items.Where(chat => chat.PrivacyMode.NotIn(ChatPrivacyMode.Public, ChatPrivacyMode.Protected))
-                .FirstOrDefault(chat =>
-                {
-                    var participant = chat.Participants.FirstOrDefault(r => r.UserId == currentUserId);
-                    return participant == null || participant.ChatParticipantStatus != ChatParticipantStatus.Active;
-                });
-            if (noAccess != null)
-            {
-                throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Get, ErrorEntity.PersonalizedChat),
-                    serviceName, methodName, noAccess.ChatId, currentUserId);
-            }
+            CheckCanGetPage(currentUserId, chatsPage, serviceName, methodName);
             return Task.CompletedTask;
         }
 
@@ -78,8 +55,13 @@
             var participant = chat.Participants.FirstOrDefault(r => r.UserId == currentUserId);
             if (participant == null || participant.ChatParticipantStatus != ChatParticipantStatus.Active)
             {
-                throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Get, ErrorEntity.PersonalizedChat),
-                    serviceName, methodName, chat.ChatId, currentUserId);
+                throw new DotChatException(ExceptionCode.AccessDeniedForeign, new
+                {
+                    serviceName,
+                    methodName,
+                    chat.ChatId,
+                    currentUserId
+                });
             }
             return Task.CompletedTask;
         }
@@ -89,12 +71,23 @@
             var user = await ReadUserStore.Retrieve(currentUserId);
             if (user == null)
             {
-                throw new DotChatNotFoundUserException(ErrorModule.Security, ErrorOperation.Add, chatId, currentUserId);
+                throw new DotChatException(ExceptionCode.StorageFaultItemNotFound, new
+                {
+                    serviceName,
+                    methodName,
+                    chatId,
+                    currentUserId
+                });
             }
             if (!user.CanCreateChat)
             {
-                throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Add, ErrorEntity.Chat),
-                    serviceName, methodName, chatId, currentUserId);
+                throw new DotChatException(ExceptionCode.AccessDeniedNotEnoughPermissions, new
+                {
+                    serviceName,
+                    methodName,
+                    chatId,
+                    currentUserId
+                });
             }
         }
 
@@ -104,8 +97,13 @@
             var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
             if (participant == null || participant.ChatParticipantStatus != ChatParticipantStatus.Active || participant.ChatParticipantType.NotIn(ChatParticipantType.Admin, ChatParticipantType.Moderator, ChatParticipantType.Participant))
             {
-                throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Edit, ErrorEntity.ChatInfo),
-                    serviceName, methodName, chatId, currentUserId);
+                throw new DotChatException(ExceptionCode.AccessDeniedForeign, new
+                {
+                    serviceName,
+                    methodName,
+                    chatId,
+                    currentUserId
+                });
             }
         }
 
@@ -114,8 +112,32 @@
             var participant = await ReadChatParticipantStore.Retrieve(chatId, currentUserId);
             if (participant == null || participant.ChatParticipantStatus != ChatParticipantStatus.Active || participant.ChatParticipantType.NotIn(ChatParticipantType.Admin))
             {
-                throw new DotChatAccessDeniedException(new ErrorCode(ErrorType.AccessDenied, ErrorModule.Security, ErrorOperation.Remove, ErrorEntity.Chat),
-                    serviceName, methodName, chatId, currentUserId);
+                throw new DotChatException(ExceptionCode.AccessDeniedForeign, new
+                {
+                    serviceName,
+                    methodName,
+                    chatId,
+                    currentUserId
+                });
+            }
+        }
+
+        protected virtual void CheckCanGetPage(Guid currentUserId, IPagedResult<IPersonalizedChat> chatsPage, string serviceName, string methodName)
+        {
+            var noAccess = chatsPage.Items.Where(chat => chat.PrivacyMode.NotIn(ChatPrivacyMode.Public, ChatPrivacyMode.Protected))
+                .FirstOrDefault(chat =>
+                {
+                    var participant = chat.Participants.FirstOrDefault(r => r.UserId == currentUserId);
+                    return participant == null || participant.ChatParticipantStatus != ChatParticipantStatus.Active;
+                });
+            if (noAccess != null)
+            {
+                throw new DotChatException(ExceptionCode.AccessDeniedForeign, new
+                {
+                    serviceName,
+                    methodName,
+                    currentUserId
+                });
             }
         }
     }
