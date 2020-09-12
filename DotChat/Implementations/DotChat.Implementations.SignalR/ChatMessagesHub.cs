@@ -15,59 +15,31 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public abstract class ChatMessagesHub<TChatMessagesClient, TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo,
-            TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment,
-            TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter,
-            TChatMessagesPagedResult, TPagingOptions>
+    public abstract class ChatMessagesHub<TChatMessagesClient, TMessageFilterCollection, TPagingOptions, TChatMessageInfo>
         : Hub<TChatMessagesClient>
-        where TChatMessagesClient: class, IChatMessagesClient<TChatInfo, TChatUser, TChatMessage, TChatMessageInfo, TTextMessage, TQuoteMessage,
-        TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatInfo : IChatInfo
-        where TChatUser : IChatUser
-        where TChatMessageCollection : IReadOnlyCollection<TChatMessage>
-        where TChatMessage : IChatMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage,
-            TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage,
-            TContactMessageCollection, TContactMessage>
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage,
-            TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage,
-            TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage,
-            TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage,
-            TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
-        where TMessageFilter : IMessageFilter
-        where TChatMessagesPagedResult : IPagedResult<TChatMessageCollection, TChatMessage>
-        where TPagingOptions : IPagingOptions
+        where TChatMessagesClient: class, IChatMessagesClient
+        where TMessageFilterCollection: IReadOnlyCollection<IMessageFilter>
+        where TPagingOptions: IPagingOptions
+        where TChatMessageInfo: IChatMessageInfo
     {
-        protected readonly IChatMessagesService<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage,
-            TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment,
-            TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, TMessageFilter,
-            TChatMessagesPagedResult, TPagingOptions> ChatMessagesService;
+        protected readonly IChatMessagesService ChatMessagesService;
 
-        public ChatMessagesHub(IChatMessagesService<TChatInfo, TChatUser, TChatMessageCollection, TChatMessage, TChatMessageInfo,
-                TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage,
-                TContactMessageCollection, TContactMessage, TMessageFilter, TChatMessagesPagedResult, TPagingOptions> chatMessagesService)
+        public ChatMessagesHub(IChatMessagesService chatMessagesService)
         {
             ChatMessagesService = chatMessagesService;
         }
 
-        public virtual async Task<TChatMessagesPagedResult> GetPage(Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions pagingOptions)
+        public virtual async Task<IPagedResult<IChatMessage>> GetPage(Guid chatId, TMessageFilterCollection filters, TPagingOptions pagingOptions)
         {
             return await ChatMessagesService.GetPage(CurrentUserId, chatId, filters, pagingOptions);
         }
 
-        public virtual async Task<TChatMessagesPagedResult> GetPage(Guid chatId, TPagingOptions pagingOptions)
+        public virtual async Task<IPagedResult<IChatMessage>> GetPage(Guid chatId, TPagingOptions pagingOptions)
         {
             return await ChatMessagesService.GetPage(CurrentUserId, chatId, pagingOptions);
         }
 
-        public virtual async Task<TChatMessagesPagedResult> GetPage(Guid chatId)
+        public virtual async Task<IPagedResult<IChatMessage>> GetPage(Guid chatId)
         {
             return await ChatMessagesService.GetPage(CurrentUserId, chatId);
         }

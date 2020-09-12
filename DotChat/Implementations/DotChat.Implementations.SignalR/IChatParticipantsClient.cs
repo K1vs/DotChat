@@ -9,17 +9,14 @@
     using Notifications.Participants;
     using Participants;
 
-    public interface IChatParticipantsClient<in TParticipationResultCollection, in TParticipationResult, in TChatParticipant>
-        where TParticipationResultCollection : IReadOnlyCollection<TParticipationResult>
-        where TParticipationResult : IParticipationResult<TChatParticipant>
-        where TChatParticipant : IChatParticipant
+    public interface IChatParticipantsClient
     {
-        Task ChatParticipantAdded(IChatParticipantAddedNotification<TChatParticipant> notification);
-        Task ChatParticipantApplied(IChatParticipantAppliedNotification<TChatParticipant> notification);
-        Task ChatParticipantInvited(IChatParticipantInvitedNotification<TChatParticipant> notification);
-        Task ChatParticipantRemoved(IChatParticipantRemovedNotification<TChatParticipant> notification);
-        Task ChatParticipantBlocked(IChatParticipantBlockedNotification<TChatParticipant> notification);
-        Task ChatParticipantsAppended(IChatParticipantsAppendedNotification<TParticipationResultCollection, TParticipationResult, TChatParticipant> notification);
-        Task ChatParticipantTypeChanged(IChatParticipantTypeChangedNotification<TChatParticipant> notification);
+        Task ChatParticipantAdded(IChatParticipantAddedNotification notification);
+        Task ChatParticipantApplied(IChatParticipantAppliedNotification notification);
+        Task ChatParticipantInvited(IChatParticipantInvitedNotification notification);
+        Task ChatParticipantRemoved(IChatParticipantRemovedNotification notification);
+        Task ChatParticipantBlocked(IChatParticipantBlockedNotification notification);
+        Task ChatParticipantsAppended(IChatParticipantsAppendedNotification notification);
+        Task ChatParticipantTypeChanged(IChatParticipantTypeChangedNotification notification);
     }
 }

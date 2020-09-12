@@ -15,72 +15,42 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public abstract class ChatsHub<TChatsClient, TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo,
-            TChatParticipantCollection, TChatParticipant, TParticipationCandidates, TParticipationCandidateCollection, 
-            TParticipationCandidate, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage,
-            TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions>
+    public abstract class ChatsHub<TChatsClient, TChatFilter, TPagingOptions, TChatInfo, TParticipationCandidates>
         : Hub<TChatsClient>
-        where TChatsClient: class, IChatsClient<TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TPersonalizedChatsSummary : IPersonalizedChatsSummary
-        where TPersonalizedChatCollection : IReadOnlyCollection<TPersonalizedChat>
-        where TPersonalizedChat : IPersonalizedChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChat : IChat<TChatInfo, TChatParticipantCollection, TChatParticipant, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TChatInfo : IChatInfo
-        where TChatParticipantCollection : IReadOnlyCollection<TChatParticipant>
-        where TChatParticipant : IChatParticipant
-        where TParticipationCandidates : IHasParticipationCandidates<TParticipationCandidateCollection, TParticipationCandidate>
-        where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
-        where TParticipationCandidate : IParticipationCandidate
-        where TChatUser : IChatUser
-        where TChatMessageInfo : IChatMessageInfo<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TTextMessage : ITextMessage
-        where TQuoteMessage : IQuoteMessage<TChatInfo, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage>
-        where TMessageAttachmentCollection : IReadOnlyCollection<TMessageAttachment>
-        where TMessageAttachment : IMessageAttachment
-        where TChatRefMessageCollection : IReadOnlyCollection<TChatRefMessage>
-        where TChatRefMessage : IChatRefMessage<TChatInfo>
-        where TContactMessageCollection : IReadOnlyCollection<TContactMessage>
-        where TContactMessage : IContactMessage<TChatUser>
-        where TChatFilter : IChatFilter<TChatUserFilter, TMessageFilter>
-        where TChatUserFilter : IChatUserFilter
-        where TMessageFilter : IMessageFilter
-        where TPagedResult : IPagedResult<TPersonalizedChatCollection, TPersonalizedChat>
+        where TChatsClient: class, IChatsClient
+        where TChatFilter : IChatFilter
         where TPagingOptions : IPagingOptions
+        where TChatInfo: IChatInfo
+        where TParticipationCandidates: IHasParticipationCandidates
     {
-        protected readonly IChatsService<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant,
-            TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage, 
-            TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage, 
-            TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> ChatsService;
+        protected readonly IChatsService ChatsService;
 
-        public ChatsHub(IChatsService<TPersonalizedChatsSummary, TPersonalizedChatCollection, TPersonalizedChat, TChat, TChatInfo, TChatParticipantCollection, TChatParticipant,
-            TParticipationCandidates, TParticipationCandidateCollection, TParticipationCandidate, TChatUser, TChatMessageInfo, TTextMessage, TQuoteMessage,
-            TMessageAttachmentCollection, TMessageAttachment, TChatRefMessageCollection, TChatRefMessage, TContactMessageCollection, TContactMessage,
-            TChatFilter, TChatUserFilter, TMessageFilter, TPagedResult, TPagingOptions> chatsService)
+        public ChatsHub(IChatsService chatsService)
         {
             ChatsService = chatsService;
         }
 
-        public virtual async Task<TPersonalizedChatsSummary> GetSummary()
+        public virtual async Task<IPersonalizedChatsSummary> GetSummary()
         {
             return await ChatsService.GetSummary(CurrentUserId);
         }
 
-        public virtual async Task<TPagedResult> GetPage(TChatFilter filter, TPagingOptions pagingOptions)
+        public virtual async Task<IPagedResult<IPersonalizedChat>> GetPage(TChatFilter filter, TPagingOptions pagingOptions)
         {
             return await ChatsService.GetPage(CurrentUserId, filter, pagingOptions);
         }
 
-        public virtual async Task<TPagedResult> GetPage(TPagingOptions pagingOptions)
+        public virtual async Task<IPagedResult<IPersonalizedChat>> GetPage(TPagingOptions pagingOptions)
         {
             return await ChatsService.GetPage(CurrentUserId, pagingOptions);
         }
 
-        public virtual async Task<TPagedResult> GetPage()
+        public virtual async Task<IPagedResult<IPersonalizedChat>> GetPage()
         {
             return await ChatsService.GetPage(CurrentUserId);
         }
 
-        public virtual async Task<TPersonalizedChat> Get(Guid chatId)
+        public virtual async Task<IPersonalizedChat> Get(Guid chatId)
         {
             return await ChatsService.Get(CurrentUserId, chatId);
         }

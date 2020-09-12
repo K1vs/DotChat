@@ -15,18 +15,14 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public abstract class ChatParticipantsHub<TChatParticipantsClient, TParticipationResultCollection, TParticipationResult, TChatParticipant, TParticipationCandidateCollection, TParticipationCandidate>
+    public abstract class ChatParticipantsHub<TChatParticipantsClient, TParticipationCandidateCollection>
         : Hub<TChatParticipantsClient>
-        where TChatParticipantsClient: class, IChatParticipantsClient<TParticipationResultCollection, TParticipationResult, TChatParticipant>
-        where TParticipationResultCollection : IReadOnlyCollection<TParticipationResult>
-        where TParticipationResult : IParticipationResult<TChatParticipant>
-        where TChatParticipant : IChatParticipant
-        where TParticipationCandidateCollection : IReadOnlyCollection<TParticipationCandidate>
-        where TParticipationCandidate : IParticipationCandidate
+        where TChatParticipantsClient: class, IChatParticipantsClient
+        where TParticipationCandidateCollection : IReadOnlyCollection<IParticipationCandidate>
     {
-        protected readonly IChatParticipantsService<TParticipationCandidateCollection, TParticipationCandidate> ChatParticipantsService;
+        protected readonly IChatParticipantsService ChatParticipantsService;
 
-        public ChatParticipantsHub(IChatParticipantsService<TParticipationCandidateCollection, TParticipationCandidate> chatParticipantsService)
+        public ChatParticipantsHub(IChatParticipantsService chatParticipantsService)
         {
             ChatParticipantsService = chatParticipantsService;
         }
