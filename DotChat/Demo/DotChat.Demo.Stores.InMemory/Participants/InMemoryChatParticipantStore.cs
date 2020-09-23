@@ -9,23 +9,23 @@
     using DotChat.Stores.Participants;
     using K1vs.DotChat.Models.Participants;
 
-    public class InMemoryChatParticipantStore: InMemoryReadChatParticipantStore, IChatParticipantStore<ChatParticipant, ChatUser>
+    public class InMemoryChatParticipantStore: InMemoryReadChatParticipantStore, IChatParticipantStore
     {
         public InMemoryChatParticipantStore(InMemoryStore store) : base(store)
         {
         }
 
-        public async Task<ChatParticipant> Set(Guid chatId, ChatUser chatUser, ChatParticipantType participantType, ChatParticipantStatus participantStatus,
+        public async Task<IChatParticipant> Set(Guid chatId, IChatUser chatUser, ChatParticipantType participantType, ChatParticipantStatus participantStatus,
             Guid setterId)
         {
             await Task.Yield();
             return SetUser(chatId, chatUser, participantType, participantStatus);
         }
 
-        public async Task<ChatParticipant> Set(Guid chatId, ChatUser chatUser, ChatParticipantStatus participantStatus, Guid setterId)
+        public async Task<IChatParticipant> Set(Guid chatId, IChatUser chatUser, ChatParticipantStatus participantStatus, Guid setterId)
         {
             await Task.Yield();
-            var participants = Store.Chats[chatId].Participants;
+            var participants = (List<ChatParticipant>)Store.Chats[chatId].Participants;
             lock (participants)
             {
                 var exist = participants.FirstOrDefault(r => r.UserId == chatUser.UserId);
@@ -43,25 +43,25 @@
             }
         }
 
-        public async Task<IReadOnlyCollection<ChatParticipant>> Set(Guid chatId, IEnumerable<ChatUser> chatUsers, ChatParticipantType participantType,
+        public async Task<IReadOnlyCollection<IChatParticipant>> Set(Guid chatId, IEnumerable<IChatUser> chatUsers, ChatParticipantType participantType,
             ChatParticipantStatus participantStatus, Guid setterId)
         {
             await Task.Yield();
             return chatUsers.Select(chatUser => SetUser(chatId, chatUser, participantType, participantStatus)).ToList();
         }
 
-        public async Task<ChatParticipant> ChangeType(Guid chatId, Guid userId, ChatParticipantType participantType, Guid setterId)
+        public async Task<IChatParticipant> ChangeType(Guid chatId, Guid userId, ChatParticipantType participantType, Guid setterId)
         {
             await Task.Yield();
-            var p = Store.Chats[chatId].Participants.FirstOrDefault(r => r.UserId == userId);
+            var p = (ChatParticipant)Store.Chats[chatId].Participants.FirstOrDefault(r => r.UserId == userId);
             p.ChatParticipantType = participantType;
             p.Version += 1;
             return p;
         }
 
-        private ChatParticipant SetUser(Guid chatId, ChatUser chatUser, ChatParticipantType participantType, ChatParticipantStatus participantStatus)
+        private ChatParticipant SetUser(Guid chatId, IChatUser chatUser, ChatParticipantType participantType, ChatParticipantStatus participantStatus)
         {
-            var participants = Store.Chats[chatId].Participants;
+            var participants = (List<ChatParticipant>)Store.Chats[chatId].Participants;
             lock (participants)
             {
                 var exist = participants.FirstOrDefault(r => r.UserId == chatUser.UserId);

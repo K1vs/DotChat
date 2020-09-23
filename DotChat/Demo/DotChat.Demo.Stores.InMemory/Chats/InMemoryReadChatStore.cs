@@ -4,21 +4,16 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Basic.Chats;
-    using Basic.Configuration;
     using Common.Filters;
     using Common.Paging;
     using DotChat.Chats;
     using DotChat.Participants;
     using DotChat.Stores.Chats;
-    using K1vs.DotChat.Basic.Messages;
-    using K1vs.DotChat.Basic.Messages.Typed;
+    using K1vs.DotChat.Common.Configuration;
     using K1vs.DotChat.FrameworkUtils.Extensions;
-    using K1vs.DotChat.Models.Messages.Typed;
-    using Models.Chats;
-    using Models.Participants;
+    using K1vs.DotChat.Models.Chats;
 
-    public class InMemoryReadChatStore: IReadChatStore<PersonalizedChatsSummary, List<PersonalizedChat>, PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions>
+    public class InMemoryReadChatStore: IReadChatStore
     {
         protected readonly ChatServicesConfiguration ServicesConfiguration;
         protected readonly InMemoryStore Store;
@@ -29,7 +24,7 @@
             Store = store;
         }
 
-        public async Task<PersonalizedChatsSummary> RetrievePersonalizedSummary(Guid userId)
+        public async Task<IPersonalizedChatsSummary> RetrievePersonalizedSummary(Guid userId)
         {
             await Task.Yield();
             var chats = GetUserChats(userId)
@@ -50,13 +45,13 @@
                 .ToList();
         }
 
-        public async Task<PagedResult<List<PersonalizedChat>, PersonalizedChat>> RetrievePersonalizedPage(Guid userId, ChatFilter<ChatUserFilter, MessageFilter> filter, PagingOptions pagingOptions)
+        public async Task<IPagedResult<IPersonalizedChat>> RetrievePersonalizedPage(Guid userId, IChatFilter filter, IPagingOptions pagingOptions)
         {
             await Task.Yield();
             IEnumerable<PersonalizedChat> query = Store.Chats
                 .Select(r => Store.Personalize(r.Value, userId))
                 .Where(r => filter.Search == null || r.Name.Contains(filter.Search) || filter.SearchInDescription && r.Description.Contains(filter.Search))
-                .Where(r => r.Participants.Any(p => filter.UserFiltersList.Any(uFilter =>
+                .Where(r => r.Participants.Any(p => filter.UserFilters.Any(uFilter =>
                     (uFilter.UserId == null || uFilter.UserId == p.UserId) &&
                     (uFilter.ChatPrivacyMode == null || uFilter.ChatPrivacyMode == r.PrivacyMode) &&
                     (uFilter.ParticipantStatus == null || uFilter.ParticipantStatus == p.ChatParticipantStatus) && 
@@ -69,10 +64,10 @@
             var take = pagingOptions?.Limit ?? ServicesConfiguration.DefaultChatsPageSize;
             query = query.Skip(skip).Take(take);
             var prev = Math.Max(skip - take, 0);
-            return new PagedResult<List<PersonalizedChat>, PersonalizedChat>(query.ToList(), skip == 0 ? null : prev.ToString() , $"{skip + take}");
+            return new PagedResult<PersonalizedChat>(query.ToList(), skip == 0 ? null : prev.ToString() , $"{skip + take}");
         }
 
-        public async Task<PagedResult<List<PersonalizedChat>, PersonalizedChat>> RetrievePersonalizedPage(Guid userId, PagingOptions pagingOptions)
+        public async Task<IPagedResult<IPersonalizedChat>> RetrievePersonalizedPage(Guid userId, IPagingOptions pagingOptions)
         {
             await Task.Yield();
             IEnumerable<PersonalizedChat> query = Store.Chats
@@ -86,16 +81,16 @@
             var take = pagingOptions?.Limit ?? ServicesConfiguration.DefaultChatsPageSize;
             query = query.Skip(skip).Take(take);
             var prev = Math.Max(skip - take, 0);
-            return new PagedResult<List<PersonalizedChat>, PersonalizedChat>(query.ToList(), skip == 0 ? null : prev.ToString(), $"{skip + take}");
+            return new PagedResult<PersonalizedChat>(query.ToList(), skip == 0 ? null : prev.ToString(), $"{skip + take}");
         }
 
-        public async Task<PersonalizedChat> RetrievePersonalized(Guid chatId, Guid userId)
+        public async Task<IPersonalizedChat> RetrievePersonalized(Guid chatId, Guid userId)
         {
             await Task.Yield();
             return Store.Personalize(Store.Chats[chatId], userId);
         }
 
-        public async Task<Chat> Retrieve(Guid chatId)
+        public async Task<IChat> Retrieve(Guid chatId)
         {
             await Task.Yield();
             return Store.Chats[chatId];

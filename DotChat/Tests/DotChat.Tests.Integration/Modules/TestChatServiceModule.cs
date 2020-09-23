@@ -16,6 +16,8 @@
     using Demo.Stores.InMemory.Participants;
     using Demo.Stores.InMemory.Users;
     using Dependency;
+    using K1vs.DotChat.Common.Configuration;
+    using K1vs.DotChat.Common.Modules;
     using Models.Chats;
     using Models.Messages.Typed;
     using Models.Participants;
@@ -29,7 +31,7 @@
         private readonly InMemoryBus _bus;
         private readonly InMemoryStore _store;
 
-        public TestChatServiceModule(InMemoryBus bus, InMemoryStore store) : base(new ChatServicesConfiguration())
+        public TestChatServiceModule(InMemoryBus bus, InMemoryStore store)
         {
             _bus = bus;
             _store = store;
@@ -62,35 +64,35 @@
                 .AsTransient();
         }
 
-        public override IDependencyRegistrationBuilder<IReadChatStore<PersonalizedChatsSummary, List<PersonalizedChat>, PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions>> RegisterReadChatStore(IDependencyRegistrar registrar)
+        public override IDependencyRegistrationBuilder<IReadChatStore> RegisterReadChatStore(IDependencyRegistrar registrar)
         {
             return registrar.Register<InMemoryReadChatStore>()
                 .AsSelf()
-                .As<IReadChatStore<PersonalizedChatsSummary, List<PersonalizedChat>, PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, ChatUser, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions>>()
+                .As<IReadChatStore>()
                 .AsTransient();
         }
 
-        public override IDependencyRegistrationBuilder<IReadChatMessageStore<ChatInfo, ChatUser, List<ChatMessage>, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage, MessageFilter, PagedResult<List<ChatMessage>, ChatMessage>, PagingOptions>> RegisterReadChatMessageStore(IDependencyRegistrar registrar)
+        public override IDependencyRegistrationBuilder<IReadChatMessageStore> RegisterReadChatMessageStore(IDependencyRegistrar registrar)
         {
             return registrar.Register<InMemoryReadChatMessageStore>()
                 .AsSelf()
-                .As<IReadChatMessageStore<ChatInfo, ChatUser, List<ChatMessage>, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage, MessageFilter, PagedResult<List<ChatMessage>, ChatMessage>, PagingOptions>>()
+                .As<IReadChatMessageStore>()
                 .AsTransient();
         }
 
-        public override IDependencyRegistrationBuilder<IReadChatParticipantStore<ChatParticipant>> RegisterReadChatParticipantStore(IDependencyRegistrar registrar)
+        public override IDependencyRegistrationBuilder<IReadChatParticipantStore> RegisterReadChatParticipantStore(IDependencyRegistrar registrar)
         {
             return registrar.Register<InMemoryReadChatParticipantStore>()
                 .AsSelf()
-                .As<IReadChatParticipantStore<ChatParticipant>>()
+                .As<IReadChatParticipantStore>()
                 .AsTransient();
         }
 
-        public override IDependencyRegistrationBuilder<IReadUserStore<ChatUser>> RegisterReadUserStore(IDependencyRegistrar registrar)
+        public override IDependencyRegistrationBuilder<IReadUserStore> RegisterReadUserStore(IDependencyRegistrar registrar)
         {
             return registrar.Register<InMemoryReadUserStore>()
                 .AsSelf()
-                .As<IReadUserStore<ChatUser>>()
+                .As<IReadUserStore>()
                 .AsTransient();
         }
     }

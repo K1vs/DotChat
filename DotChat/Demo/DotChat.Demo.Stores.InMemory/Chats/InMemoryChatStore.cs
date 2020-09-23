@@ -5,25 +5,23 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Basic.Chats;
-    using Basic.Configuration;
-    using Basic.Participants;
     using Common.Filters;
     using Common.Paging;
     using DotChat.Participants;
     using Models.Chats;
     using Models.Participants;
-    using K1vs.DotChat.Basic.Messages;
-    using K1vs.DotChat.Models.Messages.Typed;
-    using K1vs.DotChat.Basic.Messages.Typed;
+    using K1vs.DotChat.Common.Configuration;
+    using K1vs.DotChat.Chats;
+    using K1vs.DotChat.Messages;
+    using K1vs.DotChat.Models.Messages;
 
-    public class InMemoryChatStore: InMemoryReadChatStore, IChatStore<PersonalizedChatsSummary, List<PersonalizedChat>,PersonalizedChat, Chat, ChatInfo, List<ChatParticipant>, ChatParticipant, List<ParticipationCandidate>, ParticipationCandidate, ChatUser, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage, ChatFilter<ChatUserFilter, MessageFilter>, ChatUserFilter, MessageFilter, PagedResult<List<PersonalizedChat>, PersonalizedChat>, PagingOptions>
+    public class InMemoryChatStore: InMemoryReadChatStore, IChatStore
     {
         public InMemoryChatStore(ChatServicesConfiguration servicesConfiguration, InMemoryStore store) : base(servicesConfiguration, store)
         {
         }
 
-        public async Task<Chat> Create(Guid chatId, ChatInfo chatInfo, List<ParticipationCandidate> toAdd, List<ParticipationCandidate> toInvite, Guid creatorId)
+        public async Task<IChat> Create(Guid chatId, IChatInfo chatInfo, IReadOnlyCollection<IParticipationCandidate> toAdd, IReadOnlyCollection<IParticipationCandidate> toInvite, Guid creatorId)
         {
             await Task.Yield();
             var now = DateTime.UtcNow;
@@ -36,7 +34,7 @@
             return chat;
         }
 
-        public async Task<ChatInfo> UpdateInfo(Guid chatId, ChatInfo chatInfo, Guid modifierId)
+        public async Task<IChatInfo> UpdateInfo(Guid chatId, IChatInfo chatInfo, Guid modifierId)
         {
             await Task.Yield();
             var chat = Store.Chats[chatId];
@@ -47,7 +45,7 @@
             return chat;
         }
 
-        public async Task<ChatInfo> Delete(Guid chatId, Guid removerId)
+        public async Task<IChatInfo> Delete(Guid chatId, Guid removerId)
         {
             await Task.Yield();
             Store.Chats.TryRemove(chatId, out var chat);
@@ -55,7 +53,7 @@
             return chat;
         }
 
-        public async Task SetTop(Guid chatId, ChatMessage topChatMessage)
+        public async Task SetTop(Guid chatId, IChatMessage topChatMessage)
         {
             await Task.Yield();
             var chat = Store.Chats[chatId];

@@ -72,15 +72,40 @@
                 .As<IChatsCommandBuilder>();
         }
 
-        public abstract IDependencyRegistrationBuilder<IChatParticipantsCommandBuilder> RegisterChatParticipantsCommandBuilder(IDependencyRegistrar registrar);
+        public virtual IDependencyRegistrationBuilder<IChatParticipantsCommandBuilder> RegisterChatParticipantsCommandBuilder(IDependencyRegistrar registrar)
+        {
+            return registrar.Register<ChatParticipantsCommandBuilder>()
+                .AsSelf()
+                .As<IChatParticipantsCommandBuilder>();
+        }
 
-        public abstract IDependencyRegistrationBuilder<IChatMessagesCommandBuilder> RegisterChatMessagesCommandBuilder(IDependencyRegistrar registrar);
+        public virtual IDependencyRegistrationBuilder<IChatMessagesCommandBuilder> RegisterChatMessagesCommandBuilder(IDependencyRegistrar registrar)
+        {
+            return registrar.Register<ChatParticipantsCommandBuilder>()
+                .AsSelf()
+                .As<IChatParticipantsCommandBuilder>();
+        }
 
-        public abstract IDependencyRegistrationBuilder<IChatsEventBuilder> RegisterChatsEventBuilder(IDependencyRegistrar registrar);
+        public virtual IDependencyRegistrationBuilder<IChatsEventBuilder> RegisterChatsEventBuilder(IDependencyRegistrar registrar)
+        {
+            return registrar.Register<ChatParticipantsCommandBuilder>()
+                .AsSelf()
+                .As<IChatParticipantsCommandBuilder>();
+        }
 
-        public abstract IDependencyRegistrationBuilder<IChatParticipantsEventBuilder> RegisterChatParticipantsEventBuilder(IDependencyRegistrar registrar);
+        public virtual IDependencyRegistrationBuilder<IChatParticipantsEventBuilder> RegisterChatParticipantsEventBuilder(IDependencyRegistrar registrar)
+        {
+            return registrar.Register<ChatParticipantsCommandBuilder>()
+                .AsSelf()
+                .As<IChatParticipantsCommandBuilder>();
+        }
 
-        public abstract IDependencyRegistrationBuilder<IChatMessagesEventBuilder> RegisterChatMessagesEventBuilder(IDependencyRegistrar registrar);
+        public virtual IDependencyRegistrationBuilder<IChatMessagesEventBuilder> RegisterChatMessagesEventBuilder(IDependencyRegistrar registrar)
+        {
+            return registrar.Register<ChatParticipantsCommandBuilder>()
+                .AsSelf()
+                .As<IChatParticipantsCommandBuilder>();
+        }
 
         public abstract IDependencyRegistrationBuilder<IReadChatStore> RegisterReadChatStore(IDependencyRegistrar registrar);
 
@@ -90,18 +115,53 @@
 
         public abstract IDependencyRegistrationBuilder<IReadUserStore> RegisterReadUserStore(IDependencyRegistrar registrar);
 
-        public abstract IDependencyRegistrationBuilder<IChatsService> RegisterChatsService(IDependencyRegistrar registrar);
+        public virtual IDependencyRegistrationBuilder<IChatsService> RegisterChatsService(IDependencyRegistrar registrar)
+        {
+            return registrar.Register<ChatParticipantsCommandBuilder>()
+                .AsSelf()
+                .As<IChatParticipantsCommandBuilder>();
+        }
 
-        public abstract IDependencyRegistrationBuilder<IChatParticipantsService> RegisterChatParticipantsService(IDependencyRegistrar registrar);
+        public virtual IDependencyRegistrationBuilder<IChatParticipantsService> RegisterChatParticipantsService(IDependencyRegistrar registrar)
+        {
+            return registrar.Register<ChatParticipantsCommandBuilder>()
+                .AsSelf()
+                .As<IChatParticipantsCommandBuilder>();
+        }
 
-        public abstract IDependencyRegistrationBuilder<IChatMessagesService> RegisterChatMessagesService(IDependencyRegistrar registrar);
+        public virtual IDependencyRegistrationBuilder<IChatMessagesService> RegisterChatMessagesService(IDependencyRegistrar registrar)
+        {
+            return registrar.Register<ChatParticipantsCommandBuilder>()
+                .AsSelf()
+                .As<IChatParticipantsCommandBuilder>();
+        }
 
-        public abstract IDependencyRegistrationBuilder<IDotChat> RegisterDotChat(IDependencyRegistrar registrar);
+        public virtual IDependencyRegistrationBuilder<IDotChat> RegisterDotChat(IDependencyRegistrar registrar)
+        {
+            return registrar.Register<ChatParticipantsCommandBuilder>()
+                .AsSelf()
+                .As<IChatParticipantsCommandBuilder>();
+        }
 
-        public abstract IDependencyRegistrationBuilder<IChatsPermissionValidator> RegisterChatsPermissionValidator(IDependencyRegistrar registrar);
+        public virtual IDependencyRegistrationBuilder<IChatsPermissionValidator> RegisterChatsPermissionValidator(IDependencyRegistrar registrar)
+        {
+            return registrar.Register<ChatParticipantsCommandBuilder>()
+                .AsSelf()
+                .As<IChatParticipantsCommandBuilder>();
+        }
 
-        public abstract IDependencyRegistrationBuilder<IChatParticipantsPermissionValidator> RegisterChatParticipantsPermissionValidator(IDependencyRegistrar registrar);
+        public virtual IDependencyRegistrationBuilder<IChatParticipantsPermissionValidator> RegisterChatParticipantsPermissionValidator(IDependencyRegistrar registrar)
+        {
+            return registrar.Register<ChatParticipantsCommandBuilder>()
+                .AsSelf()
+                .As<IChatParticipantsCommandBuilder>();
+        }
 
-        public abstract IDependencyRegistrationBuilder<IChatMessagesPermissionValidator> RegisterChatMessagesPermissionValidator(IDependencyRegistrar registrar);
+        public virtual IDependencyRegistrationBuilder<IChatMessagesPermissionValidator> RegisterChatMessagesPermissionValidator(IDependencyRegistrar registrar)
+        {
+            return registrar.Register<ChatMessagesPermissionValidator>()
+                .AsSelf()
+                .As<IChatMessagesPermissionValidator>();
+        }
     }
 }

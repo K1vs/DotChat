@@ -5,18 +5,17 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Basic.Configuration;
-    using Basic.Messages;
-    using Basic.Messages.Typed;
     using Common.Filters;
     using Common.Paging;
     using DotChat.Messages;
+    using K1vs.DotChat.Common.Configuration;
+    using K1vs.DotChat.Models.Messages;
     using K1vs.DotChat.Stores.Messages;
     using Models.Chats;
     using Models.Messages.Typed;
     using Models.Participants;
 
-    public class InMemoryChatMessageStore: InMemoryReadChatMessageStore, IChatMessageStore<ChatInfo, ChatUser, List<ChatMessage>, ChatMessage, ChatMessageInfo, TextMessage, QuoteMessage, List<MessageAttachment>, MessageAttachment, List<ChatRefMessage>, ChatRefMessage, List<ContactMessage>, ContactMessage, MessageFilter, PagedResult<List<ChatMessage>, ChatMessage>, PagingOptions>
+    public class InMemoryChatMessageStore: InMemoryReadChatMessageStore, IChatMessageStore
     {
         public InMemoryChatMessageStore(ChatServicesConfiguration servicesConfiguration, InMemoryStore store) : base(servicesConfiguration, store)
         {
@@ -25,14 +24,14 @@
         public async Task Read(Guid chatId, Guid userId, long index, bool force)
         {
             await Task.Yield();
-            var p = Store.Chats[chatId].Participants.FirstOrDefault(r => r.UserId == userId);
+            var p = (ChatParticipant)Store.Chats[chatId].Participants.FirstOrDefault(r => r.UserId == userId);
             if (force || p.ReadIndex < index)
             {
                 p.ReadIndex = index;
             }
         }
 
-        public async Task<ChatMessage> Create(Guid chatId, Guid userId, Guid messageId, ChatMessageInfo messageInfo, DateTime timestamp, long index, bool isSystem, Guid creatorId)
+        public async Task<IChatMessage> Create(Guid chatId, Guid userId, Guid messageId, IChatMessageInfo messageInfo, DateTime timestamp, long index, bool isSystem, Guid creatorId)
         {
             await Task.Yield();
             var message = new ChatMessage(messageId, timestamp, index, userId, MessageStatus.Actual, null, isSystem, messageInfo);
@@ -44,7 +43,7 @@
             return message;
         }
 
-        public async Task<ChatMessage> Update(Guid chatId, Guid messageId, ChatMessageInfo messageInfo, Guid modifierId)
+        public async Task<IChatMessage> Update(Guid chatId, Guid messageId, IChatMessageInfo messageInfo, Guid modifierId)
         {
             await Task.Yield();
             var message = Store.Messages[chatId][messageId];
@@ -62,7 +61,7 @@
             return message;
         }
 
-        public async Task<ChatMessage> Delete(Guid chatId, Guid messageId, Guid removerId)
+        public async Task<IChatMessage> Delete(Guid chatId, Guid messageId, Guid removerId)
         {
             await Task.Yield();
             Store.Messages[chatId].TryRemove(messageId, out var chatMessage);
@@ -70,7 +69,7 @@
             return chatMessage;
         }
 
-        public async Task Archive(Guid chatId, Guid originalMessageId, Guid achievedMessageId, ChatMessage messageInfo, Guid archiverId)
+        public async Task Archive(Guid chatId, Guid originalMessageId, Guid achievedMessageId, IChatMessage messageInfo, Guid archiverId)
         {
             await Task.Yield();
         }

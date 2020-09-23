@@ -1,11 +1,11 @@
 ﻿namespace K1vs.DotChat.Tests.Integration.Modules
 {
-    using Basic.Configuration;
-    using Basic.Modules;
     using Demo.Bus.InMemory;
     using Demo.Others;
     using Demo.Stores.InMemory;
     using Dependency;
+    using K1vs.DotChat.Common.Configuration;
+    using K1vs.DotChat.Common.Modules;
     using Notifiers;
 
     public class TestChatNotificationModule: ChatNotificationModule

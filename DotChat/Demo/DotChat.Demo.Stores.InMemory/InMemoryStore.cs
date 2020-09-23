@@ -6,8 +6,8 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Basic.Chats;
-    using Basic.Messages;
+    using K1vs.DotChat.Models.Chats;
+    using K1vs.DotChat.Models.Messages;
     using Models.Participants;
 
     public class InMemoryStore
