@@ -51,7 +51,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{B545
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotChat.Demo.SignalR", "Demo\DotChat.Demo.SignalR\DotChat.Demo.SignalR.csproj", "{E130CB12-B5DA-4FD8-BE69-0C0615588354}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotChat.Implementations.Autofac", "Implementations\DotChat.Implementations.Autofac\DotChat.Implementations.Autofac.csproj", "{790BC816-05F3-4B71-BD78-19D350304E8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotChat.Implementations.Autofac", "Implementations\DotChat.Implementations.Autofac\DotChat.Implementations.Autofac.csproj", "{790BC816-05F3-4B71-BD78-19D350304E8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotChat.Implementations.CoreSignalR", "DotChat.Implementations.CoreSignalR\DotChat.Implementations.CoreSignalR.csproj", "{C646E850-2D45-4005-B0B8-9FED39D2D8C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,6 +145,10 @@ Global
 		{790BC816-05F3-4B71-BD78-19D350304E8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{790BC816-05F3-4B71-BD78-19D350304E8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{790BC816-05F3-4B71-BD78-19D350304E8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C646E850-2D45-4005-B0B8-9FED39D2D8C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C646E850-2D45-4005-B0B8-9FED39D2D8C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C646E850-2D45-4005-B0B8-9FED39D2D8C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C646E850-2D45-4005-B0B8-9FED39D2D8C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,6 +162,7 @@ Global
 		{6C546BAA-E06D-4F7E-BC2B-DFD8BAA9521C} = {EDB74A82-07EB-43A3-928B-7D3C724F2AD2}
 		{E130CB12-B5DA-4FD8-BE69-0C0615588354} = {6B76A79F-B638-4BA4-BCC2-BE05CC906C93}
 		{790BC816-05F3-4B71-BD78-19D350304E8E} = {EDB74A82-07EB-43A3-928B-7D3C724F2AD2}
+		{C646E850-2D45-4005-B0B8-9FED39D2D8C3} = {EDB74A82-07EB-43A3-928B-7D3C724F2AD2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A131F489-4334-43C7-A428-B4E92AE72797}
