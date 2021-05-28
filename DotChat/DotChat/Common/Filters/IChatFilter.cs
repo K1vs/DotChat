@@ -5,8 +5,8 @@
 
     public interface IChatFilter
     {
-        IReadOnlyCollection<IChatUserFilter> UserFilters { get; }
-        IReadOnlyCollection<IMessageFilter> MessageFilters { get;  }
+        IReadOnlyCollection<IChatParticipantFilter> ParticipantFilters { get; }
+        IReadOnlyCollection<IChatMessageFilter> MessageFilters { get;  }
         string Search { get; }
         bool SearchInDescription { get; }
     }

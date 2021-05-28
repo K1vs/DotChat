@@ -18,7 +18,7 @@
     public abstract class ChatMessagesHub<TChatMessagesClient, TMessageFilterCollection, TPagingOptions, TChatMessageInfo>
         : Hub<TChatMessagesClient>
         where TChatMessagesClient: class, IChatMessagesClient
-        where TMessageFilterCollection: IReadOnlyCollection<IMessageFilter>
+        where TMessageFilterCollection: IReadOnlyCollection<IChatMessageFilter>
         where TPagingOptions: IPagingOptions
         where TChatMessageInfo: IChatMessageInfo
     {

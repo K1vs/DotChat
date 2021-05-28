@@ -86,7 +86,7 @@
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 
-        public virtual async Task Handle(IReadChatMessagesCommand command, IChatBusContext chatEventPublisher)
+        public virtual async Task Handle(IReadChatParticipantCommand command, IChatBusContext chatEventPublisher)
         {
             await ChatMessagesPermissionValidator.ValidateRead(command.InitiatorUserId, command.ChatId, command.Index, command.Force, WorkerName).ConfigureAwait(false);
             await ChatMessageStore.Read(command.ChatId, command.InitiatorUserId, command.Index, command.Force).ConfigureAwait(false);

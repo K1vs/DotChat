@@ -6,6 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using Common;
+    using K1vs.DotChat.Users;
 
     public interface IParticipationCandidate: IUserRelated, ICustomizable
     {

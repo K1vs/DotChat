@@ -11,20 +11,17 @@
         {
         }
 
-        public AddChatCommand(Guid initiatorUserId, Guid chatId, IChatInfo chatInfo, IReadOnlyCollection<IParticipationCandidate> add, IReadOnlyCollection<IParticipationCandidate> invite) : base(initiatorUserId)
+        public AddChatCommand(Guid initiatorUserId, Guid chatId, IChatInfo chatInfo, IParticipantsAddInviteBulk participantsAddInviteBulk) : base(initiatorUserId)
         {
             ChatId = chatId;
             ChatInfo = chatInfo;
-            ToAdd = add;
-            ToInvite = invite;
+            ParticipantsAddInviteBulk = participantsAddInviteBulk;
         }
 
         public Guid ChatId { get; set; }
 
         public IChatInfo ChatInfo { get; set; }
 
-        public IReadOnlyCollection<IParticipationCandidate> ToAdd { get; set; }
-
-        public IReadOnlyCollection<IParticipationCandidate> ToInvite { get; set; }
+        public IParticipantsAddInviteBulk ParticipantsAddInviteBulk { get; set; }
     }
 }

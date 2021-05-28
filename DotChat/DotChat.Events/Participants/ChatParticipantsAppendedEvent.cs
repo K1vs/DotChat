@@ -8,13 +8,13 @@
     using Chats;
     using DotChat.Participants;
 
-    public class ChatParticipantsAppendedEvent: Event, IChatParticipantsAppendedEvent
+    public class ChatParticipantsAppendedEvent: Event, IChatParticipantBulkAddedInvitedEvent
     {
         public ChatParticipantsAppendedEvent()
         {
         }
 
-        public ChatParticipantsAppendedEvent(Guid initiatorUserId, Guid chatId, IReadOnlyCollection<IParticipationResult> added, IReadOnlyCollection<IParticipationResult> invited) : base(initiatorUserId)
+        public ChatParticipantsAppendedEvent(Guid initiatorUserId, Guid chatId, IReadOnlyCollection<IParticipationModificationResult> added, IReadOnlyCollection<IParticipationModificationResult> invited) : base(initiatorUserId)
         {
             ChatId = chatId;
             Added = added;
@@ -22,7 +22,7 @@
         }
 
         public Guid ChatId { get; set; }
-        public IReadOnlyCollection<IParticipationResult> Added { get; set; }
-        public IReadOnlyCollection<IParticipationResult> Invited { get; set; }
+        public IReadOnlyCollection<IParticipationModificationResult> Added { get; set; }
+        public IReadOnlyCollection<IParticipationModificationResult> Invited { get; set; }
     }
 }

@@ -4,7 +4,7 @@
     using DotChat.Chats;
     using K1vs.DotChat.Participants;
 
-    public interface IChatParticipantBlockedEvent: IChatParticipantEvent, IChatRelated, IParticipationResult
+    public interface IChatParticipantBlockedEvent: IChatParticipantEvent, IChatRelated, IHasParticipationStatusModificationResult
     {
     }
 }

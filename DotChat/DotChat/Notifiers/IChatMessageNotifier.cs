@@ -11,8 +11,7 @@
     public interface IChatMessageNotifier:
         IHandleEvent<IChatMessageAddedEvent>,
         IHandleEvent<IChatMessageEditedEvent>,
-        IHandleEvent<IChatMessageRemovedEvent>,
-        IHandleEvent<IChatMessagesReadEvent>
+        IHandleEvent<IChatMessageRemovedEvent>
     {
     }
 }

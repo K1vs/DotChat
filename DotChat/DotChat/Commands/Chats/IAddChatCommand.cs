@@ -5,7 +5,7 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public interface IAddChatCommand: ICommand, IChatRelated, IHasChatInfo, IHasParticipationCandidates
+    public interface IAddChatCommand: ICommand, IChatRelated, IHasChatInfo, IHasParticipantsAddInviteBulk
     {
     }
 }

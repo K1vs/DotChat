@@ -6,13 +6,13 @@
     using DotChat.Participants;
     using Events;
 
-    public class ChatParticipantsAppendedNotification: Notification, IChatParticipantsAppendedNotification
+    public class ChatParticipantsAppendedNotification: Notification, IChatParticipantBulkAddedInvitedNotification
     {
         public ChatParticipantsAppendedNotification()
         {
         }
 
-        public ChatParticipantsAppendedNotification(Guid initiatorUserId, Guid chatId, IReadOnlyCollection<IParticipationResult> added, IReadOnlyCollection<IParticipationResult> invited) : base(initiatorUserId)
+        public ChatParticipantsAppendedNotification(Guid initiatorUserId, Guid chatId, IReadOnlyCollection<IParticipationModificationResult> added, IReadOnlyCollection<IParticipationModificationResult> invited) : base(initiatorUserId)
         {
             ChatId = chatId;
             Added = added;
@@ -20,7 +20,7 @@
         }
 
         public Guid ChatId { get; set; }
-        public IReadOnlyCollection<IParticipationResult> Added { get; set; }
-        public IReadOnlyCollection<IParticipationResult> Invited { get; set; }
+        public IReadOnlyCollection<IParticipationModificationResult> Added { get; set; }
+        public IReadOnlyCollection<IParticipationModificationResult> Invited { get; set; }
     }
 }

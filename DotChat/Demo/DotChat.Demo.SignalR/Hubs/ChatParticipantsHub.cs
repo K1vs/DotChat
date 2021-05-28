@@ -7,7 +7,7 @@
     using Models.Participants;
     using Services;
 
-    public class ChatParticipantsHub: ChatParticipantsHub<IChatParticipantsClient, List<ParticipationResult>, ParticipationResult, ChatParticipant, List<ParticipationCandidate>, ParticipationCandidate>
+    public class ChatParticipantsHub: ChatParticipantsHub<IChatParticipantsClient, List<ParticipationModificationResult>, ParticipationModificationResult, ChatParticipant, List<ParticipationCandidate>, ParticipationCandidate>
     {
         public ChatParticipantsHub(IChatParticipantsService<List<ParticipationCandidate>, ParticipationCandidate> chatParticipantsService) : base(chatParticipantsService)
         {

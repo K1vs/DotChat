@@ -6,11 +6,14 @@
     using System.Text;
     using System.Threading.Tasks;
     using DotChat.Participants;
+    using K1vs.DotChat.Common.Filters;
+    using K1vs.DotChat.Common.Paging;
 
     public interface IReadChatParticipantStore
     {
-        Task<IReadOnlyCollection<Guid>> RetrieveIds(Guid chatId);
-        Task<IReadOnlyCollection<IChatParticipant>> RetrieveList(Guid chatId, IEnumerable<Guid> participantsIds);
+        Task<IPagedResult<IChatParticipant>> Retrieve(Guid chatId, IReadOnlyCollection<IChatParticipantFilter> filters, IPagingOptions options);
+        Task<IPagedResult<IChatParticipant>> Retrieve(Guid chatId, IPagingOptions options);
         Task<IChatParticipant> Retrieve(Guid chatId, Guid userId);
+        Task<IReadOnlyCollection<Guid>> RetrieveIds(Guid chatId);
     }
 }

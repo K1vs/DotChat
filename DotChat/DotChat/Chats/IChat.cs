@@ -6,13 +6,18 @@
     using Messages;
     using K1vs.DotChat.Common;
     using K1vs.DotChat.Messages.Typed;
+    using K1vs.DotChat.Users;
 
-    public interface IChat : IChatInfo, IChatRelated, IHasParticipants
+    public interface IChat : IChatRelated, IHasParticipants, IVersioned
     {
+        IChatInfo ChatInfo { get; set; }
         long TopIndex { get; }
         DateTime LastTimestamp { get; }
         Guid? LastMessageId { get; }
-        Guid? LastMessageAuthorId { get; }
         IChatMessageInfo LastChatMessageInfo { get; }
+        long LastMessageIndex { get; set; }
+        Guid? LastMessageAuthorId { get; }
+        IChatUser LastMessageAuthorInfo { get; set; }
+        long PaticipantsCount { get; set; }
     }
 }

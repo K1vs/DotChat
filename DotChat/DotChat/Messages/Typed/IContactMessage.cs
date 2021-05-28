@@ -2,6 +2,7 @@
 {
     using Common;
     using K1vs.DotChat.Participants;
+    using K1vs.DotChat.Users;
 
     public interface IContactMessage: ICustomizable
     {

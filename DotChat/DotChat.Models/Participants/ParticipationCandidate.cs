@@ -1,7 +1,9 @@
 ﻿namespace K1vs.DotChat.Models.Participants
 {
     using System;
+    using System.Collections.Generic;
     using DotChat.Participants;
+    using K1vs.DotChat.Common;
 
     public class ParticipationCandidate: IParticipationCandidate
     {
@@ -9,17 +11,15 @@
         {
         }
 
-        public ParticipationCandidate(Guid userId, ChatParticipantType chatParticipantType, string style = null, string metadata = null)
+        public ParticipationCandidate(Guid userId, ChatParticipantType chatParticipantType, IReadOnlyList<string> styles = null)
         {
             UserId = userId;
             ChatParticipantType = chatParticipantType;
-            Style = style;
-            Metadata = metadata;
+            Styles = styles;
         }
 
         public Guid UserId { get; set; }
         public ChatParticipantType ChatParticipantType { get; set; }
-        public string Style { get; set; }
-        public string Metadata { get; set; }
+        public IReadOnlyList<string> Styles { get; set; }
     }
 }

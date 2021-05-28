@@ -1,4 +1,4 @@
-﻿namespace K1vs.DotChat.Common.CommandBuilders
+﻿namespace K1vs.DotChat.Commands.CommandBuilders
 {
     using K1vs.DotChat.CommandBuilders;
     using System;
@@ -7,8 +7,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using Commands.Messages;
-    using Messages;
-    using Messages.Typed;
+    using K1vs.DotChat.Messages;
 
     public class ChatMessagesCommandBuilder: IChatMessagesCommandBuilder
     {
@@ -30,11 +29,6 @@
         public virtual IRemoveChatMessageCommand BuildRemoveChatMessageCommand(Guid currentUserId, Guid chatId, Guid messageId)
         {
             return new RemoveChatMessageCommand(currentUserId, chatId, messageId);
-        }
-
-        public virtual IReadChatMessagesCommand BuildReadChatMessagesCommand(Guid currentUserId, Guid chatId, long index, bool force)
-        {
-            return new ReadChatMessagesCommand(currentUserId, chatId, index, force);
         }
     }
 }

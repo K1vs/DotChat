@@ -1,4 +1,4 @@
-﻿namespace K1vs.DotChat.Common.CommandBuilders
+﻿namespace K1vs.DotChat.Commands.CommandBuilders
 {
     using System;
     using System.Collections.Generic;
@@ -11,20 +11,20 @@
 
     public class ChatParticipantsCommandBuilder: IChatParticipantsCommandBuilder
     {
-        public virtual IAddChatParticipantCommand BuildAddChatParticipantCommand(Guid currentUserId, Guid chatId, Guid userId, ChatParticipantType chatParticipantType, string style, string metadata)
+        public virtual IAddChatParticipantCommand BuildAddChatParticipantCommand(Guid currentUserId, Guid chatId, Guid userId, ChatParticipantType chatParticipantType, IReadOnlyList<string> styles = null)
         {
-            return new AddChatParticipantCommand(currentUserId, chatId, userId, chatParticipantType, style, metadata);
+            return new AddChatParticipantCommand(currentUserId, chatId, userId, chatParticipantType, styles);
         }
 
-        public virtual IApplyToChatCommand BuildApplyToChatCommand(Guid currentUserId, Guid chatId, ChatParticipantType chatParticipantType, string style, string metadata)
+        public virtual IApplyToChatCommand BuildApplyToChatCommand(Guid currentUserId, Guid chatId, Guid userId, ChatParticipantType chatParticipantType, IReadOnlyList<string> styles = null)
         {
-            return new ApplyToChatCommand(currentUserId, chatId, chatParticipantType, style, metadata);
+            return new ApplyToChatCommand(currentUserId, chatId, userId, chatParticipantType, styles);
         }
 
         public virtual IInviteChatParticipantCommand BuildInviteChatParticipantCommand(Guid currentUserId, Guid chatId, Guid userId,
-            ChatParticipantType chatParticipantType, string style, string metadata)
+            ChatParticipantType chatParticipantType, IReadOnlyList<string> styles = null)
         {
-            return new InviteChatParticipantCommand(currentUserId, chatId, userId, chatParticipantType, style, metadata);
+            return new InviteChatParticipantCommand(currentUserId, chatId, userId, chatParticipantType, styles);
         }
 
         public virtual IRemoveChatParticipantCommand BuildRemoveChatParticipantCommand(Guid currentUserId, Guid chatId, Guid userId)
@@ -33,9 +33,9 @@
         }
 
         public virtual IChangeChatParticipantTypeCommand BuildChangeChatParticipantTypeCommand(Guid currentUserId, Guid chatId, Guid userId,
-            ChatParticipantType chatParticipantType, string style, string metadata)
+            ChatParticipantType chatParticipantType, IReadOnlyList<string> styles = null)
         {
-            return new ChangeChatParticipantTypeCommand(currentUserId, chatId, userId, chatParticipantType, style, metadata);
+            return new ChangeChatParticipantTypeCommand(currentUserId, chatId, userId, chatParticipantType, styles);
         }
 
         public virtual IBlockChatParticipantCommand BuildBlockChatParticipantCommand(Guid currentUserId, Guid chatId, Guid userId)
@@ -43,9 +43,14 @@
             return new BlockChatParticipantCommand(currentUserId, chatId, userId);
         }
 
-        public virtual IAppendChatParticipantsCommand BuildAppendChatParticipantsCommand(Guid currentUserId, Guid chatId, IReadOnlyCollection<IParticipationCandidate> addCandidates, IReadOnlyCollection<IParticipationCandidate> inviteCandidates)
+        public virtual IBulkAddInviteChatParticipantsCommand BuildBulkAddInviteChatParticipantsCommand(Guid currentUserId, Guid chatId, IParticipantsAddInviteBulk participantsAddInviteBulk)
         {
-            return new AppendChatParticipantsCommand(currentUserId, chatId, addCandidates, inviteCandidates);
+            return new BulkAddInviteChatParticipantsCommand(currentUserId, chatId, participantsAddInviteBulk);
+        }
+
+        public virtual IReadChatParticipantCommand BuildReadChatParticipantCommand(Guid currentUserId, Guid chatId, long index, bool force)
+        {
+            return new ReadChatMessagesCommand(currentUserId, chatId, index, force);
         }
     }
 }

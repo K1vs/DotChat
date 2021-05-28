@@ -14,6 +14,5 @@
         IAddChatMessageCommand BuildAddChatMessageCommand(Guid currentUserId, Guid chatId, Guid messageId, DateTime timestamp, long index, bool isSystem, IChatMessageInfo chatMessageInfo);
         IEditChatMessageCommand BuildEditChatMessageCommand(Guid currentUserId, Guid chatId, Guid messageId, IChatMessageInfo chatMessageInfo, Guid? archivedMessageId);
         IRemoveChatMessageCommand BuildRemoveChatMessageCommand(Guid currentUserId, Guid chatId, Guid messageId);
-        IReadChatMessagesCommand BuildReadChatMessagesCommand(Guid currentUserId, Guid chatId, long index, bool force);
     }
 }

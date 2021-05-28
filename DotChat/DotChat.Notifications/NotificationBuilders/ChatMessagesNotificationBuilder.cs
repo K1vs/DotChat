@@ -10,9 +10,6 @@
     using DotChat.Notifications.Messages;
     using Messages;
     using Messages.Typed;
-    using Models.Chats;
-    using Models.Messages.Typed;
-    using Models.Participants;
 
     public class ChatMessagesNotificationBuilder: IChatMessagesNotificationBuilder
     {
@@ -29,11 +26,6 @@
         public virtual IChatMessageRemovedNotification BuildChatMessageRemovedNotification(IChatMessageRemovedEvent @event)
         {
             return new ChatMessageRemovedNotification(@event.InitiatorUserId, @event.ChatId, @event.Message);
-        }
-
-        public virtual IChatMessagesReadNotification BuildChatMessagesReadNotification(IChatMessagesReadEvent @event)
-        {
-            return new ChatMessagesReadNotification(@event.InitiatorUserId, @event.ChatId, @event.Index, @event.Force);
         }
     }
 }

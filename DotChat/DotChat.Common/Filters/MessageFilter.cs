@@ -3,7 +3,7 @@
     using System;
     using Messages;
 
-    public class MessageFilter: IMessageFilter
+    public class MessageFilter: IChatMessageFilter
     {
         public MessageFilter()
         {

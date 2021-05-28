@@ -36,7 +36,7 @@
 
         public virtual async Task Handle(IAddChatParticipantCommand command, IChatBusContext chatEventPublisher)
         {
-            await ChatParticipantsPermissionValidator.ValidateAdd(command.InitiatorUserId, command.ChatId, command.UserId, command.ChatParticipantType, command.Style, command.Metadata, WorkerName).ConfigureAwait(false);
+            await ChatParticipantsPermissionValidator.ValidateAdd(command.InitiatorUserId, command.ChatId, command.UserId, command.ChatParticipantType, command.Styles, command.Data, WorkerName).ConfigureAwait(false);
             var currentParticipant = await ChatParticipantStore.Retrieve(command.ChatId, command.UserId).ConfigureAwait(false);
             var participant = await SetParticipationCandidate(command, ChatParticipantStatus.Active).ConfigureAwait(false);
             var @event = ChatParticipantsEventBuilder.BuildChatParticipantAddedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant?.ChatParticipantStatus);
@@ -45,16 +45,16 @@
 
         public virtual async Task Handle(IApplyToChatCommand command, IChatBusContext chatEventPublisher)
         {
-            await ChatParticipantsPermissionValidator.ValidateApply(command.InitiatorUserId, command.ChatId, command.ChatParticipantType, command.Style, command.Metadata, WorkerName).ConfigureAwait(false);
+            await ChatParticipantsPermissionValidator.ValidateApply(command.InitiatorUserId, command.ChatId, command.ChatParticipantType, command.Styles, command.Data, WorkerName).ConfigureAwait(false);
             var currentParticipant = await ChatParticipantStore.Retrieve(command.ChatId, command.InitiatorUserId).ConfigureAwait(false);
-            var participant = await SetParticipationCandidate(command.ChatId, command.InitiatorUserId, command.ChatParticipantType, ChatParticipantStatus.Applied, command.Style, command.Metadata, command.InitiatorUserId).ConfigureAwait(false);
+            var participant = await SetParticipationCandidate(command.ChatId, command.InitiatorUserId, command.ChatParticipantType, ChatParticipantStatus.Applied, command.Styles, command.Data, command.InitiatorUserId).ConfigureAwait(false);
             var @event = ChatParticipantsEventBuilder.BuildChatParticipantAppliedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant?.ChatParticipantStatus);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 
         public virtual async Task Handle(IInviteChatParticipantCommand command, IChatBusContext chatEventPublisher)
         {
-            await ChatParticipantsPermissionValidator.ValidateInvite(command.InitiatorUserId, command.ChatId, command.UserId, command.ChatParticipantType, command.Style, command.Metadata, WorkerName).ConfigureAwait(false);
+            await ChatParticipantsPermissionValidator.ValidateInvite(command.InitiatorUserId, command.ChatId, command.UserId, command.ChatParticipantType, command.Styles, command.Data, WorkerName).ConfigureAwait(false);
             var currentParticipant = await ChatParticipantStore.Retrieve(command.ChatId, command.UserId).ConfigureAwait(false);
             var participant = await SetParticipationCandidate(command, ChatParticipantStatus.Invited).ConfigureAwait(false);
             var @event = ChatParticipantsEventBuilder.BuildChatParticipantInvitedEvent(command.InitiatorUserId, command.ChatId, participant, currentParticipant?.ChatParticipantStatus);
@@ -81,24 +81,24 @@
 
         public virtual async Task Handle(IChangeChatParticipantTypeCommand command, IChatBusContext chatEventPublisher)
         {
-            await ChatParticipantsPermissionValidator.ValidateChangeType(command.InitiatorUserId, command.ChatId, command.UserId, command.ChatParticipantType, command.Style, command.Metadata, WorkerName).ConfigureAwait(false);
+            await ChatParticipantsPermissionValidator.ValidateChangeType(command.InitiatorUserId, command.ChatId, command.UserId, command.ChatParticipantType, command.Styles, command.Data, WorkerName).ConfigureAwait(false);
             var currentParticipant = await ChatParticipantStore.Retrieve(command.ChatId, command.UserId).ConfigureAwait(false);
             var participant = await ChatParticipantStore.ChangeType(command.ChatId, command.UserId, command.ChatParticipantType, command.InitiatorUserId).ConfigureAwait(false);
             var @event = ChatParticipantsEventBuilder.BuildChatParticipantTypeChangedEvent(command.InitiatorUserId, command.ChatId, participant);
             await chatEventPublisher.EventPublisher.Publish(@event).ConfigureAwait(false);
         }
 
-        public virtual async Task Handle(IAppendChatParticipantsCommand command, IChatBusContext chatEventPublisher)
+        public virtual async Task Handle(IBulkAddInviteChatParticipantsCommand command, IChatBusContext chatEventPublisher)
         {
             await ChatParticipantsPermissionValidator.ValidateAppend(command.InitiatorUserId, command.ChatId, command.ToAdd, command.ToInvite, WorkerName).ConfigureAwait(false);
             var currentParticipants = await ChatParticipantStore.RetrieveList(command.ChatId, command.ToAdd.Concat(command.ToInvite).Select(r => r.UserId));
             var append = command.ToAdd.Concat(command.ToInvite);
             var users = await ReadUserStore.Retrieve(append.Select(r => r.UserId));
             users = users.Join(append, r => r.UserId, r => r.UserId, (u, c) => new {User = u, Candidate = c})
-                .Select(r => ReadUserStore.Customize(r.User, r.Candidate.Style, r.Candidate.Metadata))
+                .Select(r => ReadUserStore.Customize(r.User, r.Candidate.Styles, r.Candidate.Data))
                 .ToList();
 
-            async Task<IReadOnlyCollection<IParticipationResult>> SetStatusGroup(IReadOnlyCollection<IParticipationCandidate> candidates, ChatParticipantStatus status)
+            async Task<IReadOnlyCollection<IParticipationModificationResult>> SetStatusGroup(IReadOnlyCollection<IParticipationCandidate> candidates, ChatParticipantStatus status)
             {
                 IEnumerable<IChatParticipant> chatParticipants = Enumerable.Empty<IChatParticipant>();
                 foreach (var group in candidates.GroupBy(r => r.ChatParticipantType))
@@ -132,7 +132,7 @@
         protected virtual Task<IChatParticipant> SetParticipationCandidate<TCommand>(TCommand command, ChatParticipantStatus participantStatus)
             where TCommand : IHasInitiator, IChatRelated, IParticipationCandidate
         {
-            return SetParticipationCandidate(command.ChatId, command.UserId, command.ChatParticipantType, participantStatus, command.Style, command.Metadata,
+            return SetParticipationCandidate(command.ChatId, command.UserId, command.ChatParticipantType, participantStatus, command.Styles, command.Data,
                 command.InitiatorUserId);
         }
 

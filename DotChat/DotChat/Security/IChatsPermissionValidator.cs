@@ -14,12 +14,12 @@
 
     public interface IChatsPermissionValidator
     {
-        Task ValidateGetSummary(Guid currentUserId, string serviceName, [CallerMemberName] string methodName = null);
-        Task ValidateGetPage(Guid currentUserId, IPagedResult<IPersonalizedChat> chatsPage, IChatFilter filter, IPagingOptions pagingOptions, string serviceName, [CallerMemberName] string methodName = null);
-        Task ValidateGetPage(Guid currentUserId, IPagedResult<IPersonalizedChat> chatsPage, IPagingOptions pagingOptions, string serviceName, [CallerMemberName] string methodName = null);
-        Task ValidateGet(Guid currentUserId, IPersonalizedChat chat, string serviceName, [CallerMemberName] string methodName = null);
-        Task ValidateAdd(Guid currentUserId, Guid chatId, IChatInfo chatInfo, string serviceName, [CallerMemberName] string methodName = null);
-        Task ValidateEditInfo(Guid currentUserId, Guid chatId, IChatInfo chatInfo, string serviceName, [CallerMemberName] string methodName = null);
-        Task ValidateRemove(Guid currentUserId, Guid chatId, string serviceName, [CallerMemberName] string methodName = null);
+        Task ValidateGetSummary(Guid currentUserId, IChatsSummary chatsSummary);
+        Task ValidateGetPage(Guid currentUserId, IChatFilter filter, IPagingOptions pagingOptions, IPagedResult<IChat> chatPage);
+        Task ValidateGetPage(Guid currentUserId, IPagingOptions pagingOptions, IPagedResult<IChat> chatPage);
+        Task ValidateGet(Guid currentUserId, IChat chat);
+        Task ValidateAdd(Guid currentUserId, Guid chatId, IChatInfo chatInfo, IParticipantsAddInviteBulk participationCandidates);
+        Task ValidateEditInfo(Guid currentUserId, Guid chatId, IChatInfo chatInfo);
+        Task ValidateRemove(Guid currentUserId, Guid chatId);
     }
 }

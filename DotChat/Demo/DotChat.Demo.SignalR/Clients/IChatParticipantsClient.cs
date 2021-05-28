@@ -5,7 +5,7 @@
     using Implementations.SignalR;
     using Models.Participants;
 
-    public interface IChatParticipantsClient: IChatParticipantsClient<List<ParticipationResult>, ParticipationResult, ChatParticipant>
+    public interface IChatParticipantsClient: IChatParticipantsClient<List<ParticipationModificationResult>, ParticipationModificationResult, ChatParticipant>
     {
     }
 }

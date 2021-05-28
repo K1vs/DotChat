@@ -30,7 +30,7 @@
 
         public IChatUser Customize(IChatUser user, string style, string metadata)
         {
-            return new ChatUser(user.UserId, user.Name, user.Details, user.AvatarId, user.InviteOnly, user.CanCreateChat, style ?? user.Style, metadata ?? user.Style);
+            return new ChatUser(user.UserId, user.Name, user.Details, user.AvatarId, user.InviteOnly, user.CanCreateChat, style ?? user.Styles, metadata ?? user.Styles);
         }
     }
 }

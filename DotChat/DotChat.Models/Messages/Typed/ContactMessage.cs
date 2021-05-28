@@ -2,6 +2,8 @@
 {
     using DotChat.Messages.Typed;
     using DotChat.Participants;
+    using K1vs.DotChat.Users;
+    using System.Collections.Generic;
 
     public class ContactMessage: IContactMessage
     {
@@ -9,15 +11,13 @@
         {
         }
 
-        public ContactMessage(IChatUser contact, string style = null, string metadata = null)
+        public ContactMessage(IChatUser contact, IReadOnlyList<string> styles = null)
         {
             Contact = contact;
-            Style = style;
-            Metadata = metadata;
+            Styles = styles;
         }
 
         public IChatUser Contact { get; set; }
-        public string Style { get; set; }
-        public string Metadata { get; set; }
+        public IReadOnlyList<string> Styles { get; set; }
     }
 }

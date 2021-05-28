@@ -7,14 +7,13 @@
     using DotChat.Messages.Typed;
     using DotChat.Participants;
 
-    public class ChatMessage: ChatMessageInfo, IChatMessage
+    public class ChatMessage: IChatMessage
     {
         public ChatMessage()
         {
         }
 
-        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage, bool isSystem, MessageType type, long version, bool immutable = false, string style = null, string metadata = null, ITextMessage text = default, IQuoteMessage quote = default, IReadOnlyCollection<IMessageAttachment> messageAttachments = default, IReadOnlyCollection<IChatRefMessage> chatRefs = default, IReadOnlyCollection<IContactMessage> contacts = default)
-            : base(type, version, immutable, style, metadata, text, quote, messageAttachments, chatRefs, contacts)
+        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage, bool isSystem, int version, IChatMessageInfo chatMessageInfo)
         {
             MessageId = messageId;
             Timestamp = timestamp;
@@ -24,11 +23,7 @@
             OriginalMessage = originalMessage;
             Version = version;
             IsSystem = isSystem;
-        }
-
-        public ChatMessage(Guid messageId, DateTime timestamp, long index, Guid authorId, MessageStatus messageStatus, Guid? originalMessage, bool isSystem, IChatMessageInfo messageInfo)
-            : this(messageId, timestamp, index, authorId, messageStatus, originalMessage, isSystem, messageInfo.Type, messageInfo.Version, messageInfo.Immutable, messageInfo.Style, messageInfo.Metadata, messageInfo.Text, messageInfo.Quote, messageInfo.MessageAttachments, messageInfo.ChatRefs, messageInfo.Contacts)
-        {              
+            ChatMessageInfo = chatMessageInfo;
         }
 
         public Guid MessageId { get; set; }
@@ -38,5 +33,7 @@
         public MessageStatus MessageStatus { get; set; }
         public Guid? OriginalMessage { get; set; }
         public bool IsSystem { get; set; }
+        public IChatMessageInfo ChatMessageInfo { get; set; }
+        public long Version { get; set; }
     }
 }

@@ -57,7 +57,7 @@
             return chatsPage;
         }
 
-        public virtual async Task<Guid> Add(Guid currentUserId, Guid? chatId, IChatInfo chatInfo, IHasParticipationCandidates participationCandidates)
+        public virtual async Task<Guid> Add(Guid currentUserId, Guid? chatId, IChatInfo chatInfo, IParticipantsAddInviteBulk participationCandidates)
         {
             var command = ChatsCommandBuilder.BuildAddChatCommand(currentUserId, chatId, chatInfo, participationCandidates);
             await ChatsPermissionValidator.ValidateAdd(currentUserId, command.ChatId, chatInfo, ServiceName).ConfigureAwait(false);

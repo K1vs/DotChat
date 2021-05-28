@@ -13,11 +13,10 @@
 
     public interface IChatsService
     {
-        Task<IPersonalizedChatsSummary> GetSummary(Guid currentUserId);
-        Task<IPagedResult<IPersonalizedChat>> GetPage(Guid currentUserId, IChatFilter filter, IPagingOptions pagingOptions = default);
-        Task<IPagedResult<IPersonalizedChat>> GetPage(Guid currentUserId, IPagingOptions pagingOptions = default);
-        Task<IPersonalizedChat> Get(Guid currentUserId, Guid chatId);
-        Task<Guid> Add(Guid currentUserId, Guid? chatId, IChatInfo chatInfo, IHasParticipationCandidates participationCandidates);
+        Task<IChatsSummary> GetSummary(Guid currentUserId);
+        Task<IPagedResult<IChat>> GetPage(Guid currentUserId, IChatFilter filter = default, IPagingOptions pagingOptions = default);
+        Task<IChat> Get(Guid currentUserId, Guid chatId);
+        Task<Guid> Add(Guid currentUserId, Guid? chatId, IChatInfo chatInfo, IParticipantsAddInviteBulk participationCandidates);
         Task EditInfo(Guid currentUserId, Guid chatId, IChatInfo chatInfo);
         Task Remove(Guid currentUserId, Guid chatId);
     }

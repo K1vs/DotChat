@@ -14,6 +14,5 @@
         IChatMessageAddedNotification BuildChatMessageAddedNotification(IChatMessageAddedEvent @event);
         IChatMessageEditedNotification BuildChatMessageEditedNotification(IChatMessageEditedEvent @event);
         IChatMessageRemovedNotification BuildChatMessageRemovedNotification(IChatMessageRemovedEvent @event);
-        IChatMessagesReadNotification BuildChatMessagesReadNotification(IChatMessagesReadEvent @event);
     }
 }

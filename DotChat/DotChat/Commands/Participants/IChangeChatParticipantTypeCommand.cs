@@ -8,7 +8,7 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public interface IChangeChatParticipantTypeCommand: ICommand, IChatRelated, IParticipationCandidate
+    public interface IChangeChatParticipantTypeCommand: ICommand, IChatRelated, IHasParticipantType
     {
     }
 }

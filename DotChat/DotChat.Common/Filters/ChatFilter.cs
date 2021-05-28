@@ -10,20 +10,16 @@
 
         }
 
-        public ChatFilter(List<TChatUserFilter> userFiltersList, List<TMessageFilter> messageFiltersList, IReadOnlyCollection<IChatUserFilter> userFilters, IReadOnlyCollection<IMessageFilter> messageFilters, string search, bool searchInDescription)
+        public ChatFilter(IReadOnlyCollection<IChatParticipantFilter> participantFilters, IReadOnlyCollection<IChatMessageFilter> messageFilters, string search, bool searchInDescription)
         {
-            UserFiltersList = userFiltersList;
-            MessageFiltersList = messageFiltersList;
-            UserFilters = userFilters;
+            ParticipantFilters = participantFilters;
             MessageFilters = messageFilters;
             Search = search;
             SearchInDescription = searchInDescription;
         }
 
-        public List<TChatUserFilter> UserFiltersList { get; set; }
-        public List<TMessageFilter> MessageFiltersList { get; set; }
-        public IReadOnlyCollection<IChatUserFilter> UserFilters { get; set; }
-        public IReadOnlyCollection<IMessageFilter> MessageFilters { get; set; }
+        public IReadOnlyCollection<IChatParticipantFilter> ParticipantFilters { get; set; }
+        public IReadOnlyCollection<IChatMessageFilter> MessageFilters { get; set; }
         public string Search { get; set; }
         public bool SearchInDescription { get; set; }
     }

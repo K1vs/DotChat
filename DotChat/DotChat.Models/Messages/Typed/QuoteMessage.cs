@@ -15,21 +15,19 @@
         {
         }
 
-        public QuoteMessage(Guid chatId, Guid messageId, DateTime timestamp, IChatMessageInfo messageInfo, string style = null, string metadata = null)
+        public QuoteMessage(Guid chatId, Guid messageId, DateTime timestamp, IChatMessageInfo messageInfo, IReadOnlyList<string> styles = null)
         {
             ChatId = chatId;
             MessageId = messageId;
             Timestamp = timestamp;
             MessageInfo = messageInfo;
-            Style = style;
-            Metadata = metadata;
+            Styles = styles;
         }
 
         public Guid ChatId { get; set; }
         public Guid MessageId { get; set; }
         public DateTime Timestamp { get; set; }
         public IChatMessageInfo MessageInfo { get; set; }
-        public string Style { get; set; }
-        public string Metadata { get; set; }
+        public IReadOnlyList<string> Styles { get; set; }
     }
 }

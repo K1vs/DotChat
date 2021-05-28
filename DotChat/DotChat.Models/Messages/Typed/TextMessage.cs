@@ -1,6 +1,7 @@
 ﻿namespace K1vs.DotChat.Models.Messages.Typed
 {
     using DotChat.Messages.Typed;
+    using System.Collections.Generic;
 
     public class TextMessage: ITextMessage
     {
@@ -8,17 +9,15 @@
         {
         }
 
-        public TextMessage(string content, int? collapseIndex = null, string style = null, string metadata = null)
+        public TextMessage(string content, int? collapseIndex = null, IReadOnlyList<string> styles = null)
         {
             Content = content;
             CollapseIndex = collapseIndex;
-            Style = style;
-            Metadata = metadata;
+            Styles = styles;
         }
 
         public string Content { get; set; }
         public int? CollapseIndex { get; set; }
-        public string Style { get; set; }
-        public string Metadata { get; set; }
+        public IReadOnlyList<string> Styles { get; set; }
     }
 }

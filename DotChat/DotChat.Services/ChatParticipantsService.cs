@@ -74,7 +74,7 @@
         {
             await ChatParticipantsPermissionValidator.ValidateAppend(currentUserId, chatId, addCandidates, inviteCandidates, ServiceName)
                 .ConfigureAwait(false);
-            var command = ChatParticipantsCommandBuilder.BuildAppendChatParticipantsCommand(currentUserId, chatId, addCandidates, inviteCandidates);
+            var command = ChatParticipantsCommandBuilder.BuildBulkAppendChatParticipantsCommand(currentUserId, chatId, addCandidates, inviteCandidates);
             await ChatCommandSender.Send(command).ConfigureAwait(false);
         }
     }

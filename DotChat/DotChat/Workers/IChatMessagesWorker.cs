@@ -4,6 +4,7 @@
     using Chats;
     using Commands.Messages;
     using Handlers;
+    using K1vs.DotChat.Commands.Participants;
     using Messages;
     using Messages.Typed;
     using Participants;
@@ -12,7 +13,7 @@
         IHandleCommand<IAddChatMessageCommand>,
         IHandleCommand<IEditChatMessageCommand>,
         IHandleCommand<IRemoveChatMessageCommand>,
-        IHandleCommand<IReadChatMessagesCommand>
+        IHandleCommand<IReadChatParticipantCommand>
     {
     }
 }

@@ -11,13 +11,13 @@
         {
         }
 
-        public ChatParticipantInvitedNotification(Guid initiatorUserId, Guid chatId, IChatParticipant participant) : base(initiatorUserId)
+        public ChatParticipantInvitedNotification(Guid initiatorUserId, Guid chatId, IParticipationModificationResult participationModificationResult) : base(initiatorUserId)
         {
             ChatId = chatId;
-            Participant = participant;
+            ParticipationModificationResult = participationModificationResult;
         }
 
         public Guid ChatId { get; set; }
-        public IChatParticipant Participant { get; set; }
+        public IParticipationModificationResult ParticipationModificationResult { get; set; }
     }
 }

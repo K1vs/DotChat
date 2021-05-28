@@ -51,7 +51,7 @@
             IEnumerable<PersonalizedChat> query = Store.Chats
                 .Select(r => Store.Personalize(r.Value, userId))
                 .Where(r => filter.Search == null || r.Name.Contains(filter.Search) || filter.SearchInDescription && r.Description.Contains(filter.Search))
-                .Where(r => r.Participants.Any(p => filter.UserFilters.Any(uFilter =>
+                .Where(r => r.Participants.Any(p => filter.ParticipantFilters.Any(uFilter =>
                     (uFilter.UserId == null || uFilter.UserId == p.UserId) &&
                     (uFilter.ChatPrivacyMode == null || uFilter.ChatPrivacyMode == r.PrivacyMode) &&
                     (uFilter.ParticipantStatus == null || uFilter.ParticipantStatus == p.ChatParticipantStatus) && 

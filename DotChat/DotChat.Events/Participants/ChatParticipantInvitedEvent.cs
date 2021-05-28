@@ -10,15 +10,15 @@
         {
         }
 
-        public ChatParticipantInvitedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant participant, ChatParticipantStatus? previousStatus) : base(initiatorUserId)
+        public ChatParticipantInvitedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant participant, IParticipationModificationResult participationModificationResult) : base(initiatorUserId)
         {
             ChatId = chatId;
             Participant = participant;
-            PreviousStatus = previousStatus;
+            ParticipationModificationResult = participationModificationResult;
         }
 
         public Guid ChatId { get; set; }
         public IChatParticipant Participant { get; set; }
-        public ChatParticipantStatus? PreviousStatus { get; set; }
+        public IParticipationModificationResult ParticipationModificationResult { get; set; }
     }
 }

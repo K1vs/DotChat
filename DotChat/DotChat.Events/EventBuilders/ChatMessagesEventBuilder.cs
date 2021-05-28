@@ -17,9 +17,9 @@
             return new ChatMessageAddedEvent(initiatorUserId, chatId, chatMessage);
         }
 
-        public virtual IChatMessageAddedEvent BuildChatMessageAddedEvent(Guid initiatorUserId, Guid chatId, Guid messageId, DateTime timestamp, long index, bool isSystem, IChatMessageInfo chatMessageInfo)
+        public virtual IChatMessageAddedEvent BuildChatMessageAddedEvent(Guid initiatorUserId, Guid chatId, Guid messageId, DateTime timestamp, long index, bool isSystem, int version, IChatMessageInfo chatMessageInfo)
         {
-            var message = new ChatMessage(messageId, timestamp, index, initiatorUserId, MessageStatus.Actual, null, isSystem, chatMessageInfo);
+            var message = new ChatMessage(messageId, timestamp, index, initiatorUserId, MessageStatus.Actual, null, isSystem, version, chatMessageInfo);
             return new ChatMessageAddedEvent(initiatorUserId, chatId, message);
         }
 
@@ -31,11 +31,6 @@
         public virtual IChatMessageRemovedEvent BuildChatMessageRemovedEvent(Guid initiatorUserId, Guid chatId, IChatMessage chatMessage)
         {
             return new ChatMessageRemovedEvent(initiatorUserId, chatId, chatMessage);
-        }
-
-        public virtual IChatMessagesReadEvent BuildChatMessagesReadEvent(Guid initiatorUserId, Guid chatId, long index, bool force)
-        {
-            return new ChatMessagesReadEvent(initiatorUserId, chatId, index, force);
         }
     }
 }

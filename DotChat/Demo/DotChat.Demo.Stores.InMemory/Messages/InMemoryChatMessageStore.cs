@@ -49,8 +49,8 @@
             var message = Store.Messages[chatId][messageId];
             message.Type = messageInfo.Type;
             message.Immutable = messageInfo.Immutable;
-            message.Style = messageInfo.Style;
-            message.Metadata = messageInfo.Metadata;
+            message.Styles = messageInfo.Styles;
+            message.Metadata = messageInfo.Data;
 
             message.Text = messageInfo.Text;
             message.Quote = messageInfo.Quote;

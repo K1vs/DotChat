@@ -14,13 +14,15 @@
         {
         }
 
-        public ChatParticipantTypeChangedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant participant) : base(initiatorUserId)
+        public ChatParticipantTypeChangedEvent(Guid initiatorUserId, Guid chatId, IChatParticipant participant, IParticipationTypeModificationResult participationTypeModificationResult) : base(initiatorUserId)
         {
             ChatId = chatId;
             Participant = participant;
+            ParticipationTypeModificationResult = participationTypeModificationResult;
         }
 
         public Guid ChatId { get; set; }
         public IChatParticipant Participant { get; set; }
+        public IParticipationTypeModificationResult ParticipationTypeModificationResult { get; set; }
     }
 }

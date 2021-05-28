@@ -15,13 +15,13 @@
     public interface ISystemMessagesBuilder
     {
         IReadOnlyCollection<IChatMessageInfo> BuildChatAddedMessage(IChatAddedEvent @event);
-        IChatMessageInfo BuildChatInfoEditedMessage(IChatInfoEditedEvent @event);
-        IReadOnlyCollection<IChatMessageInfo> BuildBulkParticipantsAppendedMessages(IChatParticipantsAppendedEvent @event);
-        IChatMessageInfo BuildChatParticipantAddedMessage(IChatParticipantAddedEvent @event);
-        IChatMessageInfo BuildChatParticipantAppliedMessage(IChatParticipantAppliedEvent @event);
-        IChatMessageInfo BuildChatParticipantBlockedMessage(IChatParticipantBlockedEvent @event);     
-        IChatMessageInfo BuildChatParticipantInvitedMessage(IChatParticipantInvitedEvent @event);
-        IChatMessageInfo BuildChatParticipantRemovedMessage(IChatParticipantRemovedEvent @event);
-        IChatMessageInfo BuildParticipantTypeChangedMessage(IChatParticipantTypeChangedEvent @event);
+        IReadOnlyCollection<IChatMessageInfo> BuildChatInfoEditedMessages(IChatInfoEditedEvent @event);
+        IReadOnlyCollection<IChatMessageInfo> BuildBulkParticipantsAppendedMessages(IChatParticipantBulkAddedInvitedEvent @event);
+        IReadOnlyCollection<IChatMessageInfo> BuildChatParticipantAddedMessages(IChatParticipantAddedEvent @event);
+        IReadOnlyCollection<IChatMessageInfo> BuildChatParticipantAppliedMessages(IChatParticipantAppliedEvent @event);
+        IReadOnlyCollection<IChatMessageInfo> BuildChatParticipantBlockedMessages(IChatParticipantBlockedEvent @event);
+        IReadOnlyCollection<IChatMessageInfo> BuildChatParticipantInvitedMessages(IChatParticipantInvitedEvent @event);
+        IReadOnlyCollection<IChatMessageInfo> BuildChatParticipantRemovedMessages(IChatParticipantRemovedEvent @event);
+        IReadOnlyCollection<IChatMessageInfo> BuildParticipantTypeChangedMessages(IChatParticipantTypeChangedEvent @event);
     }
 }

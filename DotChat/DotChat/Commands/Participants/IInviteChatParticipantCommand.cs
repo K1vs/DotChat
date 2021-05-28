@@ -3,7 +3,7 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public interface IInviteChatParticipantCommand : ICommand, IChatRelated, IParticipationCandidate
+    public interface IInviteChatParticipantCommand : ICommand, IChatRelated, IHasParticipantType
     {
     }
 }

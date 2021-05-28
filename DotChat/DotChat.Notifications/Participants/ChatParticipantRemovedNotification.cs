@@ -11,13 +11,13 @@
         {
         }
 
-        public ChatParticipantRemovedNotification(Guid initiatorUserId, Guid chatId, IChatParticipant participant) : base(initiatorUserId)
+        public ChatParticipantRemovedNotification(Guid initiatorUserId, Guid chatId, IParticipationStatusModificationResult participationStatusModificationResult) : base(initiatorUserId)
         {
             ChatId = chatId;
-            Participant = participant;
+            ParticipationStatusModificationResult = participationStatusModificationResult;
         }
 
         public Guid ChatId { get; set; }
-        public IChatParticipant Participant { get; set; }
+        public IParticipationStatusModificationResult ParticipationStatusModificationResult { get; set; }
     }
 }

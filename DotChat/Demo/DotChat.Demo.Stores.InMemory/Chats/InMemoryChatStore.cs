@@ -65,7 +65,7 @@
                     chat.TopIndex = topChatMessage.Index;
                     chat.LastMessageId = topChatMessage.MessageId;
                     chat.LastMessageAuthorId = topChatMessage.AuthorId;
-                    chat.LastChatMessageInfo = new ChatMessageInfo(topChatMessage.Type, topChatMessage.Version, topChatMessage.Immutable, topChatMessage.Style, topChatMessage.Metadata,
+                    chat.LastChatMessageInfo = new ChatMessageInfo(topChatMessage.Type, topChatMessage.Version, topChatMessage.Immutable, topChatMessage.Styles, topChatMessage.Data,
                         topChatMessage.Text, topChatMessage.Quote, topChatMessage.MessageAttachments, topChatMessage.ChatRefs, topChatMessage.Contacts);
                 }
             }

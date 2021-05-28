@@ -12,7 +12,6 @@
 
     public interface IChatMessageStore: IReadChatMessageStore
     {
-        Task Read(Guid chatId, Guid userId, long index, bool force);
         Task<IChatMessage> Create(Guid chatId, Guid userId, Guid messageId, IChatMessageInfo messageInfo, DateTime timestamp, long index, bool isSystem, Guid creatorId);
         Task<IChatMessage> Update(Guid chatId, Guid messageId, IChatMessageInfo messageInfo, Guid modifierId);
         Task<IChatMessage> Delete(Guid chatId, Guid messageId, Guid removerId);

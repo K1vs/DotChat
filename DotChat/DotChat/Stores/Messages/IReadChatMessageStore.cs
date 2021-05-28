@@ -13,7 +13,7 @@
 
     public interface IReadChatMessageStore
     {
-        Task<IPagedResult<IChatMessage>> Retrieve(Guid chatId, IReadOnlyCollection<IMessageFilter> filters, IPagingOptions options);
+        Task<IPagedResult<IChatMessage>> Retrieve(Guid chatId, IReadOnlyCollection<IChatMessageFilter> filters, IPagingOptions options);
         Task<IPagedResult<IChatMessage>> Retrieve(Guid chatId, IPagingOptions options);
         Task<IChatMessage> Retrieve(Guid chatId, Guid messageId);
     }

@@ -12,7 +12,7 @@
         IHandleCommand<IRemoveChatParticipantCommand>,
         IHandleCommand<IBlockChatParticipantCommand>,
         IHandleCommand<IChangeChatParticipantTypeCommand>,
-        IHandleCommand<IAppendChatParticipantsCommand>
+        IHandleCommand<IBulkAddInviteChatParticipantsCommand>
     {
     }
 }

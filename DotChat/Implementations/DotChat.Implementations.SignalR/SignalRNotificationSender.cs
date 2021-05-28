@@ -98,7 +98,7 @@
                 await chatMessagesClient.ChatMessageRemoved(chatMessageRemovedNotification);
             }
 
-            if (notification is IChatMessagesReadNotification chatMessagesReadNotification)
+            if (notification is IChatParticipantReadNotification chatMessagesReadNotification)
             {
                 await chatMessagesClient.ChatMessagesRead(chatMessagesReadNotification);
             }
@@ -132,7 +132,7 @@
                 await chatParticipantsClient.ChatParticipantBlocked(chatParticipantBlockedNotification);
             }
 
-            if (notification is IChatParticipantsAppendedNotification chatParticipantsAppendedNotification)
+            if (notification is IChatParticipantBulkAddedInvitedNotification chatParticipantsAppendedNotification)
             {
                 await chatParticipantsClient.ChatParticipantsAppended(chatParticipantsAppendedNotification);
             }

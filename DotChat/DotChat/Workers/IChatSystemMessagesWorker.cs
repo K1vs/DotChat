@@ -19,7 +19,7 @@
         IHandleEvent<IChatParticipantAppliedEvent>,
         IHandleEvent<IChatParticipantRemovedEvent>,
         IHandleEvent<IChatParticipantBlockedEvent>,
-        IHandleEvent<IChatParticipantsAppendedEvent>,
+        IHandleEvent<IChatParticipantBulkAddedInvitedEvent>,
         IHandleEvent<IChatAddedEvent>,
         IHandleEvent<IChatInfoEditedEvent>
     {

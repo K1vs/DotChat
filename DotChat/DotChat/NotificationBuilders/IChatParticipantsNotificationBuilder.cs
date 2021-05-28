@@ -13,7 +13,8 @@
         IChatParticipantInvitedNotification BuildChatParticipantInvitedNotification(IChatParticipantInvitedEvent @event);
         IChatParticipantRemovedNotification BuildChatParticipantRemovedNotification(IChatParticipantRemovedEvent @event);
         IChatParticipantBlockedNotification BuildChatParticipantBlockedNotification(IChatParticipantBlockedEvent @event);
-        IChatParticipantsAppendedNotification BuildChatParticipantsAppendedNotification(IChatParticipantsAppendedEvent @event);
+        IChatParticipantBulkAddedInvitedNotification BuildChatParticipantBulkAddedInvitedNotification(IChatParticipantBulkAddedInvitedEvent @event);
         IChatParticipantTypeChangedNotification BuildChatParticipantTypeChangedNotification(IChatParticipantTypeChangedEvent @event);
+        IChatParticipantReadNotification BuildChatMessagesReadNotification(IChatParticipantReadEvent @event);
     }
 }

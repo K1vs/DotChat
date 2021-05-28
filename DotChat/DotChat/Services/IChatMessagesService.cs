@@ -13,9 +13,8 @@
 
     public interface IChatMessagesService
     {
-        Task<IPagedResult<IChatMessage>> GetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<IMessageFilter> filters, IPagingOptions pagingOptions = default);
+        Task<IPagedResult<IChatMessage>> GetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<IChatMessageFilter> filters, IPagingOptions pagingOptions = default);
         Task<IPagedResult<IChatMessage>> GetPage(Guid currentUserId, Guid chatId, IPagingOptions pagingOptions = default);
-        Task Read(Guid currentUserId, Guid chatId, long index, bool force);
         Task<Guid> Add(Guid currentUserId, Guid chatId, Guid? messageId, IChatMessageInfo messageInfo);
         Task<Guid> Edit(Guid currentUserId, Guid chatId, Guid messageId, IChatMessageInfo messageInfo, Guid? archivedMessageId);
         Task Remove(Guid currentUserId, Guid chatId, Guid messageId);

@@ -25,7 +25,7 @@
             Store = store;
         }
 
-        public async Task<IPagedResult<IChatMessage>> Retrieve(Guid chatId, IReadOnlyCollection<IMessageFilter> filters, IPagingOptions pagingOptions)
+        public async Task<IPagedResult<IChatMessage>> Retrieve(Guid chatId, IReadOnlyCollection<IChatMessageFilter> filters, IPagingOptions pagingOptions)
         {
             await Task.Yield();
             if(!Store.Messages.TryGetValue(chatId, out var messages))

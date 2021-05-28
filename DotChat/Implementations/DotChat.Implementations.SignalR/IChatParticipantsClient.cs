@@ -16,7 +16,7 @@
         Task ChatParticipantInvited(IChatParticipantInvitedNotification notification);
         Task ChatParticipantRemoved(IChatParticipantRemovedNotification notification);
         Task ChatParticipantBlocked(IChatParticipantBlockedNotification notification);
-        Task ChatParticipantsAppended(IChatParticipantsAppendedNotification notification);
+        Task ChatParticipantsAppended(IChatParticipantBulkAddedInvitedNotification notification);
         Task ChatParticipantTypeChanged(IChatParticipantTypeChangedNotification notification);
     }
 }

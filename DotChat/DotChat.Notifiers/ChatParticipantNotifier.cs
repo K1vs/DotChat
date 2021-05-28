@@ -51,11 +51,11 @@
             await NotificationRouteService.RemoveUserFromChat(@event.Participant.UserId, @event.ChatId);
         }
 
-        public virtual async Task Handle(IChatParticipantsAppendedEvent @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantBulkAddedInvitedEvent @event, IChatBusContext chatBusContext)
         {
             var users = @event.Added.Select(r => r.Participant.UserId);
             await NotificationRouteService.AddUsersToChat(users, @event.ChatId);
-            var notification = ChatParticipantsNotificationBuilder.BuildChatParticipantsAppendedNotification(@event);
+            var notification = ChatParticipantsNotificationBuilder.BuildChatParticipantBulkAddedInvitedNotification(@event);
             await Notify(@event.ChatId, notification);
         }
 

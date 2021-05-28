@@ -21,7 +21,7 @@
         where TChatFilter : IChatFilter
         where TPagingOptions : IPagingOptions
         where TChatInfo: IChatInfo
-        where TParticipationCandidates: IHasParticipationCandidates
+        where TParticipationCandidates: IParticipantsAddInviteBulk
     {
         protected readonly IChatsService ChatsService;
 

@@ -8,8 +8,9 @@ namespace K1vs.DotChat.Messages
     using Participants;
     using Typed;
 
-    public interface IChatMessage: IChatMessageInfo, IChatMessageRelated, IHasTimestamp, IIndexed, IVersioned
+    public interface IChatMessage: IChatMessageRelated, IHasTimestamp, IIndexed, IVersioned
     {
+        IChatMessageInfo ChatMessageInfo { get; set; }
         Guid AuthorId { get; }
         MessageStatus MessageStatus { get; }
         Guid? OriginalMessage { get; }

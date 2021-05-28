@@ -13,11 +13,10 @@
 
     public interface IReadChatStore
     {
-        Task<IPersonalizedChatsSummary> RetrievePersonalizedSummary(Guid userId);
-        Task<IReadOnlyCollection<Guid>> RetrieveAllIds(Guid userId);
-        Task<IPagedResult<IPersonalizedChat>> RetrievePersonalizedPage(Guid userId, IChatFilter filter, IPagingOptions pagingOptions);
-        Task<IPagedResult<IPersonalizedChat>> RetrievePersonalizedPage(Guid userId, IPagingOptions pagingOptions);
-        Task<IPersonalizedChat> RetrievePersonalized(Guid chatId, Guid userId);
+        Task<IChatsSummary> RetrieveSummary();
+        Task<IPagedResult<IChat>> RetrievePage(Guid userId, IChatFilter filter, IPagingOptions pagingOptions);
+        Task<IPagedResult<IChat>> RetrievePage(Guid userId, IPagingOptions pagingOptions);
         Task<IChat> Retrieve(Guid chatId);
+        Task<IReadOnlyCollection<Guid>> RetrieveIds(Guid userId);
     }
 }

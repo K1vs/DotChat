@@ -4,7 +4,7 @@
     using DotChat.Participants;
     using Events;
 
-    public interface IChatParticipantBlockedNotification: IChatParticipantsNotification, IChatRelated, IHasParticipant
+    public interface IChatParticipantBlockedNotification: IChatParticipantsNotification, IChatRelated, IHasParticipationStatusModificationResult
     {
     }
 }

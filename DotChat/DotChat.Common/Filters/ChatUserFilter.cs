@@ -5,20 +5,22 @@
     using Chats;
     using Participants;
 
-    public class ChatUserFilter: IChatUserFilter
+    public class ChatUserFilter: IChatParticipantFilter
     {
         public ChatUserFilter()
         {
         }
 
-        public ChatUserFilter(Guid? userId, ChatPrivacyMode? chatPrivacyMode, ChatParticipantType? participantType, ChatParticipantStatus? participantStatus)
+        public ChatUserFilter(string search, Guid? userId, ChatPrivacyMode? chatPrivacyMode, ChatParticipantType? participantType, ChatParticipantStatus? participantStatus)
         {
+            Search = search;
             UserId = userId;
             ChatPrivacyMode = chatPrivacyMode;
             ParticipantType = participantType;
             ParticipantStatus = participantStatus;
         }
 
+        public string Search { get; }
         public Guid? UserId { get; set; }
         public ChatPrivacyMode? ChatPrivacyMode { get; set; }
         public ChatParticipantType? ParticipantType { get; set; }

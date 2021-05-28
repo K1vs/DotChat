@@ -8,7 +8,6 @@
 
     public interface ICustomizable
     {
-        string Style { get; }
-        string Metadata { get; }
+        IReadOnlyList<string> Styles { get; }
     }
 }

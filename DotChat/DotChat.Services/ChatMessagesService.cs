@@ -30,7 +30,7 @@
             ChatCommandSender = chatCommandSender;
         }
 
-        public virtual async Task<IPagedResult<IChatMessage>> GetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<IMessageFilter> filters, IPagingOptions pagingOptions = default)
+        public virtual async Task<IPagedResult<IChatMessage>> GetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<IChatMessageFilter> filters, IPagingOptions pagingOptions = default)
         {
             var messagesPage = await ReadChatMessageStore.Retrieve(chatId, filters, pagingOptions).ConfigureAwait(false);
             await ChatMessagesPermissionValidator.ValidateGetPage(currentUserId, chatId, filters, pagingOptions, messagesPage, ServiceName).ConfigureAwait(false);

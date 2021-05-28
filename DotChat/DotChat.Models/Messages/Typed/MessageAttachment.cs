@@ -1,6 +1,7 @@
 ﻿namespace K1vs.DotChat.Models.Messages.Typed
 {
     using System;
+    using System.Collections.Generic;
     using DotChat.Messages.Typed;
 
     public class MessageAttachment: IMessageAttachment
@@ -9,19 +10,17 @@
         {
         }
 
-        public MessageAttachment(Guid id, string name, string type, string style = null, string metadata = null)
+        public MessageAttachment(Guid id, string name, string type, IReadOnlyList<string> styles = null)
         {
             Id = id;
             Name = name;
             Type = type;
-            Style = style;
-            Metadata = metadata;
+            Styles = styles;
         }
 
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
-        public string Style { get; set; }
-        public string Metadata { get; set; }
+        public IReadOnlyList<string> Styles { get; set; }
     }
 }

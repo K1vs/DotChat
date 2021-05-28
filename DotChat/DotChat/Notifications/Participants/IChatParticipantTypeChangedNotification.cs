@@ -10,7 +10,7 @@
     using DotChat.Participants;
     using Events;
 
-    public interface IChatParticipantTypeChangedNotification: IChatParticipantsNotification, IChatRelated, IHasParticipant
+    public interface IChatParticipantTypeChangedNotification: IChatParticipantsNotification, IChatRelated, IHasParticipationTypeModificationResult
     {
     }
 }

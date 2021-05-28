@@ -6,19 +6,23 @@
     using System.Text;
     using System.Threading.Tasks;
     using Chats;
-    using DotChat.Events.Chat;
     using DotChat.Events.Chats;
     using DotChat.NotificationBuilders;
     using DotChat.Notifications.Chats;
-    using K1vs.DotChat.Models.Messages.Typed;
-    using Models.Chats;
-    using Models.Participants;
+    using K1vs.DotChat.PersonalizedChats;
 
     public class ChatsNotificationBuilder: IChatsNotificationBuilder
     {
+        private readonly IPersonalizedChatBuilder _personalizedChatBuilder;
+
+        public ChatsNotificationBuilder(IPersonalizedChatBuilder personalizedChatBuilder)
+        {
+            _personalizedChatBuilder = personalizedChatBuilder;
+        }
+
         public virtual IChatAddedNotification BuildChatAddedNotification(IChatAddedEvent @event)
         {
-            var personalizedChat = new PersonalizedChat(@event.Chat.Name, @event.Chat.Description, @event.Chat.PrivacyMode, @event.Chat.Version, @event.Chat.ChatId, @event.Chat.Participants, @event.Chat.LastTimestamp, @event.Chat.TopIndex, @event.Chat.LastMessageId, @event.Chat.LastMessageAuthorId, @event.Chat.LastChatMessageInfo, 0, @event.Chat.TopIndex);
+            var personalizedChat = _personalizedChatBuilder.Build(@event.Chat, 0, 0);
             return new ChatAddedNotification(@event.InitiatorUserId, personalizedChat);
         }
 

@@ -24,7 +24,7 @@
             ReadChatMessageStore = readChatMessageStore;
         }
 
-        public virtual async Task ValidateGetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<IMessageFilter> filters, IPagingOptions pagingOptions, IPagedResult<IChatMessage> messagesPage, string serviceName, string methodName = null)
+        public virtual async Task ValidateGetPage(Guid currentUserId, Guid chatId, IReadOnlyCollection<IChatMessageFilter> filters, IPagingOptions pagingOptions, IPagedResult<IChatMessage> messagesPage, string serviceName, string methodName = null)
         {
             var participant = await GetCurrentParticipant(currentUserId, chatId, serviceName, methodName);
             CheckCurrentParticipantStatus(participant, currentUserId, chatId, serviceName, methodName);

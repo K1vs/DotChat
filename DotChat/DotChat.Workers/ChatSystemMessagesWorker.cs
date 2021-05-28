@@ -80,7 +80,7 @@
             await AddMessage(@event, messageInfo, chatBusContext);
         }
 
-        public virtual async Task Handle(IChatParticipantsAppendedEvent @event, IChatBusContext chatBusContext)
+        public virtual async Task Handle(IChatParticipantBulkAddedInvitedEvent @event, IChatBusContext chatBusContext)
         {
             if (ChatWorkersConfiguration.DisableSystemMessages)
             {

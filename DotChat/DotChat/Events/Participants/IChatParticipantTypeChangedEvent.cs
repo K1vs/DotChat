@@ -9,7 +9,7 @@
     using DotChat.Chats;
     using DotChat.Participants;
 
-    public interface IChatParticipantTypeChangedEvent: IChatParticipantEvent, IChatRelated, IHasParticipant
+    public interface IChatParticipantTypeChangedEvent: IChatParticipantEvent, IChatRelated, IHasParticipant, IHasParticipationTypeModificationResult
     {
     }
 }

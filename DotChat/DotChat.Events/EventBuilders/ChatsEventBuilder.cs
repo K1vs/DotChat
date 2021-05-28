@@ -9,9 +9,6 @@
     using DotChat.EventBuilders;
     using DotChat.Events.Chat;
     using DotChat.Events.Chats;
-    using K1vs.DotChat.Models.Messages.Typed;
-    using Models.Chats;
-    using Models.Participants;
 
     public class ChatsEventBuilder: IChatsEventBuilder
     {

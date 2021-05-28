@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using Events.Participants;
     using Handlers;
+    using K1vs.DotChat.Events.Messages;
     using Participants;
 
     public interface IChatParticipantNotifier:
@@ -11,8 +12,9 @@
         IHandleEvent<IChatParticipantAppliedEvent>,
         IHandleEvent<IChatParticipantRemovedEvent>,
         IHandleEvent<IChatParticipantBlockedEvent>,
-        IHandleEvent<IChatParticipantsAppendedEvent>,
-        IHandleEvent<IChatParticipantTypeChangedEvent> 
+        IHandleEvent<IChatParticipantBulkAddedInvitedEvent>,
+        IHandleEvent<IChatParticipantTypeChangedEvent>,
+        IHandleEvent<IChatParticipantReadEvent>
     {
     }
 }

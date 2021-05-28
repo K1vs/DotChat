@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using DotChat.Participants;
 
-    public class ParticipationCandidates: IHasParticipationCandidates
+    public class ParticipationCandidates: IParticipantsAddInviteBulk
     {
         public ParticipationCandidates()
         {
