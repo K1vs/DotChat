@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>K1vs.DotChat.Demo.AspNetCore.SignalR</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\DotChat.Basic\DotChat.Basic.csproj" />
+    <ProjectReference Include="..\..\DotChat.Commands\DotChat.Commands.csproj" />
+    <ProjectReference Include="..\..\DotChat.Common\DotChat.Common.csproj" />
+    <ProjectReference Include="..\..\DotChat.Events\DotChat.Events.csproj" />
+    <ProjectReference Include="..\..\DotChat.FrameworkUtils\DotChat.FrameworkUtils.csproj" />
+    <ProjectReference Include="..\..\DotChat.Models\DotChat.Models.csproj" />
+    <ProjectReference Include="..\..\DotChat.Modules\DotChat.Modules.csproj" />
+    <ProjectReference Include="..\..\DotChat.Notifications\DotChat.Notifications.csproj" />
+    <ProjectReference Include="..\..\DotChat.Notifiers\DotChat.Notifiers.csproj" />
+    <ProjectReference Include="..\..\DotChat.Security\DotChat.Security.csproj" />
+    <ProjectReference Include="..\..\DotChat.Services\DotChat.Services.csproj" />
+    <ProjectReference Include="..\..\DotChat.Workers\DotChat.Workers.csproj" />
+    <ProjectReference Include="..\..\DotChat\DotChat.csproj" />
+    <ProjectReference Include="..\..\Implementations\DotChat.Implementations.AspNetCore.SignalR\DotChat.Implementations.AspNetCore.SignalR.csproj" />
+    <ProjectReference Include="..\..\Implementations\DotChat.Implementations.DependencyCore\DotChat.Implementations.DependencyCore.csproj" />
+    <ProjectReference Include="..\DotChat.Demo.Bus.InMemory\DotChat.Demo.Bus.InMemory.csproj" />
+    <ProjectReference Include="..\DotChat.Demo.Others\DotChat.Demo.Others.csproj" />
+    <ProjectReference Include="..\DotChat.Demo.Stores.InMemory\DotChat.Demo.Stores.InMemory.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+</Project>

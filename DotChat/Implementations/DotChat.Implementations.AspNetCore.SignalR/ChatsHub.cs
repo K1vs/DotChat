@@ -1,4 +1,4 @@
-﻿namespace K1vs.DotChat.Implementations.CoreSignalR
+﻿namespace K1vs.DotChat.Implementations.AspNetCore.SignalR
 {
     using K1vs.DotChat.Chats;
     using K1vs.DotChat.Common.Filters;

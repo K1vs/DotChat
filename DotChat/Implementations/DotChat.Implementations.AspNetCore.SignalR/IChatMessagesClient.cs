@@ -1,4 +1,4 @@
-﻿namespace K1vs.DotChat.Implementations.CoreSignalR
+﻿namespace K1vs.DotChat.Implementations.AspNetCore.SignalR
 {
     using System;
     using System.Collections.Generic;

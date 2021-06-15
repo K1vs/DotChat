@@ -1,0 +1,36 @@
+﻿.input-panel{
+    display: flex;
+    flex-direction: row;
+    margin: 25px;
+}
+.input-box{
+    flex: 1 0;
+    margin: 10px;
+}
+.send-button{
+    flex: 0 0;
+    margin: 10px;
+}
+html, body{
+    height: 100%;
+}
+.active{
+    border: solid;
+}
+.messages-box{
+    margin: 25px;
+    overflow-y: scroll;
+    flex: 1 1;
+}
+.right-panel{
+    height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.chats-box{
+    margin: 25px;
+}
+.chat{
+    padding: 10px;
+}
