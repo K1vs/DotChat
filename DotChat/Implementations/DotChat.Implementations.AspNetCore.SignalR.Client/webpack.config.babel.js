@@ -3,15 +3,15 @@ const path = require('path');
 export default () => (
     {
         mode: 'production',
-        entry: './src/dot-chat-signalr-connector.js',
+        entry: './src/dot-chat-asp-net-core-signalr-connector.js',
         devtool: 'source-map',
         output: {
             path: path.resolve(__dirname, './dist'),
-            filename: 'dot-chat-signalr-connector.js',
+            filename: 'dot-chat-asp-net-core-signalr-connector.js',
             libraryTarget: 'umd',
             libraryExport: 'default',
             globalObject: 'this',
-            library: 'DotChatSignalRConnector'
+            library: 'DotChatAspNetCoreSignalRConnector'
         },
         externals: {
             'lodash': {
@@ -21,10 +21,10 @@ export default () => (
                 root: '_'
             },
             'signalr': {
-                commonjs: 'signalr',
-                commonjs2: 'signalr',
-                amd: 'signalr',
-                root: '$'
+                commonjs: 'signalR',
+                commonjs2: 'signalR',
+                amd: 'signalR',
+                root: 'signalR'
             }
         },
         module: {

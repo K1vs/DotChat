@@ -67,17 +67,18 @@
 
         public virtual async Task<TPagedResult> GetPage(TChatFilter filter, TPagingOptions pagingOptions)
         {
-            return await ChatsService.GetPage(CurrentUserId, filter, pagingOptions);
-        }
-
-        public virtual async Task<TPagedResult> GetPage(TPagingOptions pagingOptions)
-        {
-            return await ChatsService.GetPage(CurrentUserId, pagingOptions);
-        }
-
-        public virtual async Task<TPagedResult> GetPage()
-        {
-            return await ChatsService.GetPage(CurrentUserId);
+            if (filter != null && pagingOptions != null)
+            {
+                return await ChatsService.GetPage(CurrentUserId, filter, pagingOptions);
+            }
+            else if (pagingOptions != null)
+            {
+                return await ChatsService.GetPage(CurrentUserId, pagingOptions);
+            }
+            else
+            {
+                return await ChatsService.GetPage(CurrentUserId);
+            }
         }
 
         public virtual async Task<TPersonalizedChat> Get(Guid chatId)

@@ -1,7 +1,11 @@
+import * as signalR from 'signalr';
+
 export let createDefaultOptions = function () {
-    var defaultOptions = {};
+    const defaultOptions = {};
+    defaultOptions.withUrlOptionsProvider = null; //(hubName)
+    defaultOptions.configureConnectionBuilder = null; //(connectionBuilder)
     defaultOptions.start = function defaultStart(connection) {
-        var start = async function (resolve, reject, retryContext) {
+        const start = async function (resolve, reject, retryContext) {
             try {
                 await connection.start();
                 resolve();
@@ -14,7 +18,7 @@ export let createDefaultOptions = function () {
                         previousRetryCount: 0
                     };
                 }
-                var timeout = defaultOptions.getStartTimeoutMs(retryContext);
+                const timeout = defaultOptions.getStartTimeoutMs(retryContext);
                 if (timeout == null) {
                     reject(err);
                 } else {
@@ -26,9 +30,9 @@ export let createDefaultOptions = function () {
             start(resolve, reject);
         });
     };
-    defaultOptions.configureConnection = null;
+    defaultOptions.configureConnection = null; //(connection)
     defaultOptions.getTimeoutMs = function (retryContext) {
-        let count = retryContext.previousRetryCount;
+        const count = retryContext.previousRetryCount;
         if (count < 3) {
             return 0;
         } else if (count < 10) {
@@ -41,11 +45,11 @@ export let createDefaultOptions = function () {
     defaultOptions.getRecconectTimeoutMs = defaultOptions.getTimeoutMs;
     defaultOptions.hubNames = {
         chatsHub: 'chatsHub',
-        participantsHub: 'chatParticipantsHub',
-        messagesHub: 'chatMessagesHub'
+        chatParticipantsHub: 'chatParticipantsHub',
+        chatMessagesHub: 'chatMessagesHub'
     };
     defaultOptions.hubConnectionBuilderFactory = function () {
-        return new window.signalR.HubConnectionBuilder();
+        return new signalR.HubConnectionBuilder();
     };
     return defaultOptions;
 };

@@ -3,10 +3,14 @@ import { createParticipantsConnector } from './participants.js';
 import { createMessagesConnector } from './messages.js';
 import { createDefaultOptions } from './default-options.js';
 
-export default class DotChatSignalRConnector{
-    constructor(options) {
-        var defaultOptions = createDefaultOptions();
-        this._options = options ? Object.assign(options, defaultOptions) : defaultOptions;
+export default class DotChatAspNetCoreSignalRConnector{
+    constructor(optionsConfigurator) {
+        const defaultOptions = createDefaultOptions();
+        if (optionsConfigurator) {
+            this._options = optionsConfigurator(defaultOptions);
+        } else {
+            this._options = defaultOptions;
+        }
         this._chats = createChatsConnector(this._options);
         this._participants = createParticipantsConnector(this._options);
         this._messages = createMessagesConnector(this._options);
@@ -25,9 +29,9 @@ export default class DotChatSignalRConnector{
     }
 
     start() {
-        var chatsStating = this._chats.start();
-        var participantsStating = this._participants.start();
-        var messagesStating = this._messages.start();
+        const chatsStating = this._chats.start();
+        const participantsStating = this._participants.start();
+        const messagesStating = this._messages.start();
         return Promise.all([chatsStating, participantsStating, messagesStating]);
     }
 }

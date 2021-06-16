@@ -88,12 +88,19 @@
     
         setChats([]);
 
-        var connection = $.hubConnection();
-        connection.stop();
-        connection.qs = { 'userId': userId };
-        connection.logging = true;
-
-        var connector = new DotChatSignalRConnector(connection);
+        var connector = new DotChatAspNetCoreSignalRConnector(function (options) {
+            options.withUrlOptionsProvider = function () {
+                return {
+                    accessTokenFactory: function () {
+                        return userId;
+                    }
+                };
+            },
+            options.configureConnectionBuilder = function (builder) {
+                return builder.configureLogging(signalR.LogLevel.Debug);
+            }
+            return options;
+        });
 
         if (window.dotChatClient) {
             window.dotChatClient.dispose();
@@ -154,15 +161,13 @@
                 alert('removed');
             });
         });
-        
-        connection.start().then(function(){
-            return dotChatClient.ready().then(function(client){
-                client.loadSummary().then(setSummary);
-                return reader.open().then(function(current){
-                    setChats(current);
-                });
+
+        dotChatClient.ready().then(function (client) {
+            client.loadSummary().then(setSummary);
+            return reader.open().then(function (current) {
+                setChats(current);
             });
-        }).catch(function(){
+        }, function () {
             alert(JSON.stringify(arguments));
         });
     });

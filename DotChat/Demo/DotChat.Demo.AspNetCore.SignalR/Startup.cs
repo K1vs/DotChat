@@ -83,6 +83,7 @@ namespace K1vs.DotChat.Demo.AspNetCore.SignalR
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             var bus = app.ApplicationServices.GetService<InMemoryBus>();
@@ -98,7 +99,7 @@ namespace K1vs.DotChat.Demo.AspNetCore.SignalR
 
             app.Use(async (context, next) =>
             {
-                if (context.Request.Query.TryGetValue("userId", out var userIdValues))
+                if (context.Request.Query.TryGetValue("access_token", out var userIdValues))
                 {
                     var userId = userIdValues.Single();
                     if (!string.IsNullOrEmpty(userId) && Guid.TryParse(userId, out var userIdGuid))
@@ -113,12 +114,12 @@ namespace K1vs.DotChat.Demo.AspNetCore.SignalR
 
             app.UseRouting();
 
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapHub<ChatsHub>("/chatsHub");
-            //    endpoints.MapHub<ChatParticipantsHub>("/chatParticipantsHub");
-            //    endpoints.MapHub<ChatMessagesHub>("/chatMessagesHub");
-            //});
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<ChatsHub>("/chatsHub");
+                endpoints.MapHub<ChatParticipantsHub>("/chatParticipantsHub");
+                endpoints.MapHub<ChatMessagesHub>("/chatMessagesHub");
+            });
 
             var dotChat = app.ApplicationServices.GetService<IDotChat>();
             AddTestData(dotChat);

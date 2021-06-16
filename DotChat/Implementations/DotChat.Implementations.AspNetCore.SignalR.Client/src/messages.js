@@ -1,9 +1,14 @@
 import { createProxyBuilder } from './proxy-builder.js';
 export let createMessagesConnector = function (options) {
 
-    var builder = createProxyBuilder(options, 'chatMessagesHub');
+    const builder = createProxyBuilder(options, 'chatMessagesHub');
 
-    builder.addMethod('getPage');
+    builder.addMethod('getPage', function (args) {
+        if (args.length === 2) {
+            args.splice(1, 0, []);
+        }
+        return args;
+    });
     builder.addMethod('read');
     builder.addMethod('add');
     builder.addMethod('edit');

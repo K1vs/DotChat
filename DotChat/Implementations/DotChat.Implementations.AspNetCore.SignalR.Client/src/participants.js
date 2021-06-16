@@ -1,7 +1,7 @@
 import { createProxyBuilder } from './proxy-builder.js';
 export let createParticipantsConnector = function (options) {
 
-    var builder = createProxyBuilder(options, 'chatParticipantsHub');
+    const builder = createProxyBuilder(options, 'chatParticipantsHub');
 
     builder.addMethod('add');
     builder.addMethod('invite');

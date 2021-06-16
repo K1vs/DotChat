@@ -59,17 +59,18 @@
 
         public virtual async Task<TChatMessagesPagedResult> GetPage(Guid chatId, IReadOnlyCollection<TMessageFilter> filters, TPagingOptions pagingOptions)
         {
-            return await ChatMessagesService.GetPage(CurrentUserId, chatId, filters, pagingOptions);
-        }
-
-        public virtual async Task<TChatMessagesPagedResult> GetPage(Guid chatId, TPagingOptions pagingOptions)
-        {
-            return await ChatMessagesService.GetPage(CurrentUserId, chatId, pagingOptions);
-        }
-
-        public virtual async Task<TChatMessagesPagedResult> GetPage(Guid chatId)
-        {
-            return await ChatMessagesService.GetPage(CurrentUserId, chatId);
+            if(filters != null && pagingOptions != null)
+            {
+                return await ChatMessagesService.GetPage(CurrentUserId, chatId, filters, pagingOptions);
+            }
+            else if (pagingOptions != null)
+            {
+                return await ChatMessagesService.GetPage(CurrentUserId, chatId, pagingOptions);
+            }
+            else
+            {
+                return await ChatMessagesService.GetPage(CurrentUserId, chatId);
+            }
         }
 
         public virtual async Task Read(Guid chatId, long index, bool force)
