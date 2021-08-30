@@ -29,9 +29,12 @@ export default class DotChatAspNetCoreSignalRConnector{
     }
 
     start() {
-        const chatsStating = this._chats.start();
-        const participantsStating = this._participants.start();
-        const messagesStating = this._messages.start();
-        return Promise.all([chatsStating, participantsStating, messagesStating]);
+        if (!this._startingPromise) {
+            const chatsStating = this._chats.start();
+            const participantsStating = this._participants.start();
+            const messagesStating = this._messages.start();
+            this._startingPromise = Promise.all([chatsStating, participantsStating, messagesStating]);
+        }
+        return this._startingPromise;
     }
 }
