@@ -96,6 +96,11 @@
                     }
                 };
             },
+                options.hubNames = {
+                chatsHub: 'https://localhost:5001/chatsHub',
+                chatParticipantsHub: 'https://localhost:5001/chatParticipantsHub',
+                chatMessagesHub: 'https://localhost:5001/chatMessagesHub'
+                }
             options.configureConnectionBuilder = function (builder) {
                 return builder.configureLogging(signalR.LogLevel.Debug);
             }

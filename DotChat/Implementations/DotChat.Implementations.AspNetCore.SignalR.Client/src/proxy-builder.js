@@ -2,7 +2,7 @@ export let createProxyBuilder = function (options, hub) {
     let connectionBuilder = options
         .hubConnectionBuilderFactory();
 
-    const ulr = '/' + options.hubNames[hub];
+    const ulr = options.hubNames[hub];
 
     if (options.withUrlOptionsProvider) {
         const withUrlOptions = options.withUrlOptionsProvider();

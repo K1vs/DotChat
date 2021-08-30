@@ -1,8 +1,8 @@
 {
-  "name": "dot-chat-core-signalr-connector",
-  "version": "1.3.5",
-  "description": "Extensible chat framework for systems with microservice architecture. Core SignalR connector for Javascript client.",
-  "main": "dist/dot-chat-core-signalr-connector.js",
+  "name": "dot-chat-asp-net-core-signalr-connector",
+  "version": "1.3.6",
+  "description": "Extensible chat framework for systems with microservice architecture. AspNetCore SignalR connector for Javascript client.",
+  "main": "dist/dot-chat-asp-net-core-signalr-connector.js",
   "scripts": {
     "build": "webpack"
   },

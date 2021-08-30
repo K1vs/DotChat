@@ -44,9 +44,9 @@ export let createDefaultOptions = function () {
     defaultOptions.getStartTimeoutMs = defaultOptions.getTimeoutMs;
     defaultOptions.getRecconectTimeoutMs = defaultOptions.getTimeoutMs;
     defaultOptions.hubNames = {
-        chatsHub: 'chatsHub',
-        chatParticipantsHub: 'chatParticipantsHub',
-        chatMessagesHub: 'chatMessagesHub'
+        chatsHub: '/chatsHub',
+        chatParticipantsHub: '/chatParticipantsHub',
+        chatMessagesHub: '/chatMessagesHub'
     };
     defaultOptions.hubConnectionBuilderFactory = function () {
         return new signalR.HubConnectionBuilder();
