@@ -19,6 +19,6 @@
     "@microsoft/signalr": "^5.0.7",
     "bootstrap": "^4.4.1",
     "jquery": "^3.4.1",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.21"
   }
 }
