@@ -23,10 +23,10 @@
     "@babel/register": "^7.8.6",
     "babel-loader": "^8.0.6",
     "eslint": "^6.8.0",
-    "eslint-loader": "^3.0.3",
+    "eslint-loader": "^4.0.2",
     "idempotent-babel-polyfill": "^7.4.4",
     "lodash": "^4.17.15",
-    "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11"
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   }
 }
